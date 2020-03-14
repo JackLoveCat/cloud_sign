@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: cloud_sign_backend_java
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: fanxu
+Implementation-Vendor-Id: cn.edu.fzu
+Build-Jdk: 1.8.0_231
+Implementation-URL: http://maven.apache.org
+Created-By: Maven Integration for Eclipse
+
