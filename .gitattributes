@@ -1,0 +1,4 @@
+*.js linguist-language=VUE
+*.css linguist-language=VUE
+*.html linguist-language=VUE
+*.java linguist-language=JAVA
