@@ -13,8 +13,6 @@ import cn.edu.fzu.cloudsign.demo.domain.Demo;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 
 /**
- * Demo
- * @author fanxu
  *
  */
 @RestController
