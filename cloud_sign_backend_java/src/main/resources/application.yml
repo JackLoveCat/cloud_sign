@@ -1,7 +1,17 @@
 # 项目相关配置
-cloud_sign_backend_java:
+cloudsign:
   # 名称
-  name: cloud_sign_backend_java
+  name: cloudsign
+  # 版本
+  version: 1.0
+  # 版权年份
+  copyrightYear: 2020
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/development/uploadPath）
+  profile: D:/development/uploadPath
+  # 获取ip地址开关
+  addressEnabled: true
 
 # 开发环境配置
 server:
@@ -99,4 +109,14 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
-  
+
+# 代码生成
+gen: 
+  # 作者
+  author: fanxuenan
+  # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
+  packageName: cn.edu.fzu.cloudsign.project.cla
+  # 自动去除表前缀，默认是true
+  autoRemovePre: true
+  # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
+  tablePrefix: cla_ 
