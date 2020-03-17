@@ -2,7 +2,9 @@ package cn.edu.fzu.cloudsign.project.cla.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
 
 /**
  * 班课信息对象 cla_course
