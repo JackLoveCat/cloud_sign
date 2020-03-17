@@ -50,7 +50,6 @@ public class SwaggerConfig {
 				.title("标题：到云系统_接口文档")
 				// 描述
 				.description("描述：")
-				// 作者信息
 				.contact(new Contact(cloudSignConfig.getName(), null, null))
 				// 版本
 				.version("版本号:" + cloudSignConfig.getVersion()).build();
