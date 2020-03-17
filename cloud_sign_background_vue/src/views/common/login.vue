@@ -4,8 +4,8 @@
       <div class="site-content">
         <div class="brand-info">
           <img src="~@/assets/img/logo.png" alt="">
-          <h2 class="brand-info__text" style="display: inline-block">熊猫班课</h2>
-          <p class="brand-info__intro">熊猫班课是一套教务信息解决方案，采用Vue2.x和SSM开发</p>
+          <h2 class="brand-info__text" style="display: inline-block">到云</h2>
+          <p class="brand-info__intro">到云——第27组</p>
 
         </div>
         <div class="login-main" v-if="isForgetPwd">
