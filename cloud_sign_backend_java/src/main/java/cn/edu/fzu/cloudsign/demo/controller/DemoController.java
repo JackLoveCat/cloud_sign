@@ -28,9 +28,4 @@ public class DemoController {
 		return AjaxResult.success(demoStr);
 	}
 
-	@PostMapping("/postdemo")
-	public AjaxResult postDemo(@RequestBody Demo demo) {
-		System.out.println(demo.getKey() + ":" + demo.getValue());
-		return AjaxResult.success();
-	}
 }
