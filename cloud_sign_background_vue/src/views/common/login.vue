@@ -30,10 +30,7 @@
               <a @click="isForgetPwd=!isForgetPwd">忘记密码？</a>
             </el-form-item>
             <el-form-item>
-              <el-radio v-model="dataForm.role" label="1">学生</el-radio>
-              <el-radio v-model="dataForm.role" label="2">教师</el-radio>
-              <el-radio v-model="dataForm.role" label="3">教务处</el-radio>
-              &nbsp;&nbsp;<el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>
+              <el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
             </el-form-item>
           </el-form>

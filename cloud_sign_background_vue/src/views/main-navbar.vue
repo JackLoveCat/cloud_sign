@@ -2,7 +2,7 @@
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="site-navbar__brand-lg" href="javascript:;">熊猫班课</a>
+        <a class="site-navbar__brand-lg" href="javascript:;">到云</a>
         <a class="site-navbar__brand-mini" href="javascript:;">班课</a>
       </h1>
     </div>
@@ -24,14 +24,6 @@
             </el-badge>
           </template>
         </el-menu-item>
-
-
-
-        <el-submenu index="2">
-          <template slot="title">Git源码</template>
-          <el-menu-item index="1"><a href="https://github.com/szysammie/cgybk-vue-master" target="_blank">前端</a></el-menu-item>
-          <el-menu-item index="2"><a href="https://github.com/2515106327/JobSubmissionSystem" target="_blank">后端</a></el-menu-item>
-        </el-submenu>
         <el-menu-item class="site-navbar__avatar" index="3">
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link">
