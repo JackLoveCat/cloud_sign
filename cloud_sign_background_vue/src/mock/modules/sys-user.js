@@ -5,7 +5,7 @@ var dataList = []
 for (let i = 0; i < Math.floor(Math.random() * 10 + 1); i++) {
   dataList.push(Mock.mock({
     'userId': '@increment',
-    'name': 'Sammie',
+    'name': '管理员',
     'email': '@email',
     'mobile': /^1[0-9]{10}$/,
     'status': 1,
@@ -91,65 +91,65 @@ export  function getClass() {
       'joinedCourses' : [
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'文成',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'沈祖阳',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'文成',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'沈祖阳',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'文成',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'沈祖阳',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'文成',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
         {
           'cId':11112,
-          'cName':'高等数学',
+          'cName':'工程实践',
           'scName':'计算机学院',
-          'tName':'沈祖阳',
+          'tName':'hmm',
           'cImgSrc':`/static/img/avatar.03cb40b.png`,
           'tImgSrc':`/static/img/avatar.03cb40b.png`,
         },
@@ -220,151 +220,151 @@ export  function getPartner() {
           [
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'张三',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'张三',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'李四',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'张三',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'张三',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'李四',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },{
             'sImgSrc':'/static/img/avatar.03cb40b.png',
-            'sName':'刘洋',
+            'sName':'hmm',
             'sId':'1706034111'
           },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'刘洋',
+              'sName':'hmm',
               'sId':'1706034106'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'张三',
+              'sName':'hmm',
               'sId':'1706034111'
             },
             {
               'sImgSrc':'/static/img/avatar.03cb40b.png',
-              'sName':'王五',
+              'sName':'hmm',
               'sId':'1706034108'
             },
 
@@ -385,7 +385,7 @@ export  function getClassInfo() {
     data:
         {
           'cImgSrc':'/static/img/avatar.03cb40b.png',
-          'cName':'高等数学',
+          'cName':'工程实践',
           'cId':'EK2305',
           'status':200,
           'pubWNum':3,
@@ -673,31 +673,31 @@ export  function getEvaluateList() {
         "publishEstimates": [
           {
             "cName": "本月评价",
-            "epStartTime": "2019-03-16",
+            "epStartTime": "2020-03-19",
             "epId": "2",
             "activityImgSrc": "/static/img/avatar.03cb40b.png"
           },
           {
             "cName": "第一月评价",
-            "epStartTime": "2019-03-15",
+            "epStartTime": "2020-03-19",
             "epId": "4",
             "activityImgSrc": "/static/img/avatar.03cb40b.png"
           },
           {
             "cName": "第二月评价",
-            "epStartTime": "2019-03-11",
+            "epStartTime": "2020-03-19",
             "epId": "2",
             "activityImgSrc": "/static/img/avatar.03cb40b.png"
           },
           {
             "cName": "第三月评价",
-            "epStartTime": "2019-03-14",
+            "epStartTime": "2020-03-19",
             "epId": "2",
             "activityImgSrc": "/static/img/avatar.03cb40b.png"
           },
           {
             "cName": "第四月评价",
-            "epStartTime": "2019-03-17",
+            "epStartTime": "2020-03-19",
             "epId": "2",
             "activityImgSrc": "/static/img/avatar.03cb40b.png"
           },
