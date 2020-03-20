@@ -1,7 +1,13 @@
 <template>
-  <div id="app"
-       class="container">
+  <div id="app" class="container">
     <Nav v-if="isShowNav" />
+    <RegisterAndLogin
+      :visible="isShowLogin"
+      :isMobile="true"
+      :handleFlag="handleFlag"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    ></RegisterAndLogin>
     <div class=" layout">
       <router-view />
       <Slider v-if="isShowSlider"></Slider>
@@ -18,6 +24,7 @@ import Nav from "@/components/nav.vue"; // @ is an alias to /src
 import Slider from "@/components/slider.vue"; // @ is an alias to /src
 import Footer from "@/components/footer.vue"; // @ is an alias to /src
 import ArrowUp from "@/components/arrowUp.vue"; // @ is an alias to /src
+import RegisterAndLogin from "@/components/registerAndLogin.vue";
 import { isMobileOrPc } from "@/utils/utils";
 
 // 移动端 rem 单位适配
@@ -34,12 +41,14 @@ if (isMobileOrPc()) {
     Nav,
     Slider,
     ArrowUp,
-    Footer
+    Footer,
+    RegisterAndLogin
   }
 })
 export default class App extends Vue {
   private isShowNav: boolean = false;
   private isShowSlider: boolean = false;
+  private isShowLogin: boolean = false;
   mounted(): void {
     this.routeChange(this.$route, this.$route);
   }
@@ -47,9 +56,11 @@ export default class App extends Vue {
   routeChange(val: Route, oldVal: Route): void {
     const referrer: any = document.getElementById("referrer");
     if (val.path === "/") {
+      this.isShowLogin = true;
       this.isShowNav = false;
       referrer.setAttribute("content", "always");
     } else {
+      this.isShowLogin = false;
       this.isShowNav = true;
       referrer.setAttribute("content", "never");
     }
