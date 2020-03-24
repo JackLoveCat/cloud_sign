@@ -1,0 +1,16 @@
+// font
+@weuiFontEN: -apple-system-font, "Helvetica Neue";
+@weuiFontCN: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei";
+@weuiFontSans: sans-serif;
+@weuiFontDefault: @weuiFontEN, @weuiFontSans;
+
+@currentWidth: 100vw;
+@defaultWidth: 414px;
+.reWidth(@px) {
+  @width: @px / @defaultWidth * @currentWidth;
+}
+@currentHeight: 100vh;
+@defaultHeight: 736px;
+.reHeight(@px) {
+  @height: @px / @defaultHeight * @currentHeight;
+}

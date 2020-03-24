@@ -60,15 +60,7 @@ export default new Router({
       path: "/articleDetail",
       name: "articleDetail",
       component: () =>
-        import(
-          /* webpackChunkName: "articleDetail" */ "../views/articleDetail.vue"
-        )
+        import(/* webpackChunkName: " */ "../views/articleDetail.vue")
     }
-    // {
-    //   path: "*",
-    //   redirect: {
-    //     name: "home"
-    //   }
-    // }
   ]
 });
