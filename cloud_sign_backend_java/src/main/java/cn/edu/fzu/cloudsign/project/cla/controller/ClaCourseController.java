@@ -59,7 +59,7 @@ public class ClaCourseController extends BaseController {
 	/**
 	 * 查询我创建的班课信息列表
 	 */
-	@ApiOperation("查询我创建的班课信息列表")
+	@ApiOperation("查询我创建的班课列表")
 	@PreAuthorize("@ss.hasPermi('cla:course:create')")
 	@GetMapping("/listmycreate")
 	public TableDataInfo listMyCreate(ClaCourse claCourse) {
@@ -73,7 +73,7 @@ public class ClaCourseController extends BaseController {
 	/**
 	 * 查询我加入的班课信息列表
 	 */
-	@ApiOperation("查询我加入的班课信息列表")
+	@ApiOperation("查询我加入的班课列表")
 	@PreAuthorize("@ss.hasPermi('cla:course:join')")
 	@GetMapping("/listmyjoin")
 	public TableDataInfo listMyJoin(ClaCourse claCourse) {
@@ -107,8 +107,7 @@ public class ClaCourseController extends BaseController {
 	/**
 	 * 新增班课信息
 	 */
-	@ApiOperation("新增班课信息")
-	@PreAuthorize("@ss.hasPermi('cla:course:list')")
+	@PreAuthorize("@ss.hasPermi('')")
 	@Log(title = "班课信息", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody ClaCourse claCourse) {
@@ -118,7 +117,7 @@ public class ClaCourseController extends BaseController {
 	/**
 	 * 修改班课信息
 	 */
-	@ApiOperation("修改班课信息")
+	@ApiOperation("修改班课")
 	@PreAuthorize("@ss.hasPermi('cla:course:create')")
 	@Log(title = "班课信息", businessType = BusinessType.UPDATE)
 	@PutMapping
@@ -129,7 +128,7 @@ public class ClaCourseController extends BaseController {
 	/**
 	 * 删除班课信息
 	 */
-	@ApiOperation("删除班课信息")
+	@ApiOperation("删除班课")
 	@PreAuthorize("@ss.hasPermi('cla:course:create')")
 	@Log(title = "班课信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{courseIds}")
