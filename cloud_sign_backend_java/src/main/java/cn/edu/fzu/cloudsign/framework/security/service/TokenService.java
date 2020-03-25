@@ -62,16 +62,17 @@ public class TokenService
     public LoginUser getLoginUser(HttpServletRequest request)
     {
         // 获取请求携带的令牌
-        String token = getToken(request);
-        if (StringUtils.isNotEmpty(token))
-        {
-            Claims claims = parseToken(token);
-            // 解析对应的权限以及用户信息
-            String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
-            String userKey = getTokenKey(uuid);
-            LoginUser user = redisCache.getCacheObject(userKey);
-            return user;
-        }
+//        String token = getToken(request);
+//        if (StringUtils.isNotEmpty(token))
+//        {
+//            Claims claims = parseToken(token);
+//            // 解析对应的权限以及用户信息
+//            String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
+//            String userKey = getTokenKey(uuid);
+//            LoginUser user = redisCache.getCacheObject(userKey);
+//            return user;
+//        }
+//        return null;
         LoginUser admin = new LoginUser(new SysUser(1L), null);
         //直接把超时设成一天后
         admin.setExpireTime(System.currentTimeMillis()+86400000);

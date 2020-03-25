@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.fzu.cloudsign.project.system.mapper.SysUniacadaMapper">
+    
+    <resultMap type="SysUniacada" id="SysUniacadaResult">
+        <result property="uniacadaId"    column="uniacada_id"    />
+        <result property="universityName"    column="university_name"    />
+        <result property="academyName"    column="academy_name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysUniacadaVo">
+        select uniacada_id, university_name, academy_name, order_num, create_by, create_time, update_by, update_time, remark from sys_uniacada
+    </sql>
+
+    <select id="selectSysUniacadaList" parameterType="SysUniacada" resultMap="SysUniacadaResult">
+        <include refid="selectSysUniacadaVo"/>
+        <where>  
+            <if test="universityName != null  and universityName != ''"> and university_name like concat('%', #{universityName}, '%')</if>
+            <if test="academyName != null  and academyName != ''"> and academy_name like concat('%', #{academyName}, '%')</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUniacadaById" parameterType="Long" resultMap="SysUniacadaResult">
+        <include refid="selectSysUniacadaVo"/>
+        where uniacada_id = #{uniacadaId}
+    </select>
+        
+    <insert id="insertSysUniacada" parameterType="SysUniacada" useGeneratedKeys="true" keyProperty="uniacadaId">
+        insert into sys_uniacada
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="universityName != null  and universityName != ''">university_name,</if>
+            <if test="academyName != null  and academyName != ''">academy_name,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="universityName != null  and universityName != ''">#{universityName},</if>
+            <if test="academyName != null  and academyName != ''">#{academyName},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUniacada" parameterType="SysUniacada">
+        update sys_uniacada
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="universityName != null  and universityName != ''">university_name = #{universityName},</if>
+            <if test="academyName != null  and academyName != ''">academy_name = #{academyName},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where uniacada_id = #{uniacadaId}
+    </update>
+
+    <delete id="deleteSysUniacadaById" parameterType="Long">
+        delete from sys_uniacada where uniacada_id = #{uniacadaId}
+    </delete>
+
+    <delete id="deleteSysUniacadaByIds" parameterType="String">
+        delete from sys_uniacada where uniacada_id in 
+        <foreach item="uniacadaId" collection="array" open="(" separator="," close=")">
+            #{uniacadaId}
+        </foreach>
+    </delete>
+    
+</mapper>
