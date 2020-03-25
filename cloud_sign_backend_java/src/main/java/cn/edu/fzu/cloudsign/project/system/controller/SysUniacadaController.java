@@ -15,6 +15,8 @@ import cn.edu.fzu.cloudsign.framework.aspectj.lang.annotation.Log;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.enums.BusinessType;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUniacada;
 import cn.edu.fzu.cloudsign.project.system.service.ISysUniacadaService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
@@ -25,6 +27,7 @@ import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
  * @author fanxuenan
  * @date 2020-03-21
  */
+@Api("学校院系")
 @RestController
 @RequestMapping("/system/uniacada")
 public class SysUniacadaController extends BaseController
@@ -35,6 +38,7 @@ public class SysUniacadaController extends BaseController
     /**
      * 查询学校院系列表
      */
+    @ApiOperation("查询学校院系列表")
     @PreAuthorize("@ss.hasPermi('system:uniacada')")
     @GetMapping("/list")
     public TableDataInfo list(SysUniacada sysUniacada)

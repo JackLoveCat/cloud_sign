@@ -24,11 +24,14 @@ import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUser;
 import cn.edu.fzu.cloudsign.project.system.service.ISysUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 登录验证
  * 
  */
+@Api("登录验证")
 @RestController
 public class SysLoginController extends BaseController {
 	@Autowired
@@ -52,6 +55,7 @@ public class SysLoginController extends BaseController {
 	 * @param uuid     唯一标识
 	 * @return 结果
 	 */
+	@ApiOperation("登录")
 	@PostMapping("/login")
 	public AjaxResult login(String username, String password, String code, String uuid) {
 		AjaxResult ajax = AjaxResult.success();
@@ -62,11 +66,12 @@ public class SysLoginController extends BaseController {
 	}
 
 	/**
-	 * 注册用户
+	 * 用户注册
 	 * 
 	 * @param user
 	 * @return
 	 */
+	@ApiOperation("用户注册")
 	@Log(title = "用户管理", businessType = BusinessType.INSERT)
 	@PostMapping("/register")
 	public AjaxResult register(@Validated @RequestBody SysUser user) {
