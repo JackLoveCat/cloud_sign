@@ -1,0 +1,73 @@
+@import "../../base/fn";
+@import "weui-btn_global";
+@import "weui-btn_default";
+@import "weui-btn_primary";
+@import "weui-btn_warn";
+@import "weui-btn_disabled";
+@import "weui-btn_loading";
+@import "weui-btn_cell";
+
+button,
+input {
+  &.weui-btn {
+    border-width: 0;
+    outline: 0;
+    -webkit-appearance: none;
+    &:focus {
+      outline: 0;
+    }
+  }
+  &.weui-btn_inline,
+  &.weui-btn_mini {
+    width: auto;
+  }
+}
+
+.weui-btn_mini {
+  display: inline-block;
+  width: auto;
+  padding: 0 unit(12px / @weuiBtnMiniFontSize, em);
+  line-height: unit(@weuiBtnMiniHeight / @weuiBtnMiniFontSize);
+  font-size: @weuiBtnMiniFontSize;
+}
+
+/* gap between btn */
+.weui-btn:not(.weui-btn_mini) + .weui-btn:not(.weui-btn_mini) {
+  margin-top: @weuiBtnDefaultGap;
+}
+
+.weui-btn.weui-btn_inline + .weui-btn.weui-btn_inline {
+  margin-top: auto;
+  margin-left: @weuiBtnDefaultGap;
+}
+
+.weui-btn-area {
+  margin: 48px @weuiBtnDefaultGap 8px;
+}
+.weui-btn-area_inline {
+  display: flex;
+  .weui-btn {
+    margin-top: auto;
+    margin-right: @weuiBtnDefaultGap;
+    width: 100%;
+    flex: 1;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.weui-btn_reset {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  outline: 0;
+}
+.weui-btn_icon {
+  font-size: 0;
+  &:active {
+    [class*="weui-icon-"] {
+      color: var(--weui-FG-1);
+    }
+  }
+}

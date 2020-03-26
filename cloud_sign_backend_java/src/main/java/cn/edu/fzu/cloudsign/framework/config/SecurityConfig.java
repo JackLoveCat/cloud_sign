@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     
     /**
      * 解决 无法直接注入 AuthenticationManager
+     * TODO
      *
      * @return
      * @throws Exception
@@ -89,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/captchaImage").anonymous()
+                .antMatchers("/login", "/captchaImage","/register").anonymous()
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",
@@ -99,13 +100,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 ).permitAll()
                 .antMatchers("/profile/**").anonymous()
                 .antMatchers("/common/download**").anonymous()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/*/api-docs").permitAll()
+                .antMatchers("/swagger-ui.html").anonymous()
+                .antMatchers("/swagger-resources/**").anonymous()
+                .antMatchers("/webjars/**").anonymous()
+                .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/druid/**").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()//.authenticated()//.permitAll()
                 .and()
                 .headers().frameOptions().disable();
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);

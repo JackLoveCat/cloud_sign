@@ -1,0 +1,32 @@
+@import "../theme/index";
+
+.setColor(
+  --weui-BG-COLOR-ACTIVE,
+  #ececec,
+  overlay(rgba(255, 255, 255, 0.05), #2c2c2c)
+);
+
+// color
+@weuiColorPrimary: var(--weui-BRAND);
+@weuiColorWarn: var(--weui-RED);
+
+// active mask
+@weuiActiveMaskBlack: rgba(0, 0, 0, 0.15);
+
+// link
+@weuiLinkColorDefault: var(--weui-LINK);
+
+// background
+@weuiBgColorDefault: var(--weui-BG-0);
+@weuiBgColorPrimary: var(--weui-BG-1);
+@weuiBgColorActive: var(--weui-BG-COLOR-ACTIVE);
+
+// line
+@weuiLineColorLight: var(--weui-FG-3);
+@weuiLineColorDark: var(--weui-FG-2);
+
+// text
+@weuiTextColorTitle: var(--weui-FG-0);
+@weuiTextColorDesc: var(--weui-FG-1);
+@weuiTextColorTips: var(--weui-FG-2);
+@weuiTextColorWarn: @weuiColorWarn;

@@ -72,10 +72,11 @@ public class TokenService
             LoginUser user = redisCache.getCacheObject(userKey);
             return user;
         }
-        LoginUser admin = new LoginUser(new SysUser(1L), null);
-        //直接把超时设成一天后
-        admin.setExpireTime(System.currentTimeMillis()+86400000);
-        return admin;
+        return null;
+//        LoginUser admin = new LoginUser(new SysUser(1L), null);
+//        //直接把超时设成一天后
+//        admin.setExpireTime(System.currentTimeMillis()+86400000);
+//        return admin;
     }
 
     /**

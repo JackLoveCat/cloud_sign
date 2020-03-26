@@ -1,48 +1,71 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Vue from "vue";
+import VueRouter, { Route } from "vue-router";
+import Home from "../views/Home.vue";
+import Login from "../components/page/Login.vue";
+import store from "../store/index";
+import Register from "../components/page/Register.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
+    path: "/",
+    name: "Home",
     component: Home,
+    meta: {
+      title: "首页"
+    }
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      title: "登录",
+      showFoot: true
+    }
   },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: {
+      title: "注册",
+      showFoot: true
+    }
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/About.vue")
+  }
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
-router.beforeEach((to, _from, next) => {
-  // 路由中设置的needLogin字段就在to当中
-  if (window.localStorage.data) {
-    // console.log(to.path) //每次跳转的路径
-    if (to.path === '/') {
-      // 登录状态下 访问login.vue页面 会跳到index.vue
-      next({ path: '/index' });
+// 全局路由守卫
+router.beforeEach((to: Route, from: Route, next: Function) => {
+  console.log("cs_guards" + to.name + "  " + from.name);
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  if (store.state.isLogin) {
+    if (to.path == "/login" || to.path == "/register") {
+      next("/home");
     } else {
       next();
     }
-  } else if (to.path === '/') {
-    // 如果是登录页面的话，直接next() -->解决注销后的循环执行bug
-    next();
   } else {
-    // 否则 跳转到登录页面
-    next({ path: '/' });
+    if (to.path == "/login" || to.path == "/register") {
+      next();
+    } else {
+      next("/login");
+    }
   }
 });
-
 export default router;

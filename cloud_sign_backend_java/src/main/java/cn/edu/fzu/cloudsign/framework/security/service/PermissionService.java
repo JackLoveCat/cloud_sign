@@ -2,22 +2,21 @@ package cn.edu.fzu.cloudsign.framework.security.service;
 
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
+import cn.edu.fzu.cloudsign.common.utils.StringUtils;
+import cn.edu.fzu.cloudsign.framework.security.LoginUser;
+
 /**
- * TODO
- * 增加自定义权限实现
+ * TODO 增加自定义权限实现
  */
 @Service("ss")
 public class PermissionService {
 	/** 所有权限标识 */
 	private static final String ALL_PERMISSION = "*:*:*";
-
-	/** 管理员角色权限标识 */
-	private static final String SUPER_ADMIN = "admin";
-
-	private static final String ROLE_DELIMETER = ",";
 
 	private static final String PERMISSION_DELIMETER = ",";
 
@@ -32,16 +31,14 @@ public class PermissionService {
 	 */
 	public boolean hasPermi(String permission) {
 		return true;
-//        if (StringUtils.isEmpty(permission))
-//        {
-//            return false;
-//        }
-//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//        if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions()))
-//        {
-//            return false;
-//        }
-//        return hasPermissions(loginUser.getPermissions(), permission);
+//		if (StringUtils.isEmpty(permission)) {
+//			return false;
+//		}
+//		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//		if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
+//			return false;
+//		}
+//		return hasPermissions(loginUser.getPermissions(), permission);
 	}
 
 	/**
@@ -73,64 +70,6 @@ public class PermissionService {
 //		Set<String> authorities = loginUser.getPermissions();
 //		for (String permission : permissions.split(PERMISSION_DELIMETER)) {
 //			if (permission != null && hasPermissions(authorities, permission)) {
-//				return true;
-//			}
-//		}
-//		return false;
-	}
-
-	/**
-	 * 判断用户是否拥有某个角色
-	 * 
-	 * @param role 角色字符串
-	 * @return 用户是否具备某角色
-	 */
-	public boolean hasRole(String role) {
-		return true;
-//		if (StringUtils.isEmpty(role)) {
-//			return false;
-//		}
-//		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//		if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getUser().getRoles())) {
-//			return false;
-//		}
-//		for (SysRole sysRole : loginUser.getUser().getRoles()) {
-//			String roleKey = sysRole.getRoleKey();
-//			if (SUPER_ADMIN.contains(roleKey) || roleKey.contains(StringUtils.trim(role))) {
-//				return true;
-//			}
-//		}
-//		return false;
-	}
-
-	/**
-	 * 验证用户是否不具备某角色，与 isRole逻辑相反。
-	 *
-	 * @param role 角色名称
-	 * @return 用户是否不具备某角色
-	 */
-	public boolean lacksRole(String role) {
-		return true;
-//		return hasRole(role) != true;
-	}
-
-	/**
-	 * 验证用户是否具有以下任意一个角色
-	 *
-	 * @param roles 以 ROLE_NAMES_DELIMETER 为分隔符的角色列表
-	 * @return 用户是否具有以下任意一个角色
-	 */
-	public boolean hasAnyRoles(String roles) {
-		return true;
-//		if (StringUtils.isEmpty(roles)) {
-//			return false;
-//		}
-//		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//		if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getUser().getRoles())) {
-//			return false;
-//		}
-//		for (String role : roles.split(ROLE_DELIMETER)) {
-//			if (hasRole(role)) {
 //				return true;
 //			}
 //		}

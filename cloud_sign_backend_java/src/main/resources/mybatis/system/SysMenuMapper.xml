@@ -14,6 +14,7 @@
 		<result property="orderNum" column="order_num" />
 		<result property="isMenu" column="is_menu" />
 		<result property="isPage" column="is_page" />
+		<result property="perms" column="perms" />
 		<result property="createBy" column="create_by" />
 		<result property="createTime" column="create_time" />
 		<result property="updateTime" column="update_time" />
@@ -22,8 +23,8 @@
 	</resultMap>
 
 	<sql id="selectMenuVo">
-		select menu_id, menu_name, parent_id, icon, link,order_num,
-		is_menu,is_page, create_by, create_time, update_time,update_by, remark
+		select menu_id, menu_name, parent_id, icon, link, order_num,
+		is_menu, is_page, perms, create_by, create_time, update_time, update_by, remark
 		from sys_menu
 	</sql>
 
@@ -40,53 +41,46 @@
 
 	<select id="selectMenuTreeAll" resultMap="SysMenuResult">
 		select distinct
-		m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible,
-		ifnull(m.perms,'') as perms, m.is_frame, m.menu_type, m.icon,
-		m.order_num, m.create_time
-		from sys_menu m where m.menu_type in ('M',
-		'C') and m.visible = 0
+		menu_id, menu_name, parent_id, icon, link, order_num,is_menu, 
+		is_page,ifnull(m.perms,'') as perms, create_by, create_time, update_time, update_by, remark
+		from sys_menu m 
 		order by m.parent_id, m.order_num
 	</select>
 
 	<select id="selectMenuListByUserId" parameterType="SysMenu"
 		resultMap="SysMenuResult">
-		select distinct m.menu_id, m.parent_id, m.menu_name, m.path,
-		m.component, m.visible, ifnull(m.perms,'') as perms, m.is_frame,
-		m.menu_type, m.icon, m.order_num, m.create_time
+		select distinct m.menu_id, m.menu_name, m.parent_id, m.icon, m.link, m.order_num, m.is_menu, 
+		m.is_page,ifnull(m.perms,'') as perms, m.create_by, m.create_time, m.update_time, m.update_by, m.remark
 		from sys_menu m
-		left
-		join sys_role_menu rm on m.menu_id = rm.menu_id
-		left join sys_user_role
-		ur on rm.role_id = ur.role_id
-		left join sys_role ro on ur.role_id =
-		ro.role_id
+		left join sys_role_menu rm 
+		on m.menu_id = rm.menu_id
+		left join sys_user_role	ur 
+		on rm.role_id = ur.role_id
+		left join sys_role ro 
+		on ur.role_id =	ro.role_id
 		where ur.user_id = #{params.userId}
 		<if test="menuName != null and menuName != ''">
-			AND menu_name like concat('%', #{menuName}, '%')
-		</if>
-		<if test="visible != null and visible != ''">
-			AND visible = #{visible}
+			AND m.menu_name like concat('%', #{menuName}, '%')
 		</if>
 		order by m.parent_id, m.order_num
 	</select>
 
 	<select id="selectMenuTreeByUserId" parameterType="Long"
 		resultMap="SysMenuResult">
-		select distinct m.menu_id, m.parent_id, m.menu_name, m.path,
-		m.component, m.visible, ifnull(m.perms,'') as perms, m.is_frame,
-		m.menu_type, m.icon, m.order_num, m.create_time
+		select distinct m.menu_id, m.menu_name, m.parent_id, m.icon, m.link, m.order_num, m.is_menu, 
+		m.is_page,ifnull(m.perms,'') as perms, m.create_by, m.create_time, m.update_time, m.update_by, m.remark
 		from sys_menu m
-		left
-		join sys_role_menu rm on m.menu_id = rm.menu_id
-		left join sys_user_role
-		ur on rm.role_id = ur.role_id
-		left join sys_role ro on ur.role_id =
-		ro.role_id
-		left join sys_user u on ur.user_id = u.user_id
+		left join sys_role_menu rm 
+		on m.menu_id = rm.menu_id
+		left join sys_user_role	ur 
+		on rm.role_id = ur.role_id
+		left join sys_role ro 
+		on ur.role_id =	ro.role_id
+		left join sys_user u 
+		on ur.user_id = u.user_id
 		where
 		u.user_id = #{userId}
-		and m.menu_type in ('M', 'C') and m.visible = 0
-		AND ro.status = 0
+		and ro.status = 0
 		order by m.parent_id, m.order_num
 	</select>
 
@@ -94,8 +88,8 @@
 		resultType="Integer">
 		select m.menu_id, m.parent_id
 		from sys_menu m
-		left join
-		sys_role_menu rm on m.menu_id = rm.menu_id
+		left join	sys_role_menu rm 
+		on m.menu_id = rm.menu_id
 		where rm.role_id = #{roleId}
 		and m.menu_id not in (select m.parent_id from sys_menu m inner join
 		sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = #{roleId})
@@ -113,12 +107,11 @@
 		resultType="String">
 		select distinct m.perms
 		from sys_menu m
-		left join
-		sys_role_menu rm on m.menu_id = rm.menu_id
+		left join sys_role_menu rm 
+		on m.menu_id = rm.menu_id
 		left join sys_user_role ur
 		on rm.role_id = ur.role_id
-		where ur.user_id =
-		#{userId}
+		where ur.user_id = #{userId}
 	</select>
 
 	<select id="selectMenuById" parameterType="Long"
@@ -128,8 +121,7 @@
 	</select>
 
 	<select id="hasChildByMenuId" resultType="Integer">
-		select count(1) from
-		sys_menu where parent_id = #{menuId}
+		select count(1) from sys_menu where parent_id = #{menuId}
 	</select>
 
 	<select id="checkMenuNameUnique" parameterType="SysMenu"
@@ -143,58 +135,51 @@
 		<set>
 			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
 			<if test="parentId != null">parent_id = #{parentId},</if>
-			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
-			<if test="path != null and path != ''">path = #{path},</if>
-			<if test="component != null and component != ''">component = #{component},</if>
-			<if test="isFrame != null and isFrame != ''">is_frame = #{isFrame},</if>
-			<if test="menuType != null and menuType != ''">menu_type = #{menuType},</if>
-			<if test="visible != null">visible = #{visible},</if>
-			<if test="perms !=null">perms = #{perms},</if>
 			<if test="icon !=null and icon != ''">icon = #{icon},</if>
+			<if test="link != null and link != ''">link = #{link},</if>
+			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+			<if test="isMenu !=null and isMenu != ''">is_menu = #{isMenu},</if>
+			<if test="isPage !=null and isPage != ''">is_page = #{isPage},</if>
+			<if test="perms !=null and perms != ''">perms = #{perms},</if>
 			<if test="remark != null and remark != ''">remark = #{remark},</if>
 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
 			update_time = sysdate()
 		</set>
 		where menu_id = #{menuId}
 	</update>
-
+		
 	<insert id="insertMenu" parameterType="SysMenu">
 		insert into sys_menu(
 		<if test="menuId != null and menuId != 0">menu_id,</if>
-		<if test="parentId != null and parentId != 0">parent_id,</if>
 		<if test="menuName != null and menuName != ''">menu_name,</if>
-		<if test="orderNum != null and orderNum != ''">order_num,</if>
-		<if test="path != null and path != ''">path,</if>
-		<if test="component != null and component != ''">component,</if>
-		<if test="isFrame != null and isFrame != ''">is_frame,</if>
-		<if test="menuType != null and menuType != ''">menu_type,</if>
-		<if test="visible != null">visible,</if>
-		<if test="perms !=null and perms != ''">perms,</if>
+		<if test="parentId != null and parentId != 0">parent_id,</if>
 		<if test="icon != null and icon != ''">icon,</if>
+		<if test="link != null and link != ''">link,</if>
+		<if test="orderNum != null and orderNum != ''">order_num,</if>
+		<if test="isMenu != null and isMenu != ''">is_menu,</if>				
+		<if test="isPage != null and isPage != ''">is_page,</if>				
+		<if test="perms !=null and perms != ''">perms,</if>
 		<if test="remark != null and remark != ''">remark,</if>
 		<if test="createBy != null and createBy != ''">create_by,</if>
 		create_time
 		)values(
 		<if test="menuId != null and menuId != 0">#{menuId},</if>
-		<if test="parentId != null and parentId != 0">#{parentId},</if>
 		<if test="menuName != null and menuName != ''">#{menuName},</if>
-		<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
-		<if test="path != null and path != ''">#{path},</if>
-		<if test="component != null and component != ''">#{component},</if>
-		<if test="isFrame != null and isFrame != ''">#{isFrame},</if>
-		<if test="menuType != null and menuType != ''">#{menuType},</if>
-		<if test="visible != null">#{visible},</if>
-		<if test="perms !=null and perms != ''">#{perms},</if>
+		<if test="parentId != null and parentId != 0">#{parentId},</if>
 		<if test="icon != null and icon != ''">#{icon},</if>
+		<if test="link != null and link != ''">#{link},</if>
+		<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+		<if test="isMenu != null and isMenu != ''">#{isMenu},</if>				
+		<if test="isPage != null and isPage != ''">#{isPage},</if>				
+		<if test="perms !=null and perms != ''">#{perms},</if>
 		<if test="remark != null and remark != ''">#{remark},</if>
 		<if test="createBy != null and createBy != ''">#{createBy},</if>
 		sysdate()
 		)
 	</insert>
-
+		
 	<delete id="deleteMenuById" parameterType="Long">
-		delete from sys_menu
-		where menu_id = #{menuId}
+		delete from sys_menu where menu_id = #{menuId}
 	</delete>
 
 </mapper> 
