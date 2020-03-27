@@ -31,9 +31,11 @@ server:
 
 # 日志配置
 logging:
+  file: ./cloudsign_log/cloudsign.log
   level:
     cn.edu.fzu.cloudsign: debug
     org.springframework: warn
+
 
 # Spring配置
 spring:

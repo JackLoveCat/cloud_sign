@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.edu.fzu.cloudsign.common.constant.UserConstants;
 import cn.edu.fzu.cloudsign.common.exception.CustomException;
 import cn.edu.fzu.cloudsign.common.utils.StringUtils;
+import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseMapper;
 import cn.edu.fzu.cloudsign.project.system.domain.SysRole;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUser;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUserRole;
@@ -36,6 +37,9 @@ public class SysUserServiceImpl implements ISysUserService {
 
 	@Autowired
 	private SysUserRoleMapper userRoleMapper;
+
+	@Autowired
+	private ClaCourseMapper claCourseMapper;
 
 	/**
 	 * 根据条件分页查询用户列表
@@ -296,8 +300,35 @@ public class SysUserServiceImpl implements ISysUserService {
 	public int deleteUserByIds(Long[] userIds) {
 		for (Long userId : userIds) {
 			checkUserAllowed(new SysUser(userId));
+			if (countClaCourseTeacherByUserId(userId) > 0) {
+				throw new CustomException("用户已有创建的课程，不能删除");
+			}
+			if (countClaCourseStudentByUserId(userId) > 0) {
+				throw new CustomException("用户已有加入的课程，不能删除");
+			}
 		}
+
 		return userMapper.deleteUserByIds(userIds);
+	}
+
+	/**
+	 * 查询教师创建的课程
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private int countClaCourseTeacherByUserId(Long userId) {
+		return claCourseMapper.countClaCourseTeacherByUserId(userId);
+	}
+
+	/**
+	 * 查询学生加入的课程
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private int countClaCourseStudentByUserId(Long userId) {
+		return claCourseMapper.countClaCourseStudentByUserId(userId);
 	}
 
 }
