@@ -103,6 +103,8 @@ insert into sys_menu values('11','菜单管理','1','#','#',1,0,1,'system:menu',
 insert into sys_menu values('12','角色管理','1','#','#',2,0,1,'system:role','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('13','用户管理','1','#','#',3,0,1,'system:user','admin',sysdate(),'admin',sysdate(),null);
 
+insert into sys_menu values('21','我创建的','2','#','#',1,0,1,'cla:course:create','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('22','我加入的','2','#','#',2,0,1,'cla:course:join','admin',sysdate(),'admin',sysdate(),null);
 
 -- 用户信息表
 -- ----------------------------
