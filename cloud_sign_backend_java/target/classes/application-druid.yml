@@ -6,10 +6,12 @@ spring:
         druid:
             # 数据源
             master:
-                # url: jdbc:mysql://123.206.49.117:3306/cloud_sign?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                url: jdbc:mysql://localhost:3306/cloud_sign?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://123.206.49.117:3306/cloud_sign?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: cloudsign
                 password: CloudSign@126.com
+                #url: jdbc:mysql://localhost:3306/cloud_sign?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                #username: root
+                #password: 890511
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
