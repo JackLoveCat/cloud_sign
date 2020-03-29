@@ -21,7 +21,7 @@
     export default {
       data() {
         return {
-          classList: [],
+          schoolList: [],
           loading: true,
           classId:'',
         }
@@ -35,18 +35,18 @@
           'Class':Class
         },
         mounted() {
-          this.getClass()
+          this.getSchoolList()
         },
         methods:
           {
-            getClass() {
+            getSchoolList() {
               this.$http({
-                url: this.$http.adornUrl('/student/queryJoinedCourses.do'),
+                url: this.$http.adornUrl('/student/getSchoolList.do'),
                 method: 'get',
               }).then(({data}) => {
                 if (data && data.status === 200) {
                   // cId cName tName scName cPath
-                  this.classList = data.joinedCourses
+                  this.schoolList = data.joinedCourses
                   this.loading = false
                 }else{
                   this.$message({
