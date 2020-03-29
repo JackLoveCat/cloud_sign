@@ -90,4 +90,20 @@ public interface ClaCourseMapper {
 	 * @return
 	 */
 	public ClaCourse selectClaCourseByCourseNum(String coursenum);
+
+	/**
+	 * 查询教师创建的课程
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public int countClaCourseTeacherByUserId(Long userId);
+
+	/**
+	 * 查询学生加入的课程
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public int countClaCourseStudentByUserId(Long userId);
 }

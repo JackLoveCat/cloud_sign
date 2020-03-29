@@ -158,5 +158,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where course_num = #{coursenum}
     </select>
     
+    <select id="countClaCourseTeacherByUserId" parameterType="Long" resultType="Integer">
+        select count(1) from cla_course c
+		inner join cla_course_teacher ct
+		on c.course_id = ct.course_id
+        where ct.teacher_id = #{userId}
+    </select>    
+    
+    <select id="countClaCourseStudentByUserId" parameterType="Long" resultType="Integer">
+		select count(1) from cla_course c
+		inner join cla_course_student cs
+		on c.course_id = cs.course_id
+        where cs.student_id	= #{userId}
+    </select>  
+    
     
 </mapper>
