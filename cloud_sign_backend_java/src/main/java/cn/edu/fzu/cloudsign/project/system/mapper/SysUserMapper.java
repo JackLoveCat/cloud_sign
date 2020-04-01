@@ -132,4 +132,11 @@ public interface SysUserMapper {
 	 * @return
 	 */
 	public SysUser selectUserByEmail(String email);
+
+	/**
+	 * 通过账户、手机、邮箱获取用户信息
+	 * 
+	 * @param account
+	 */
+	public SysUser selectUserByAccount(String account);
 }

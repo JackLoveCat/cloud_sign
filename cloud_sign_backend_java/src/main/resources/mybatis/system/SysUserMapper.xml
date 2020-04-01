@@ -196,4 +196,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="selectUserVo"/>
 		where u.email = #{email}
 	</select>	
+ 	<select id="selectUserByAccount" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.user_name = #{account} or u.phonenumber = #{account} or u.email = #{account}
+	</select>		
 </mapper> 

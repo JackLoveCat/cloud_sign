@@ -352,6 +352,16 @@ public class SysUserServiceImpl implements ISysUserService {
 	@Override
 	public SysUser selectUserByEmail(String email) {
 		return userMapper.selectUserByEmail(email);
-	};
+	}
+
+	/**
+	 * 通过账户、手机、邮箱获取用户信息
+	 * 
+	 * @param account
+	 */
+	@Override
+	public SysUser selectUserByAccount(String account) {
+		return userMapper.selectUserByAccount(account);
+	}
 
 }
