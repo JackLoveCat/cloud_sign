@@ -76,11 +76,11 @@ public class SysLoginController extends BaseController {
 	 */
 	@ApiOperation("用手机号登录")
 	@PostMapping("/loginbyphone")
-	public AjaxResult loginByPhoneNum(String phoneNum, String password, String code, String uuid) {
+	public AjaxResult loginByPhoneNum(String phonenum, String password, String code, String uuid) {
 		AjaxResult ajax = AjaxResult.success();
-		SysUser user = userService.selectUserByPhoneNum(phoneNum);
+		SysUser user = userService.selectUserByPhoneNum(phonenum);
 		if (StringUtils.isNull(user) || StringUtils.isEmpty(user.getUserName())) {
-			return AjaxResult.error("用户登录失败，手机号码:" + phoneNum + ",不存在");
+			return AjaxResult.error("用户登录失败，手机号码:" + phonenum + ",不存在");
 		}
 		// 生成令牌
 		String token = loginService.login(user.getUserName(), password, code, uuid);
