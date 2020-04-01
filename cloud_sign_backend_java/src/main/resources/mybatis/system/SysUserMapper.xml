@@ -186,5 +186,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{userId}
         </foreach> 
  	</delete>
-	
+ 	
+ 	<select id="selectUserByPhoneNum" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.phonenumber = #{phoneNum}
+	</select>
+
+ 	<select id="selectUserByEmail" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.email = #{email}
+	</select>	
 </mapper> 

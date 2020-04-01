@@ -116,4 +116,20 @@ public interface SysUserMapper {
 	 * @return 结果
 	 */
 	public SysUser checkEmailUnique(String email);
+
+	/**
+	 * 通过电话获取用户信息
+	 * 
+	 * @param phoneNum
+	 * @return
+	 */
+	public SysUser selectUserByPhoneNum(String phoneNum);
+
+	/**
+	 * 通过邮箱获取用户信息
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public SysUser selectUserByEmail(String email);
 }

@@ -66,6 +66,52 @@ public class SysLoginController extends BaseController {
 	}
 
 	/**
+	 * 登录方法
+	 * 
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param captcha  验证码
+	 * @param uuid     唯一标识
+	 * @return 结果
+	 */
+	@ApiOperation("用手机号登录")
+	@PostMapping("/loginbyphone")
+	public AjaxResult loginByPhoneNum(String phoneNum, String password, String code, String uuid) {
+		AjaxResult ajax = AjaxResult.success();
+		SysUser user = userService.selectUserByPhoneNum(phoneNum);
+		if (StringUtils.isNull(user) || StringUtils.isEmpty(user.getUserName())) {
+			return AjaxResult.error("用户登录失败，手机号码:" + phoneNum + ",不存在");
+		}
+		// 生成令牌
+		String token = loginService.login(user.getUserName(), password, code, uuid);
+		ajax.put(Constants.TOKEN, token);
+		return ajax;
+	}
+
+	/**
+	 * 登录方法
+	 * 
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param captcha  验证码
+	 * @param uuid     唯一标识
+	 * @return 结果
+	 */
+	@ApiOperation("用邮箱登录")
+	@PostMapping("/loginbyemail")
+	public AjaxResult loginByEmail(String email, String password, String code, String uuid) {
+		AjaxResult ajax = AjaxResult.success();
+		SysUser user = userService.selectUserByEmail(email);
+		if (StringUtils.isNull(user) || StringUtils.isEmpty(user.getUserName())) {
+			return AjaxResult.error("用户登录失败，邮箱:" + email + ",不存在");
+		}
+		// 生成令牌
+		String token = loginService.login(user.getUserName(), password, code, uuid);
+		ajax.put(Constants.TOKEN, token);
+		return ajax;
+	}
+
+	/**
 	 * 用户注册
 	 * 
 	 * @param user

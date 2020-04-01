@@ -67,7 +67,8 @@ create_time datetime COMMENT '创建时间',
 update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
 update_time datetime COMMENT '更新时间',
 remark VARCHAR ( 500 ) DEFAULT '' COMMENT '备注',
-PRIMARY KEY ( uniacada_id ) 
+PRIMARY KEY ( uniacada_id ),
+unique key (university_name, academy_name)
 ) ENGINE = INNODB auto_increment = 2000 COMMENT = '学校院系表';
 
 -- 初始化学校院系表数据
@@ -92,7 +93,8 @@ create table sys_menu (
   update_by         varchar(64)     default ''                 comment '更新者',
   update_time       datetime                                   comment '更新时间',
   remark            varchar(500)    default ''                 comment '备注',
-  primary key (menu_id)
+  primary key (menu_id),
+  unique key (menu_name)
 ) engine=innodb auto_increment=2000 comment = '菜单管理表';
 
 -- 初始化菜单管理表数据
@@ -118,8 +120,8 @@ user_name VARCHAR ( 30 ) NOT NULL COMMENT '用户账号',
 nick_name VARCHAR ( 30 ) NOT NULL COMMENT '用户昵称',
 student_num VARCHAR ( 20 ) DEFAULT NULL COMMENT '学号',
 user_type VARCHAR ( 2 ) DEFAULT '00' COMMENT '用户类型（00系统用户）',
-email VARCHAR ( 50 ) DEFAULT '' COMMENT '用户邮箱',
-phonenumber VARCHAR ( 11 ) DEFAULT '' COMMENT '手机号码',
+email VARCHAR ( 50 ) DEFAULT NULL COMMENT '用户邮箱',
+phonenumber VARCHAR ( 11 ) DEFAULT NULL COMMENT '手机号码',
 avatar VARCHAR ( 100 ) DEFAULT '' COMMENT '头像地址',
 PASSWORD VARCHAR ( 100 ) DEFAULT '' COMMENT '密码',
 STATUS CHAR ( 1 ) DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
@@ -131,14 +133,17 @@ create_time datetime COMMENT '创建时间',
 update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
 update_time datetime COMMENT '更新时间',
 remark VARCHAR ( 500 ) DEFAULT NULL COMMENT '备注',
-PRIMARY KEY ( user_id ) 
+PRIMARY KEY ( user_id ),
+UNIQUE KEY (email),
+UNIQUE KEY (phonenumber),
+UNIQUE KEY (student_num)
 ) ENGINE = INNODB auto_increment = 100 COMMENT = '用户信息表';
 
 -- 初始化-用户信息表数据
 -- ----------------------------
 INSERT INTO sys_user VALUES (1,NULL,'admin','管理员',NULL,'00','cloudsign@163.com','15888888888','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
-INSERT INTO sys_user VALUES (2,1,'teachertest','教师测试用户',null,'01','test@qq.com','15999999999','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
-INSERT INTO sys_user VALUES (3,1,'studenttest','学生测试用户','190325000','01','test@qq.com','15666666666','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_user VALUES (2,1,'teachertest','教师测试用户',null,'01','teachertest@qq.com','15999999999','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_user VALUES (3,1,'studenttest','学生测试用户','190325000','01','studenttest@qq.com','15666666666','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
 
 
 -- 角色信息表
@@ -158,7 +163,8 @@ create_time datetime COMMENT '创建时间',
 update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
 update_time datetime COMMENT '更新时间',
 remark VARCHAR ( 500 ) DEFAULT NULL COMMENT '备注',
-PRIMARY KEY ( role_id ) 
+PRIMARY KEY ( role_id ) ,
+unique key (role_name)
 ) ENGINE = INNODB auto_increment = 100 COMMENT = '角色信息表';
 
 -- 初始化-角色信息表数据
