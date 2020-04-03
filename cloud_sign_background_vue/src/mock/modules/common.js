@@ -10,7 +10,7 @@ export function login () {
       'msg': 'success',
       'status': 200,
       'token': Mock.Random.string('abcdefghijklmnopqrstuvwxyz0123456789', 32),
-      'timeOut':30
+      'timeOut': 30
     }
   }
 }

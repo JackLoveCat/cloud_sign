@@ -28,6 +28,21 @@ public class SecurityUtils
             throw new CustomException("获取用户账户异常", HttpStatus.UNAUTHORIZED);
         }
     }
+    
+    /**
+     * 获取用户ID
+     **/
+    public static Long getUserId()
+    {
+        try
+        {
+            return getLoginUser().getUser().getUserId();
+        }
+        catch (Exception e)
+        {
+            throw new CustomException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      * 获取用户

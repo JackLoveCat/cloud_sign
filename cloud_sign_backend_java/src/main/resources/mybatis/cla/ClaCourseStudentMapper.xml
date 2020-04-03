@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseStudentMapper">
+    
+    <resultMap type="ClaCourseStudent" id="ClaCourseStudentResult">
+        <result property="courseId"    column="course_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="actualSign"    column="actual_sign"    />
+        <result property="actualExp"    column="actual_exp"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClaCourseStudentVo">
+        select course_id, student_id, actual_sign, actual_exp, create_by, create_time, update_by, update_time, remark from cla_course_student
+    </sql>
+
+    <select id="selectClaCourseStudentList" parameterType="ClaCourseStudent" resultMap="ClaCourseStudentResult">
+        <include refid="selectClaCourseStudentVo"/>
+        <where>  
+            <if test="actualSign != null "> and actual_sign = #{actualSign}</if>
+            <if test="actualExp != null "> and actual_exp = #{actualExp}</if>
+        </where>
+    </select>
+    
+    <select id="selectClaCourseStudentById" parameterType="Long" resultMap="ClaCourseStudentResult">
+        <include refid="selectClaCourseStudentVo"/>
+        where course_id = #{courseId}
+    </select>
+        
+    <insert id="insertClaCourseStudent" parameterType="ClaCourseStudent">
+        insert into cla_course_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null ">course_id,</if>
+            <if test="studentId != null ">student_id,</if>
+            <if test="actualSign != null ">actual_sign,</if>
+            <if test="actualExp != null ">actual_exp,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null ">#{courseId},</if>
+            <if test="studentId != null ">#{studentId},</if>
+            <if test="actualSign != null ">#{actualSign},</if>
+            <if test="actualExp != null ">#{actualExp},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClaCourseStudent" parameterType="ClaCourseStudent">
+        update cla_course_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null ">student_id = #{studentId},</if>
+            <if test="actualSign != null ">actual_sign = #{actualSign},</if>
+            <if test="actualExp != null ">actual_exp = #{actualExp},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where course_id = #{courseId}
+    </update>
+
+    <delete id="deleteClaCourseStudentById" parameterType="Long">
+        delete from cla_course_student where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteClaCourseStudentByIds" parameterType="String">
+        delete from cla_course_student where course_id in 
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+    
+    <select id="countClaCourseStudentByCourseId" parameterType="Long" resultType="Integer">
+		select count(1) from cla_course_student where course_id = #{courseId}
+    </select>
+</mapper>

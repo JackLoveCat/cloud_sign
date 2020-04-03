@@ -31,9 +31,11 @@ server:
 
 # 日志配置
 logging:
+  file: ./cloudsign_log/cloudsign.log
   level:
     cn.edu.fzu.cloudsign: debug
     org.springframework: warn
+
 
 # Spring配置
 spring:
@@ -82,8 +84,9 @@ token:
     header: Authorization
     # 令牌秘钥
     secret: abcdefghijklmnopqrstuvwxyz
+    # TODO
     # 令牌有效期（默认30分钟）
-    expireTime: 30
+    expireTime: 1440
   
 # MyBatis配置
 mybatis:
@@ -117,6 +120,6 @@ gen:
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
   packageName: cn.edu.fzu.cloudsign.project.cla
   # 自动去除表前缀，默认是true
-  autoRemovePre: true
+  autoRemovePre: false
   # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
   tablePrefix: cla_ 

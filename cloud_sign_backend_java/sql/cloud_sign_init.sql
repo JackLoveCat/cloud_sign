@@ -1,31 +1,3 @@
--- 菜单管理表
--- ----------------------------
-drop table if exists sys_menu;
-create table sys_menu (
-  menu_id           bigint(20)      not null auto_increment    comment '菜单ID',
-  menu_name         varchar(50)     not null                   comment '菜单名称',
-  parent_id         bigint(20)      default 0                  comment '父菜单ID',
-  icon              varchar(100)    default '#'                comment '菜单图标',
-  link              varchar(100)    default '#'                comment '菜单链接',
-  order_num         int(4)          default 0                  comment '显示顺序',
-  is_menu           char(1)         default 0                  comment '是否菜单（0否 1是）',
-  is_page           char(1)         default 0                  comment '是否页面（0否 1是）',
-  create_by         varchar(64)     default ''                 comment '创建者',
-  create_time       datetime                                   comment '创建时间',
-  update_by         varchar(64)     default ''                 comment '更新者',
-  update_time       datetime                                   comment '更新时间',
-  remark            varchar(500)    default ''                 comment '备注',
-  primary key (menu_id)
-) engine=innodb auto_increment=2000 comment = '菜单管理表';
-
--- 初始化菜单管理表数据
--- ----------------------------
-insert into sys_menu values('1','系统管理','0','#','#',1,1,0,'admin',sysdate(),'admin',sysdate(),null);
-
-insert into sys_menu values('11','菜单管理','1','#','#',1,0,1,'admin',sysdate(),'admin',sysdate(),null);
-insert into sys_menu values('12','角色管理','1','#','#',2,0,1,'admin',sysdate(),'admin',sysdate(),null);
-insert into sys_menu values('13','用户管理','1','#','#',3,0,1,'admin',sysdate(),'admin',sysdate(),null);
-
 -- 代码生成业务表
 -- ----------------------------
 drop table if exists gen_table;
@@ -79,31 +51,242 @@ create table gen_table_column (
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
 
+
+-- 学校院系表
+-- ----------------------------
+DROP TABLE
+IF
+	EXISTS sys_uniacada;
+CREATE TABLE sys_uniacada (
+uniacada_id BIGINT ( 20 ) NOT NULL auto_increment COMMENT '学校院系ID',
+university_name VARCHAR ( 50 ) NOT NULL COMMENT '学校名称',
+academy_name VARCHAR ( 50 ) NOT NULL COMMENT '院系名称',
+order_num INT ( 4 ) DEFAULT 0 COMMENT '显示顺序',
+create_by VARCHAR ( 64 ) DEFAULT '' COMMENT '创建者',
+create_time datetime COMMENT '创建时间',
+update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
+update_time datetime COMMENT '更新时间',
+remark VARCHAR ( 500 ) DEFAULT '' COMMENT '备注',
+PRIMARY KEY ( uniacada_id ),
+unique key (university_name, academy_name)
+) ENGINE = INNODB auto_increment = 2000 COMMENT = '学校院系表';
+
+-- 初始化学校院系表数据
+-- ----------------------------
+insert into sys_uniacada values('1','福州大学','数学与计算机科学学院','0','admin',sysdate(),'admin',sysdate(),null);
+
+-- 菜单管理表
+-- ----------------------------
+drop table if exists sys_menu;
+create table sys_menu (
+  menu_id           bigint(20)      not null auto_increment    comment '菜单ID',
+  menu_name         varchar(50)     not null                   comment '菜单名称',
+  parent_id         bigint(20)      default 0                  comment '父菜单ID',
+  icon              varchar(100)    default '#'                comment '菜单图标',
+  link              varchar(100)    default '#'                comment '菜单链接',
+  order_num         int(4)          default 0                  comment '显示顺序',
+  is_menu           char(1)         default 0                  comment '是否菜单（0否 1是）',
+  is_page           char(1)         default 0                  comment '是否页面（0否 1是）',
+  perms             varchar(100)    default null               comment '权限标识',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default ''                 comment '备注',
+  primary key (menu_id),
+  unique key (menu_name)
+) engine=innodb auto_increment=2000 comment = '菜单管理表';
+
+-- 初始化菜单管理表数据
+-- ----------------------------
+insert into sys_menu values('1','系统管理','0','#','#',1,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
+
+insert into sys_menu values('11','菜单管理','1','#','#',1,0,1,'system:menu','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('12','角色管理','1','#','#',2,0,1,'system:role','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('13','用户管理','1','#','#',3,0,1,'system:user','admin',sysdate(),'admin',sysdate(),null);
+
+insert into sys_menu values('21','我创建的','2','#','#',1,0,1,'cla:course:create','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('22','我加入的','2','#','#',2,0,1,'cla:course:join','admin',sysdate(),'admin',sysdate(),null);
+
+-- 用户信息表
+-- ----------------------------
+DROP TABLE
+IF
+	EXISTS sys_user;
+CREATE TABLE sys_user (
+user_id BIGINT ( 20 ) NOT NULL auto_increment COMMENT '用户ID',
+uniacada_id BIGINT ( 20 ) DEFAULT NULL COMMENT '学校系ID',
+user_name VARCHAR ( 30 ) NOT NULL COMMENT '用户账号',
+nick_name VARCHAR ( 30 ) NOT NULL COMMENT '用户昵称',
+student_num VARCHAR ( 20 ) DEFAULT NULL COMMENT '学号',
+user_type VARCHAR ( 2 ) DEFAULT '00' COMMENT '用户类型（00系统用户）',
+email VARCHAR ( 50 ) DEFAULT NULL COMMENT '用户邮箱',
+phonenumber VARCHAR ( 11 ) DEFAULT NULL COMMENT '手机号码',
+avatar VARCHAR ( 100 ) DEFAULT '' COMMENT '头像地址',
+PASSWORD VARCHAR ( 100 ) DEFAULT '' COMMENT '密码',
+STATUS CHAR ( 1 ) DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
+del_flag CHAR ( 1 ) DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+login_ip VARCHAR ( 50 ) DEFAULT '' COMMENT '最后登陆IP',
+login_date datetime COMMENT '最后登陆时间',
+create_by VARCHAR ( 64 ) DEFAULT '' COMMENT '创建者',
+create_time datetime COMMENT '创建时间',
+update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
+update_time datetime COMMENT '更新时间',
+remark VARCHAR ( 500 ) DEFAULT NULL COMMENT '备注',
+PRIMARY KEY ( user_id ),
+UNIQUE KEY (email),
+UNIQUE KEY (phonenumber),
+UNIQUE KEY (student_num)
+) ENGINE = INNODB auto_increment = 100 COMMENT = '用户信息表';
+
+-- 初始化-用户信息表数据
+-- ----------------------------
+INSERT INTO sys_user VALUES (1,NULL,'admin','管理员',NULL,'00','cloudsign@163.com','15888888888','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_user VALUES (2,1,'teachertest','教师测试用户',null,'01','teachertest@qq.com','15999999999','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_user VALUES (3,1,'studenttest','学生测试用户','190325000','01','studenttest@qq.com','15666666666','','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','0','0','127.0.0.1',SYSDATE(),'admin',SYSDATE(),'admin',SYSDATE(),NULL);
+
+
+-- 角色信息表
+-- ----------------------------
+DROP TABLE
+IF
+	EXISTS sys_role;
+CREATE TABLE sys_role (
+role_id BIGINT ( 20 ) NOT NULL auto_increment COMMENT '角色ID',
+role_name VARCHAR ( 30 ) NOT NULL COMMENT '角色名称',
+editable CHAR ( 1 ) NOT NULL COMMENT '是否允许修改（1是 0否）',
+role_sort INT ( 4 ) NOT NULL COMMENT '显示顺序',
+STATUS CHAR ( 1 ) NOT NULL COMMENT '角色状态（0正常 1停用）',
+del_flag CHAR ( 1 ) DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+create_by VARCHAR ( 64 ) DEFAULT '' COMMENT '创建者',
+create_time datetime COMMENT '创建时间',
+update_by VARCHAR ( 64 ) DEFAULT '' COMMENT '更新者',
+update_time datetime COMMENT '更新时间',
+remark VARCHAR ( 500 ) DEFAULT NULL COMMENT '备注',
+PRIMARY KEY ( role_id ) ,
+unique key (role_name)
+) ENGINE = INNODB auto_increment = 100 COMMENT = '角色信息表';
+
+-- 初始化-角色信息表数据
+-- ----------------------------
+INSERT INTO sys_role VALUES ('1','管理员',0,1,'0','0','admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_role VALUES ('2','教师',1,2,'0','0','admin',SYSDATE(),'admin',SYSDATE(),NULL);
+INSERT INTO sys_role VALUES ('3','学生',1,3,'0','0','admin',SYSDATE(),'admin',SYSDATE(),NULL);
+
+
+-- 用户和角色关联表
+-- ----------------------------
+drop table if exists sys_user_role;
+create table sys_user_role (
+  user_id   bigint(20) not null comment '用户ID',
+  role_id   bigint(20) not null comment '角色ID',
+  primary key(user_id, role_id)
+) engine=innodb comment = '用户和角色关联表';
+
+-- 初始化-用户和角色关联表数据
+-- ----------------------------
+insert into sys_user_role values ('1', '1');
+insert into sys_user_role values ('2', '2');
+insert into sys_user_role values ('3', '3');
+
+
+-- 角色和菜单关联表
+-- ----------------------------
+drop table if exists sys_role_menu;
+create table sys_role_menu (
+  role_id   bigint(20) not null comment '角色ID',
+  menu_id   bigint(20) not null comment '菜单ID',
+  primary key(role_id, menu_id)
+) engine=innodb comment = '角色和菜单关联表';
+
+-- ----------------------------
+-- 初始化-角色和菜单关联表数据
+-- ----------------------------
+insert into sys_role_menu values ('2', '2');
+insert into sys_role_menu values ('3', '2');
+insert into sys_role_menu values ('2', '21');
+insert into sys_role_menu values ('3', '22');
+
 -- 班课信息表
 -- ----------------------------
 drop table if exists cla_course;
 CREATE TABLE cla_course (
     course_id BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '班课ID',
     course_name VARCHAR(50) NOT NULL COMMENT '课程名称',
+	course_num VARCHAR(10) NOT NULL COMMENT '班课号',
     class_name VARCHAR(50) NOT NULL COMMENT '班级名称',
     course_page VARCHAR(100) COMMENT '班课封面',
     semester VARCHAR(50) COMMENT '学期',
     curriculum VARCHAR(50) COMMENT '学校课表班课',
     textbook VARCHAR(50) COMMENT '云教材',
-    university VARCHAR(50) COMMENT '学校',
-    academy VARCHAR(50) COMMENT '学院',
+    uniacada_id BIGINT(20) NOT NULL COMMENT '学校院系ID',
     study_requirement VARCHAR(100) COMMENT '学习要求',
     lecture_progress VARCHAR(100) COMMENT '教学进度',
     exam_arrangement VARCHAR(100) COMMENT '考试安排',
-    create_user_id BIGINT(20) NOT NULL COMMENT '创建者ID',
     create_by VARCHAR(64) DEFAULT '' COMMENT '创建者',
     create_time DATETIME COMMENT '创建时间',
     update_by VARCHAR(64) DEFAULT '' COMMENT '更新者',
     update_time DATETIME COMMENT '更新时间',
     remark VARCHAR(500) DEFAULT '' COMMENT '备注',
     PRIMARY KEY (course_id)
-)  ENGINE=INNODB AUTO_INCREMENT=2000 COMMENT='班课信息表';
+)  ENGINE=INNODB AUTO_INCREMENT=100 COMMENT='班课信息表';
 
 -- 初始化班课信息表
 -- ----------------------------
-insert into cla_course values('1','工程实践','2019级工程硕士',null,'2019-2020第2学期',null,null,"福州大学","数学与计算机科学学院",null,null,null,1,'admin',sysdate(),'admin',sysdate(),null);
+INSERT INTO cla_course VALUES ('1','工程实践','000000','2019级工程硕士',NULL,'2019-2020第2学期',NULL,NULL,1,NULL,NULL,NULL,'admin',sysdate(),'admin',sysdate(),NULL);
+
+-- 班课和学生信息表
+-- ----------------------------
+drop table if exists cla_course_student;
+CREATE TABLE cla_course_student (
+    course_id BIGINT(20) NOT NULL COMMENT '班课ID',
+	student_id BIGINT(20) NOT NULL COMMENT '学生ID（用户ID）',
+	actual_sign INT DEFAULT 0 COMMENT '实际签到次数',
+    actual_exp INT DEFAULT 0 COMMENT '实际经验值',
+    create_by VARCHAR(64) DEFAULT '' COMMENT '创建者',
+    create_time DATETIME COMMENT '创建时间',
+    update_by VARCHAR(64) DEFAULT '' COMMENT '更新者',
+    update_time DATETIME COMMENT '更新时间',
+    remark VARCHAR(500) DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (course_id,student_id)
+)  ENGINE=INNODB COMMENT='班课和学生信息表';
+
+-- 初始化班课和学生信息表
+-- ----------------------------
+INSERT INTO cla_course_student VALUES (1,3,0,0,'admin',sysdate(),'admin',sysdate(),NULL);
+
+-- 班课和教师信息表
+-- ----------------------------
+drop table if exists cla_course_teacher;
+CREATE TABLE cla_course_teacher (
+    course_id BIGINT(20) NOT NULL COMMENT '班课ID',
+	teacher_id BIGINT(20) NOT NULL COMMENT '任课教师ID',
+    sign INT DEFAULT 0 COMMENT '发起签到次数',
+    full_exp INT DEFAULT 0 COMMENT '满经验值',
+    create_by VARCHAR(64) DEFAULT '' COMMENT '创建者',
+    create_time DATETIME COMMENT '创建时间',
+    update_by VARCHAR(64) DEFAULT '' COMMENT '更新者',
+    update_time DATETIME COMMENT '更新时间',
+    remark VARCHAR(500) DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (course_id)
+)  ENGINE=INNODB COMMENT='班课和教师信息表';
+
+-- 初始化班课和教师信息表
+-- ----------------------------
+INSERT INTO cla_course_teacher VALUES (1,2,0,0,'admin',sysdate(),'admin',sysdate(),NULL);
+
+-- 系统访问记录
+-- ----------------------------
+drop table if exists sys_logininfor;
+create table sys_logininfor (
+  info_id        bigint(20)     not null auto_increment   comment '访问ID',
+  user_name      varchar(50)    default ''                comment '用户账号',
+  ipaddr         varchar(50)    default ''                comment '登录IP地址',
+  login_location varchar(255)   default ''                comment '登录地点',
+  browser        varchar(50)    default ''                comment '浏览器类型',
+  os             varchar(50)    default ''                comment '操作系统',
+  status         char(1)        default '0'               comment '登录状态（0成功 1失败）',
+  msg            varchar(255)   default ''                comment '提示消息',
+  login_time     datetime                                 comment '访问时间',
+  primary key (info_id)
+) engine=innodb auto_increment=100 comment = '系统访问记录';

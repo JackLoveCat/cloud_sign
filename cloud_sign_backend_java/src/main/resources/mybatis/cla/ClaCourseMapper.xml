@@ -2,22 +2,21 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.fzu.cloudsign.project.cla.mapper.CourseMapper">
+<mapper namespace="cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseMapper">
     
-    <resultMap type="Course" id="CourseResult">
+    <resultMap type="ClaCourse" id="ClaCourseResult">
         <result property="courseId"    column="course_id"    />
         <result property="courseName"    column="course_name"    />
+        <result property="courseNum"    column="course_num"    />
         <result property="className"    column="class_name"    />
         <result property="coursePage"    column="course_page"    />
         <result property="semester"    column="semester"    />
         <result property="curriculum"    column="curriculum"    />
         <result property="textbook"    column="textbook"    />
-        <result property="university"    column="university"    />
-        <result property="academy"    column="academy"    />
+        <result property="uniacadaId"    column="uniacada_id"    />
         <result property="studyRequirement"    column="study_requirement"    />
         <result property="lectureProgress"    column="lecture_progress"    />
         <result property="examArrangement"    column="exam_arrangement"    />
-        <result property="createUserId"    column="create_user_id"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -25,48 +24,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
-    <sql id="selectCourseVo">
-        select course_id, course_name, class_name, course_page, semester, curriculum, textbook, university, academy, study_requirement, lecture_progress, exam_arrangement, create_user_id, create_by, create_time, update_by, update_time, remark from cla_course
+    <sql id="selectClaCourseVo">
+        select course_id, course_name, course_num, class_name, course_page, semester, curriculum, textbook, uniacada_id, study_requirement, lecture_progress, exam_arrangement, create_by, create_time, update_by, update_time, remark from cla_course
     </sql>
 
-    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">
-        <include refid="selectCourseVo"/>
+    <select id="selectClaCourseList" parameterType="ClaCourse" resultMap="ClaCourseResult">
+        <include refid="selectClaCourseVo"/>
         <where>  
             <if test="courseName != null  and courseName != ''"> and course_name like concat('%', #{courseName}, '%')</if>
+            <if test="courseNum != null  and courseNum != ''"> and course_num = #{courseNum}</if>
             <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
             <if test="coursePage != null  and coursePage != ''"> and course_page = #{coursePage}</if>
             <if test="semester != null  and semester != ''"> and semester = #{semester}</if>
             <if test="curriculum != null  and curriculum != ''"> and curriculum = #{curriculum}</if>
             <if test="textbook != null  and textbook != ''"> and textbook = #{textbook}</if>
-            <if test="university != null  and university != ''"> and university = #{university}</if>
-            <if test="academy != null  and academy != ''"> and academy = #{academy}</if>
+            <if test="uniacadaId != null "> and uniacada_id = #{uniacadaId}</if>
             <if test="studyRequirement != null  and studyRequirement != ''"> and study_requirement = #{studyRequirement}</if>
             <if test="lectureProgress != null  and lectureProgress != ''"> and lecture_progress = #{lectureProgress}</if>
             <if test="examArrangement != null  and examArrangement != ''"> and exam_arrangement = #{examArrangement}</if>
-            <if test="createUserId != null "> and create_user_id = #{createUserId}</if>
         </where>
     </select>
     
-    <select id="selectCourseById" parameterType="Long" resultMap="CourseResult">
-        <include refid="selectCourseVo"/>
+    <select id="selectClaCourseById" parameterType="Long" resultMap="ClaCourseResult">
+        <include refid="selectClaCourseVo"/>
         where course_id = #{courseId}
     </select>
-        
-    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="courseId">
+    
+    <insert id="insertClaCourse" parameterType="ClaCourse" useGeneratedKeys="true" keyProperty="courseId">
         insert into cla_course
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="courseName != null  and courseName != ''">course_name,</if>
+            <if test="courseNum != null  and courseNum != ''">course_num,</if>
             <if test="className != null  and className != ''">class_name,</if>
             <if test="coursePage != null  and coursePage != ''">course_page,</if>
             <if test="semester != null  and semester != ''">semester,</if>
             <if test="curriculum != null  and curriculum != ''">curriculum,</if>
             <if test="textbook != null  and textbook != ''">textbook,</if>
-            <if test="university != null  and university != ''">university,</if>
-            <if test="academy != null  and academy != ''">academy,</if>
+            <if test="uniacadaId != null ">uniacada_id,</if>
             <if test="studyRequirement != null  and studyRequirement != ''">study_requirement,</if>
             <if test="lectureProgress != null  and lectureProgress != ''">lecture_progress,</if>
             <if test="examArrangement != null  and examArrangement != ''">exam_arrangement,</if>
-            <if test="createUserId != null ">create_user_id,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
@@ -75,17 +72,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="courseName != null  and courseName != ''">#{courseName},</if>
+            <if test="courseNum != null  and courseNum != ''">#{courseNum},</if>
             <if test="className != null  and className != ''">#{className},</if>
             <if test="coursePage != null  and coursePage != ''">#{coursePage},</if>
             <if test="semester != null  and semester != ''">#{semester},</if>
             <if test="curriculum != null  and curriculum != ''">#{curriculum},</if>
             <if test="textbook != null  and textbook != ''">#{textbook},</if>
-            <if test="university != null  and university != ''">#{university},</if>
-            <if test="academy != null  and academy != ''">#{academy},</if>
+            <if test="uniacadaId != null ">#{uniacadaId},</if>
             <if test="studyRequirement != null  and studyRequirement != ''">#{studyRequirement},</if>
             <if test="lectureProgress != null  and lectureProgress != ''">#{lectureProgress},</if>
             <if test="examArrangement != null  and examArrangement != ''">#{examArrangement},</if>
-            <if test="createUserId != null ">#{createUserId},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
@@ -94,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateCourse" parameterType="Course">
+    <update id="updateClaCourse" parameterType="ClaCourse">
         update cla_course
         <trim prefix="SET" suffixOverrides=",">
             <if test="courseName != null  and courseName != ''">course_name = #{courseName},</if>
@@ -103,12 +99,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="semester != null  and semester != ''">semester = #{semester},</if>
             <if test="curriculum != null  and curriculum != ''">curriculum = #{curriculum},</if>
             <if test="textbook != null  and textbook != ''">textbook = #{textbook},</if>
-            <if test="university != null  and university != ''">university = #{university},</if>
-            <if test="academy != null  and academy != ''">academy = #{academy},</if>
+            <if test="uniacadaId != null ">uniacada_id = #{uniacadaId},</if>
             <if test="studyRequirement != null  and studyRequirement != ''">study_requirement = #{studyRequirement},</if>
             <if test="lectureProgress != null  and lectureProgress != ''">lecture_progress = #{lectureProgress},</if>
             <if test="examArrangement != null  and examArrangement != ''">exam_arrangement = #{examArrangement},</if>
-            <if test="createUserId != null ">create_user_id = #{createUserId},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
@@ -118,15 +112,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where course_id = #{courseId}
     </update>
 
-    <delete id="deleteCourseById" parameterType="Long">
+    <delete id="deleteClaCourseById" parameterType="Long">
         delete from cla_course where course_id = #{courseId}
     </delete>
 
-    <delete id="deleteCourseByIds" parameterType="String">
+    <delete id="deleteClaCourseByIds" parameterType="String">
         delete from cla_course where course_id in 
         <foreach item="courseId" collection="array" open="(" separator="," close=")">
             #{courseId}
         </foreach>
     </delete>
+    
+    <select id="selectMyCreateClaCourse" parameterType="ClaCourse" resultMap="ClaCourseResult">
+        select c.course_id, course_name, course_num, class_name, course_page, semester, curriculum, 
+        textbook, uniacada_id, study_requirement, lecture_progress, exam_arrangement, c.create_by, 
+        c.create_time, c.update_by, c.update_time, c.remark from cla_course c
+		inner join cla_course_teacher ct
+		on c.course_id = ct.course_id
+        where ct.teacher_id = #{params.userId}
+        order by c.create_time desc
+    </select>    
+    
+    <select id="selectMyJoinClaCourse" parameterType="ClaCourse" resultMap="ClaCourseResult">
+		select c.course_id, course_name, course_num, class_name, course_page, semester, curriculum, 
+        textbook, uniacada_id, study_requirement, lecture_progress, exam_arrangement, c.create_by, 
+        c.create_time, c.update_by, c.update_time, c.remark from cla_course c
+		inner join cla_course_student cs
+		on c.course_id = cs.course_id
+        where cs.student_id	= #{params.userId}
+    </select>   
+    
+
+	<select id="getRandomCourseNum" resultType="String">    
+		SELECT LPAD(random_num,6,0) as random_num FROM (
+  			SELECT FLOOR(RAND() * 999999) AS random_num FROM cla_course
+			UNION
+  			SELECT FLOOR(RAND() * 999999) AS random_num
+		) AS t
+		WHERE random_num NOT IN (SELECT course_num FROM cla_course)
+		LIMIT 1
+    </select>
+
+	<select id="selectClaCourseByCourseNum" parameterType="String" resultMap="ClaCourseResult">
+        <include refid="selectClaCourseVo"/>
+        where course_num = #{coursenum}
+    </select>
+    
+    <select id="countClaCourseTeacherByUserId" parameterType="Long" resultType="Integer">
+        select count(1) from cla_course c
+		inner join cla_course_teacher ct
+		on c.course_id = ct.course_id
+        where ct.teacher_id = #{userId}
+    </select>    
+    
+    <select id="countClaCourseStudentByUserId" parameterType="Long" resultType="Integer">
+		select count(1) from cla_course c
+		inner join cla_course_student cs
+		on c.course_id = cs.course_id
+        where cs.student_id	= #{userId}
+    </select>  
+    
     
 </mapper>

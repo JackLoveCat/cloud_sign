@@ -43,8 +43,10 @@ public class SysMenu extends BaseEntity {
 	/** 是否菜单 */
 	private String isMenu;
 
-	/** 是否页面 */
 	private String isPage;
+
+	/** 权限标识 */
+	private String perms;
 
 	/** 子菜单 */
 	private List<SysMenu> children = new ArrayList<SysMenu>();
@@ -132,12 +134,20 @@ public class SysMenu extends BaseEntity {
 		this.isPage = isPage;
 	}
 
+	public String getPerms() {
+		return perms;
+	}
+
+	public void setPerms(String perms) {
+		this.perms = perms;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("menuId", getMenuId())
 				.append("menuName", getMenuName()).append("parentId", getParentId()).append("orderNum", getOrderNum())
-				.append("icon", getIcon()).append("createBy", getCreateBy()).append("createTime", getCreateTime())
-				.append("updateBy", getUpdateBy()).append("updateTime", getUpdateTime()).append("remark", getRemark())
-				.toString();
+				.append("icon", getIcon()).append("perms", getPerms()).append("createBy", getCreateBy())
+				.append("createTime", getCreateTime()).append("updateBy", getUpdateBy())
+				.append("updateTime", getUpdateTime()).append("remark", getRemark()).toString();
 	}
 }

@@ -4,7 +4,7 @@
       <div class="site-content">
         <div class="brand-info">
           <img src="~@/assets/img/logo.png" alt="">
-          <h2 class="brand-info__text" style="display: inline-block">到云</h2>
+          <h2 class="brand-info__text" style="display: inline-block">到 云</h2>
           <p class="brand-info__intro">到云——第27组</p>
 
         </div>
@@ -27,7 +27,7 @@
                   <img :src="captchaPath" @click="updataPath()" alt="">
                 </el-col>
               </el-row>
-              <a @click="isForgetPwd=!isForgetPwd">忘记密码？</a>
+              <a @click="isForgetPwd=!isForgetPwd">忘记密码</a>
             </el-form-item>
             <el-form-item>
               <el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>

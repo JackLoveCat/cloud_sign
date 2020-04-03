@@ -458,7 +458,7 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 32,
+        'menuId': 33,
         'parentId': 1,
         'parentName': null,
         'name': '院校管理',
@@ -471,7 +471,7 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 32,
+        'menuId': 34,
         'parentId': 1,
         'parentName': null,
         'name': '学员管理',
@@ -483,10 +483,10 @@ var navDataList = [
         'open': null,
         'list': null
       }
-    ],
+    ]
   },
   {
-    'menuId': 33,
+    'menuId': 35,
     'parentId': 0,
     'parentName': null,
     'name': '数据字典管理',
@@ -498,7 +498,7 @@ var navDataList = [
     'open': null,
     'list': [
       {
-        'menuId': 37,
+        'menuId': 36,
         'parentId': 33,
         'parentName': null,
         'name': '类型管理',
