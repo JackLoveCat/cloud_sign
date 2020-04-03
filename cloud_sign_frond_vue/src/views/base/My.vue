@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-24 21:39:10
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-03-25 00:43:03
+ * @LastEditTime: 2020-03-31 21:49:20
  -->
 <template>
   <div class="page__bd">
@@ -54,22 +54,36 @@
         </div>
         <div class="weui-cell__ft"></div>
       </a>
-      <a class="weui-cell  weui-cell_access" href="javascript:">
+      <a class="weui-cell  weui-cell_access" @click="goPage('About')">
         <div class="weui-cell__bd">
-          <p>用户协议</p>
+          <p>隐私政策</p>
         </div>
         <div class="weui-cell__ft"></div>
       </a>
-      <a class="weui-cell  weui-cell_access" href="javascript:">
+      <a class="weui-cell  weui-cell_access" @click="logout">
         <div class="weui-cell__bd">
-          <p>隐私政策</p>
+          <p>登出</p>
         </div>
         <div class="weui-cell__ft"></div>
       </a>
     </div>
   </div>
 </template>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import state from "@/store/index";
 
+@Component
+export default class My extends Vue {
+  goPage(page: string) {
+    this.$router.push({ name: page });
+  }
+  logout() {
+    state.commit("logout");
+    this.$router.push({ name: "Login" });
+  }
+}
+</script>
 <style scoped>
 .placeholder {
   padding: 0 10px;
