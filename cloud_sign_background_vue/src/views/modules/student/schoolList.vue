@@ -41,8 +41,12 @@
           {
             getSchoolList() {
               this.$http({
-                url: this.$http.adornUrl('/student/getSchoolList.do'),
-                method: 'get',
+                url: this.$http.adornUrl('student/getSchoolList.do'),
+                method: 'post',
+                data: this.$http.adornData({
+                  'account': 'test',
+                  'passward': '123123'
+                })
               }).then(({data}) => {
                 if (data && data.status === 200) {
                   // cId cName tName scName cPath

@@ -30,12 +30,20 @@
               <a @click="isForgetPwd=!isForgetPwd">忘记密码</a>
             </el-form-item>
             <el-form-item>
+              <el-radio v-model="dataForm.role" label="1">学生</el-radio>
+              <el-radio v-model="dataForm.role" label="2">教师</el-radio>
+              <el-radio v-model="dataForm.role" label="3">教务处</el-radio>
+            </el-form-item>
+            <el-form-item>
               <el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
+            </el-form-item>            
+             <el-form-item prop="password">
+               <a @click="toRegister">注册新账号</a>
             </el-form-item>
           </el-form>
         </div>
-        <div class="login-main" v-else="isForgetPwd">
+        <div class="login-main" v-else>
           <h3 class="login-title">忘记密码</h3>
           <el-form>
             <el-form-item>
@@ -160,7 +168,10 @@
             }
           })
         }
+      },
 
+      toRegister() {
+        this.$router.push('/register');
       }
     }
   }

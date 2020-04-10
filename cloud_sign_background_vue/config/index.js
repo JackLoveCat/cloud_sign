@@ -14,7 +14,7 @@ module.exports = {
     // 代理列表, 是否开启代理通过[./dev.env.js]配置
     proxyTable: devEnv.OPEN_PROXY === false ? {} : {
       '/proxyApi': {
-        target: 'http://localhost:8080/JobSubmissionSystem',
+        target: 'http://123.206.49.117:8080/',
         changeOrigin: true,
         pathRewrite: {
           '^/proxyApi': '/'
