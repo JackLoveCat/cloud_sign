@@ -44,7 +44,7 @@
     <div
       class="weui-cells searchbar-result"
       id="searchResult"
-      v-show="isShowResult"
+      v-show="isSuggest && isShowResult"
       style=" transform-origin: 0px 0px; opacity: 1; transform: scale(1, 1);"
     >
       <div
@@ -67,6 +67,7 @@ export default class Search extends Vue {
   private isSearchFocus = false;
   private isShowSearchText = true;
   private isShowResult = false;
+  private isSuggest = false;
   suggestSearch() {
     if (this.searchInput !== undefined && this.searchInput.length > 0) {
       console.log("search text:" + this.searchInput);

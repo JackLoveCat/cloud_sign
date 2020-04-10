@@ -1,23 +1,14 @@
 import Vue from "vue";
-import Vuex from "vuex";
-
+import Vuex, { StoreOptions } from "vuex";
+import { IndexState } from "./model/index";
+import { User } from "./model/User";
 Vue.use(Vuex);
-
-export default new Vuex.Store({
+const store: StoreOptions<IndexState> = {
+  modules: {
+    User,
+  },
   state: {
-    isLogin: false
+    version: "1.0.0",
   },
-  getters: {
-    isLogin: state => state.isLogin
-  },
-  mutations: {
-    login(state) {
-      state.isLogin = true;
-    },
-    logOut(state) {
-      state.isLogin = false;
-    }
-  },
-  actions: {},
-  modules: {}
-});
+};
+export default new Vuex.Store<IndexState>(store);

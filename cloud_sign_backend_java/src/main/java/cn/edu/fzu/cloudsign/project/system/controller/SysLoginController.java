@@ -23,6 +23,7 @@ import cn.edu.fzu.cloudsign.framework.security.service.TokenService;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUser;
+import cn.edu.fzu.cloudsign.project.system.domain.UserIdentifier;
 import cn.edu.fzu.cloudsign.project.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,13 +58,78 @@ public class SysLoginController extends BaseController {
 	 */
 	@ApiOperation("登录")
 	@PostMapping("/login")
-	public AjaxResult login(String username, String password, String code, String uuid) {
+	public AjaxResult login(@Validated @RequestBody UserIdentifier userIdentifier) {
 		AjaxResult ajax = AjaxResult.success();
+		SysUser user = userService.selectUserByAccount(userIdentifier.getAccount());
+		if (StringUtils.isNull(user) || StringUtils.isEmpty(user.getUserName())) {
+			return AjaxResult.error("用户不存在:" + userIdentifier.getAccount());
+		}
 		// 生成令牌
-		String token = loginService.login(username, password, code, uuid);
+		String token = loginService.login(user.getUserName(), userIdentifier.getPassward(), null, null);
 		ajax.put(Constants.TOKEN, token);
 		return ajax;
 	}
+
+	/**
+	 * 登录方法
+	 * 
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param captcha  验证码
+	 * @param uuid     唯一标识
+	 * @return 结果
+	 */
+	/*
+	 * @ApiOperation("登录")
+	 * 
+	 * @PostMapping("/login") public AjaxResult login(String username, String
+	 * password, String code, String uuid) { AjaxResult ajax = AjaxResult.success();
+	 * // 生成令牌 String token = loginService.login(username, password, code, uuid);
+	 * ajax.put(Constants.TOKEN, token); return ajax; }
+	 */
+
+	/**
+	 * 登录方法
+	 * 
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param captcha  验证码
+	 * @param uuid     唯一标识
+	 * @return 结果
+	 */
+	/*
+	 * @ApiOperation("用手机号登录")
+	 * 
+	 * @PostMapping("/loginbyphone") public AjaxResult loginByPhoneNum(String
+	 * phonenum, String password, String code, String uuid) { AjaxResult ajax =
+	 * AjaxResult.success(); SysUser user =
+	 * userService.selectUserByPhoneNum(phonenum); if (StringUtils.isNull(user) ||
+	 * StringUtils.isEmpty(user.getUserName())) { return
+	 * AjaxResult.error("用户登录失败，手机号码:" + phonenum + ",不存在"); } // 生成令牌 String token
+	 * = loginService.login(user.getUserName(), password, code, uuid);
+	 * ajax.put(Constants.TOKEN, token); return ajax; }
+	 */
+
+	/**
+	 * 登录方法
+	 * 
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param captcha  验证码
+	 * @param uuid     唯一标识
+	 * @return 结果
+	 */
+	/*
+	 * @ApiOperation("用邮箱登录")
+	 * 
+	 * @PostMapping("/loginbyemail") public AjaxResult loginByEmail(String email,
+	 * String password, String code, String uuid) { AjaxResult ajax =
+	 * AjaxResult.success(); SysUser user = userService.selectUserByEmail(email); if
+	 * (StringUtils.isNull(user) || StringUtils.isEmpty(user.getUserName())) {
+	 * return AjaxResult.error("用户登录失败，邮箱:" + email + ",不存在"); } // 生成令牌 String
+	 * token = loginService.login(user.getUserName(), password, code, uuid);
+	 * ajax.put(Constants.TOKEN, token); return ajax; }
+	 */
 
 	/**
 	 * 用户注册

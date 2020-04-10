@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../components/page/Login.vue";
 import store from "../store/index";
 import Register from "../components/page/Register.vue";
-
+import MyClass from "../views/MyClass.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -13,8 +13,8 @@ const routes = [
     name: "Home",
     component: Home,
     meta: {
-      title: "首页"
-    }
+      title: "首页",
+    },
   },
   {
     path: "/login",
@@ -22,8 +22,8 @@ const routes = [
     component: Login,
     meta: {
       title: "登录",
-      showFoot: true
-    }
+      showFoot: true,
+    },
   },
   {
     path: "/register",
@@ -31,21 +31,44 @@ const routes = [
     component: Register,
     meta: {
       title: "注册",
-      showFoot: true
-    }
+      showFoot: false,
+    },
+  },
+  {
+    path: "/myclass",
+    name: "MyClass",
+    component: MyClass,
+    meta: {
+      title: "我的班课",
+      showFoot: false,
+    },
   },
   {
     path: "/about",
     name: "About",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+      import(/* webpackChunkName: "about" */ "../views/base/About.vue"),
+    meta: {
+      title: "关于",
+      showFoot: false,
+    },
+  },
+  {
+    path: "/404",
+    name: "notFound",
+    component: () =>
+      import(/* webpackChunkName: "404" */ "../views/base/404.vue"),
+  },
+  {
+    path: "*", // 此处需特别注意置于最底部
+    redirect: "/404",
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 // 全局路由守卫
@@ -54,9 +77,9 @@ router.beforeEach((to: Route, from: Route, next: Function) => {
   if (to.meta.title) {
     document.title = to.meta.title;
   }
-  if (store.state.isLogin) {
+  if (store.getters["User/isLogin"]) {
     if (to.path == "/login" || to.path == "/register") {
-      next("/home");
+      next("/");
     } else {
       next();
     }

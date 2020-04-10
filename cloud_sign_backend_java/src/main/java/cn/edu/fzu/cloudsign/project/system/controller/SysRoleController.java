@@ -125,7 +125,6 @@ public class SysRoleController extends BaseController {
 	 * 查询教师和学生角色
 	 */
 	@ApiOperation("查询教师和学生角色")
-	@PreAuthorize("@ss.hasPermi('system:role')")
 	@GetMapping(value = "/teacherandstudent")
 	public AjaxResult getTeacherAndStudentRole() {
 		return AjaxResult.success(roleService.selectTeacherAndStudentRole());

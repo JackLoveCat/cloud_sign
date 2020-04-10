@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -107,6 +108,8 @@ public class SysUser extends BaseEntity {
 	}
 
 	@NotBlank(message = "用户账号不能为空")
+	@Pattern(regexp = "^.*[^\\d].*$", message = "用户账号不能为纯数字")
+	@Pattern(regexp = "^(?!.*@).*$", message = "用户账号不能包含@")
 	@Size(min = 0, max = 30, message = "用户账号长度不能超过30个字符")
 	public String getUserName() {
 		return userName;
@@ -127,6 +130,7 @@ public class SysUser extends BaseEntity {
 	}
 
 	@Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
+	@Pattern(regexp = "^[1]([3-9])[0-9]{9}$", message = "手机号码格式不正确")
 	public String getPhonenumber() {
 		return phonenumber;
 	}

@@ -297,6 +297,7 @@ public class SysUserServiceImpl implements ISysUserService {
 	 * @param userIds 需要删除的用户ID
 	 * @return 结果
 	 */
+	@Override
 	public int deleteUserByIds(Long[] userIds) {
 		for (Long userId : userIds) {
 			checkUserAllowed(new SysUser(userId));
@@ -329,6 +330,38 @@ public class SysUserServiceImpl implements ISysUserService {
 	 */
 	private int countClaCourseStudentByUserId(Long userId) {
 		return claCourseMapper.countClaCourseStudentByUserId(userId);
+	}
+
+	/**
+	 * 通过电话获取用户信息
+	 * 
+	 * @param phoneNum
+	 * @return
+	 */
+	@Override
+	public SysUser selectUserByPhoneNum(String phoneNum) {
+		return userMapper.selectUserByPhoneNum(phoneNum);
+	}
+
+	/**
+	 * 通过邮箱获取用户信息
+	 * 
+	 * @param email
+	 * @return
+	 */
+	@Override
+	public SysUser selectUserByEmail(String email) {
+		return userMapper.selectUserByEmail(email);
+	}
+
+	/**
+	 * 通过账户、手机、邮箱获取用户信息
+	 * 
+	 * @param account
+	 */
+	@Override
+	public SysUser selectUserByAccount(String account) {
+		return userMapper.selectUserByAccount(account);
 	}
 
 }

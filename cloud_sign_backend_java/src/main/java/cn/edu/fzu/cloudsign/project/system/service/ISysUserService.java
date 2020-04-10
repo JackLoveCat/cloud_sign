@@ -154,4 +154,27 @@ public interface ISysUserService {
 	 */
 	public int deleteUserByIds(Long[] userIds);
 
+	/**
+	 * 通过电话获取用户信息
+	 * 
+	 * @param phoneNum
+	 * @return
+	 */
+	public SysUser selectUserByPhoneNum(String phoneNum);
+
+	/**
+	 * 通过邮箱获取用户信息
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public SysUser selectUserByEmail(String email);
+
+	/**
+	 * 通过账户、手机、邮箱获取用户信息
+	 * 
+	 * @param account
+	 */
+	public SysUser selectUserByAccount(String account);
+
 }

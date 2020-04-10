@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:34:50
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-03-22 22:06:29
+ * @LastEditTime: 2020-04-01 23:58:08
  */
 // 登录
 export interface LoginParams {
@@ -10,15 +10,15 @@ export interface LoginParams {
   password: string;
 }
 
-export interface RegisteParam {
-  account: string;
+export interface UserInfo {
+  userId?: Number;
+  avatar: string;
+  email: string;
+  nickName: string;
   password: string;
   repassword: string;
-  phone: string;
-  email: string;
-}
-export interface UserInfo {
-  _id: string;
-  name: string;
-  avatar: string | any;
+  phonenumber: string;
+  roleIds: Array<Number>;
+  uniacadaId?: Number;
+  userName: string;
 }

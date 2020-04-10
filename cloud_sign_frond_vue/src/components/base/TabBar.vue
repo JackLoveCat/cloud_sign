@@ -10,7 +10,7 @@
             v-for="(tab, i) in params"
             v-bind:key="i"
             :class="[
-              tab.active
+              i == active
                 ? 'weui-tabbar__item  weui-bar__item_on'
                 : 'weui-tabbar__item'
             ]"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import Class from "@/views/base/Class.vue";
 import My from "@/views/base/My.vue";
 import { TabBarConfig } from "@/types/config/TabBar";
@@ -51,31 +51,30 @@ import { TabBarConfig } from "@/types/config/TabBar";
 })
 export default class TabBar extends Vue {
   private currentView = "Class";
-  private params: Array<TabBarConfig> = [
-    {
-      name: "班课",
-      icon: require("../../assets/imgs/icon/icon_tabbar.png"),
-      msgType: 1,
-      msgCount: 0,
-      active: true,
-      view: "Class"
-    },
-    {
-      name: "我的",
-      icon: require("../../assets/imgs/icon/icon_tabbar.png"),
-      msgType: 0,
-      view: "My"
-    }
-  ];
+  private active = 0;
+  @Prop({
+    type: Array,
+    required: true,
+    default: () => [
+      {
+        name: "班课",
+        icon: require("../../assets/imgs/icon/icon_tabbar.png"),
+        msgType: 1,
+        msgCount: 0,
+        view: "Class"
+      },
+      {
+        name: "我的",
+        icon: require("../../assets/imgs/icon/icon_tabbar.png"),
+        msgType: 0,
+        view: "My"
+      }
+    ]
+  })
+  params!: Array<TabBarConfig>;
   changeTab(index: number) {
-    for (let i = 0; i < this.params.length; i++) {
-      this.params[i].active = false;
-    }
-    this.params[index].active = true;
+    this.active = index;
     this.currentView = this.params[index].view;
-  }
-  goRegister() {
-    this.$router.push({ name: "Register" });
   }
 }
 </script>

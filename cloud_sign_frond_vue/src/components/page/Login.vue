@@ -55,18 +55,30 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Action } from "vuex-class";
 import { LoginParams } from "@/types/model/User";
 import state from "@/store/index";
+import API from "@/utils/api";
+
 @Component
 export default class Login extends Vue {
+  // @Action("login") saveLogin: Function;
   private params: LoginParams = {
     account: "",
-    password: ""
+    password: "",
   };
   login() {
-    state.commit("login");
-    console.log("login success:" + JSON.stringify(this.params));
-    this.$router.push({ name: "Home" });
+    state.dispatch("User/login", "jack");
+    // API.login(this.params.account, this.params.password)
+    //   .then((res) => {
+    //     // this.saveLogin(res);
+    //     // state.commit("login", "Jack login token");
+    //     console.log("login success:" + JSON.stringify(this.params));
+    //     // this.$router.push({ name: "Home" });
+    //   })
+    //   .catch((res) => {
+    //     console.log("login failed:" + res);
+    //   });
   }
   goRegister() {
     this.$router.push({ name: "Register" });
