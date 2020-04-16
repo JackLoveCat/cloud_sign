@@ -20,7 +20,7 @@ for (let i = 0; i < Math.floor(Math.random() * 10 + 1); i++) {
 export function info () {
   return {
     // isOpen: false,
-    url: '/role/getRole.do',
+    url: 'role/getRole.do',
     type: 'get',
     data: {
       'msg': 'success',
