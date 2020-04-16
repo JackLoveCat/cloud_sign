@@ -2,7 +2,7 @@
   <div class="mod-menu">
     <el-form :inline="true" :model="dataForm">
       <el-form-item>
-        <el-button v-if="isAuth('sys:menu:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="haveAuth('sys:menu:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -17,7 +17,7 @@
         label="ID">
       </el-table-column>
       <table-tree-column
-        prop="name"
+        prop="menuName"
         header-align="center"
         treeKey="menuId"
         width="150"
@@ -78,8 +78,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
-          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
+          <el-button v-if="scope.row.menuId === 1" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
+          <el-button v-if="haveAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,13 +92,14 @@
   import TableTreeColumn from '@/components/table-tree-column'
   import AddOrUpdate from './menu-add-or-update'
   import { treeDataTranslate } from '@/utils'
+  import {isAuth} from '../../../utils'
   export default {
     data () {
       return {
         dataForm: {},
         dataList: [],
         dataListLoading: false,
-        addOrUpdateVisible: false
+        addOrUpdateVisible: true
       }
     },
     components: {
@@ -108,16 +109,20 @@
     activated () {
       this.getDataList()
     },
+    mounted () {
+      this.getDataList()
+    },
     methods: {
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/menu/list'),
+          url: this.$http.adornUrl('system/menu/list'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.dataList = treeDataTranslate(data, 'menuId')
+          // this.dataList = treeDataTranslate(data, 'menuId')
+          this.dataList = data.data
           this.dataListLoading = false
         })
       },
@@ -154,6 +159,10 @@
             }
           })
         }).catch(() => {})
+      },
+      haveAuth (auth) {
+        console.log(auth + ' ' + isAuth(auth))
+        return isAuth(auth)
       }
     }
   }

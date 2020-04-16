@@ -18,54 +18,54 @@
 </template>
 
 <script>
-  import Class from  './class'
-    export default {
-      data() {
-        return {
-          classList: [],
-          loading: true,
-          classId:'',
-        }
-      },
-      computed: {
-        userId: {
-          get() {return this.$store.state.user.id}
-          }
-        },
-        components: {
-          'Class':Class
-        },
-        mounted() {
-          this.getClass()
-        },
-        methods:
-          {
-            getClass() {
-              this.$http({
-                url: this.$http.adornUrl('/student/queryJoinedCourses.do'),
-                method: 'get',
-              }).then(({data}) => {
-                if (data && data.status === 200) {
+  import Class from './class'
+  export default {
+    data () {
+      return {
+        classList: [],
+        loading: true,
+        classId: ''
+      }
+    },
+    computed: {
+      userId: {
+        get () { return this.$store.state.user.id }
+      }
+    },
+    components: {
+      'Class': Class
+    },
+    mounted () {
+      this.getClass()
+    },
+    methods:
+    {
+      getClass () {
+        this.$http({
+          url: this.$http.adornUrl('/student/queryJoinedCourses.do'),
+          method: 'get'
+        }).then(({data}) => {
+          if (data && data.status === 200) {
                   // cId cName tName scName cPath
-                  this.classList = data.joinedCourses
-                  this.loading = false
-                }else{
-                  this.$message({
-                    message:data.msg,
-                    type:'success'
-                  })
-                }
-              })
-            },
-            inClass(cId){
-              localStorage.setItem('cId',cId)
-              this.$router.push({name:'class'})
-            },
-            update(){
-              this.getClass()
-            }
+            this.classList = data.joinedCourses
+            this.loading = false
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'success'
+            })
           }
+        })
+      },
+      inClass (cId) {
+        localStorage.setItem('cId', cId)
+        this.$router.push({name: 'class'})
+      },
+      update () {
+        this.getClass()
+      }
     }
+  }
 </script>
 
 <style scoped>
