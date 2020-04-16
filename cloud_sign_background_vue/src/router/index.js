@@ -70,7 +70,8 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     http({
-      url: http.adornUrl('/role/getMenuList.do'),
+      // url:http.adornUrl('system/menu/treeselect') 正常要用这个来请求，下面这个只能用于本地测试
+      url: http.adornUrl('role/getMenuList.do'),
       method: 'get',
       params: http.adornParams()
     }).then(({data}) => {
