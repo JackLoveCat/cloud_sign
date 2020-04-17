@@ -5,6 +5,8 @@ import Login from "../components/page/Login.vue";
 import store from "../store/index";
 import Register from "../components/page/Register.vue";
 import MyClass from "../views/MyClass.vue";
+import Sign from "../views/Sign.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -53,6 +55,16 @@ const routes = [
       showFoot: false,
     },
   },
+  {
+    path: "/sign",
+    name: "Sign",
+    component: Sign,
+    meta: {
+      title: "签到",
+      showFoot: false,
+    },
+  },
+
   {
     path: "/404",
     name: "notFound",

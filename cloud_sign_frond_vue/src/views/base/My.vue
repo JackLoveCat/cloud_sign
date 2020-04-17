@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-24 21:39:10
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-03-31 21:49:20
+ * @LastEditTime: 2020-04-05 21:39:02
  -->
 <template>
   <div class="page__bd">
@@ -71,15 +71,16 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import state from "@/store/index";
+import { Action } from "vuex-class";
 
 @Component
 export default class My extends Vue {
+  @Action("User/logout") logoutAction!: Function;
   goPage(page: string) {
     this.$router.push({ name: page });
   }
   logout() {
-    state.commit("logout");
+    this.logoutAction();
     this.$router.push({ name: "Login" });
   }
 }

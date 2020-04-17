@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter, { Route } from "vue-router";
+import { ToastInterface } from "./components/base/toast/index";
 
 declare module "*.vue" {
   import Vue from "vue";
@@ -10,5 +11,7 @@ declare module "vue/types/vue" {
   interface Vue {
     $router: VueRouter; // 这表示this下有这个东西
     $route: Route;
+    $loading: ToastInterface;
+    $toptips: ToastInterface;
   }
 }

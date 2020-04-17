@@ -144,10 +144,14 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Action } from "vuex-class";
 import { UserInfo } from "@/types/model/User";
-import API from "@/utils/api";
+import API, { KResponse } from "@/utils/api";
+import { ToastOptions } from "../base/toast/index";
+
 @Component
 export default class Register extends Vue {
+  @Action("User/login") saveLogin!: Function;
   private params: UserInfo = {
     avatar: "男",
     nickName: "",
@@ -156,7 +160,7 @@ export default class Register extends Vue {
     repassword: "",
     email: "",
     phonenumber: "",
-    roleIds: [2]
+    roleIds: [2],
   };
   constructor() {
     super();
@@ -169,15 +173,20 @@ export default class Register extends Vue {
     //   });
   }
   register() {
-    console.log(this.params);
     API.register(this.params)
-      .then(res => {
-        console.log(res);
+      .then((res) => {
+        API.login(this.params.phonenumber, this.params.password)
+          .then((res: KResponse) => {
+            this.saveLogin(res.data.token);
+            this.$router.push({ name: "Home" });
+          })
+          .catch((res: KResponse) => {
+            this.$toptips.show(new ToastOptions(res.msg));
+          });
       })
-      .catch(res => {
-        console.log(res);
+      .catch((res) => {
+        this.$toptips.show(new ToastOptions(res.msg));
       });
-    alert("register success:" + JSON.stringify(this.params));
   }
   goLogin() {
     this.$router.push({ name: "Login" });
