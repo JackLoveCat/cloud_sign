@@ -18,6 +18,7 @@ const _import = require('./import-' + process.env.NODE_ENV)
 // 全局路由(无需嵌套上左右整体布局)
 const globalRoutes = [
   { path: '/404', component: _import('common/404'), name: '404', meta: { title: '404未找到' } },
+  { path: '/register', component: _import('common/register'), name: 'register', meta: { title: '注册' } },
   { path: '/login', component: _import('common/login'), name: 'login', meta: { title: '登录' } }
 ]
 
@@ -69,7 +70,8 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     http({
-      url: http.adornUrl('/role/getMenuList.do'),
+      // url:http.adornUrl('system/menu/treeselect') 正常要用这个来请求，下面这个只能用于本地测试
+      url: http.adornUrl('role/getMenuList.do'),
       method: 'get',
       params: http.adornParams()
     }).then(({data}) => {

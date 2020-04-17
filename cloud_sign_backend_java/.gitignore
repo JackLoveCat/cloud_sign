@@ -13,4 +13,9 @@
 .classpath
 .settings
 .metadata
+
+# logs
 /cloudsign_log
+
+#deploy jar
+/bin

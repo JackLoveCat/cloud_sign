@@ -11,11 +11,11 @@
         <div class="login-main" v-if="isForgetPwd">
           <h3 class="login-title">登录系统</h3>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
-            <el-form-item prop="userName">
-              <el-input v-model="dataForm.userName" placeholder="账号/工号"></el-input>
+            <el-form-item prop="account">
+              <el-input v-model="dataForm.account" placeholder="账号/工号"></el-input>
             </el-form-item>
-            <el-form-item prop="password">
-              <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+            <el-form-item prop="passward">
+              <el-input v-model="dataForm.passward" type="password" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item prop="captcha">
               <el-row :gutter="20">
@@ -30,12 +30,20 @@
               <a @click="isForgetPwd=!isForgetPwd">忘记密码</a>
             </el-form-item>
             <el-form-item>
+              <el-radio v-model="dataForm.role" label="1">学生</el-radio>
+              <el-radio v-model="dataForm.role" label="2">教师</el-radio>
+              <el-radio v-model="dataForm.role" label="3">教务处</el-radio>
+            </el-form-item>
+            <el-form-item>
               <el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
+            </el-form-item>            
+             <el-form-item prop="password">
+               <a @click="toRegister">注册新账号</a>
             </el-form-item>
           </el-form>
         </div>
-        <div class="login-main" v-else="isForgetPwd">
+        <div class="login-main" v-else>
           <h3 class="login-title">忘记密码</h3>
           <el-form>
             <el-form-item>
@@ -58,10 +66,10 @@
     data () {
       return {
         dataForm: {
-          userName: '',
-          password: '',
+          account: '',
+          passward: '',
           // uuid: '',
-          captcha: '',
+          //captcha: '',
           role:'1',
           remPsd:true,
         },
@@ -71,15 +79,15 @@
         canClick:true,
         totalTime: 60,      //记录具体倒计时时间
         dataRule: {
-          userName: [
+          account: [
             { required: true, message: '账号/工号不能为空', trigger: 'blur' }
           ],
-          password: [
+          passward: [
             { required: true, message: '密码不能为空', trigger: 'blur' }
-          ],
-          captcha: [
-            { required: true, message: '验证码不能为空', trigger: 'blur' }
           ]
+          /*captcha: [
+            { required: true, message: '验证码不能为空', trigger: 'blur' }
+          ]*/
         },
         captchaPath: '',
       }
@@ -93,17 +101,17 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl('/role/login.do'),
+              url: this.$http.adornUrl('login'),
               method: 'post',
               data: this.$http.adornData({
-                'username': this.dataForm.userName,
-                'password': this.dataForm.password,
-                'captcha': this.dataForm.captcha,
-                'role': this.dataForm.role,
-                'rememberMe': this.dataForm.remPsd
+                'account': this.dataForm.account,
+                'passward': this.dataForm.passward
+                //'captcha': this.dataForm.captcha,
+                //'role': this.dataForm.role,
+                //'rememberMe': this.dataForm.remPsd
               })
             }).then(({data}) => {
-              if (data && data.status === 200) {
+              if (data && data.code === 200) {
                 this.$cookie.set('token', data.token, data.timeOut)
                 this.$router.replace({name: 'home'})
                 console.log(data.status)
@@ -160,7 +168,10 @@
             }
           })
         }
+      },
 
+      toRegister() {
+        this.$router.push('/register');
       }
     }
   }

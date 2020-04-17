@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:role:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:role:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -36,10 +36,20 @@
         label="角色名称">
       </el-table-column>
       <el-table-column
-        prop="remark"
+        prop="roleSort"
         header-align="center"
         align="center"
-        label="备注">
+        label="显示顺序">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        header-align="center"
+        align="center"
+        label="角色状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === '0'" size="small">正常</el-tag>
+          <el-tag v-else-if="scope.row.status === '1'" size="small" type="info">停用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -97,22 +107,39 @@
     activated () {
       this.getDataList()
     },
-    methods: {
-      // 获取数据列表
-      getDataList () {
+    /*mounted (){
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/role/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'roleName': this.dataForm.roleName
+          url: this.$http.adornUrl('/system/menu/1'),
+          method: 'delete',
+          params: this.$http.delete({
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+    },*/
+    mounted () {
+      this.getDataList()
+    },
+    methods: {
+      // 获取数据列表
+      getDataList () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('system/role/list'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.dataList = data.rows
+            this.totalPage = data.total
           } else {
             this.dataList = []
             this.totalPage = 0
