@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <el-form-item label="用户名" prop="userName">
+      <el-form-item label="用户账号" prop="userName">
         <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
@@ -111,11 +111,11 @@
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
-          url: this.$http.adornUrl('/sys/role/select'),
+          url: this.$http.adornUrl('system/role/list'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.roleList = data && data.code === 0 ? data.list : []
+          this.roleList = data && data.code === 200 ? data.rows : []
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -142,14 +142,15 @@
       },
       // 表单提交
       dataFormSubmit () {
+        var methodtype = this.dataForm.id ? 'put' : 'post'
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/sys/user/${!this.dataForm.id ? 'save' : 'update'}`),
-              method: 'post',
+              url: this.$http.adornUrl(`/system/user`),
+              method: methodtype,
               data: this.$http.adornData({
                 'userId': this.dataForm.id || undefined,
-                'username': this.dataForm.userName,
+                'userName': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'salt': this.dataForm.salt,
                 'email': this.dataForm.email,

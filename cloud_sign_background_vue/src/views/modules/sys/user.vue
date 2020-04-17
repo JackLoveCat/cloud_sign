@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="haveAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="haveAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -27,19 +27,19 @@
         header-align="center"
         align="center"
         width="80"
-        label="ID">
+        label="用户ID">
       </el-table-column>
       <el-table-column
-        prop="username"
+        prop="userName"
         header-align="center"
         align="center"
-        label="用户名">
+        label="用户账号">
       </el-table-column>
       <el-table-column
-        prop="email"
+        prop="nickName"
         header-align="center"
         align="center"
-        label="邮箱">
+        label="用户昵称">
       </el-table-column>
       <el-table-column
         prop="mobile"
@@ -48,10 +48,22 @@
         label="手机号">
       </el-table-column>
       <el-table-column
+        prop="email"
+        header-align="center"
+        align="center"
+        label="用户邮箱">
+      </el-table-column>
+      <el-table-column
+        prop="loginIp"
+        header-align="center"
+        align="center"
+        label="最后登陆IP">
+      </el-table-column>
+      <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="状态">
+        label="帐号状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
           <el-tag v-else size="small">正常</el-tag>
@@ -71,8 +83,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
+          <el-button v-if="haveAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
+          <el-button v-if="haveAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,6 +104,7 @@
 
 <script>
   import AddOrUpdate from './user-add-or-update'
+  import {isAuth} from '../../../utils'
   export default {
     data () {
       return {
@@ -113,25 +126,23 @@
     activated () {
       this.getDataList()
     },
+    mounted () {
+      this.getDataList()
+    },
     methods: {
-      test(){
+      test () {
         this.$router.push({name:'test'})
       },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/user/list'),
+          url: this.$http.adornUrl('system/user/list'),
           method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'username': this.dataForm.userName
-          })
+          params: this.$http.adornParams()
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+          if (data && data.code === 200) {
+            this.dataList = data.rows
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -190,6 +201,11 @@
             }
           })
         }).catch(() => {})
+      },
+      haveAuth (auth) {
+        console.log(auth + ' ' + isAuth(auth))
+        //return isAuth(auth)
+        return true
       }
     }
   }
