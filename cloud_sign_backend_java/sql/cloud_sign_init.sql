@@ -74,6 +74,10 @@ unique key (university_name, academy_name)
 -- 初始化学校院系表数据
 -- ----------------------------
 insert into sys_uniacada values('1','福州大学','数学与计算机科学学院','0','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_uniacada values('2','福州大学','电气工程与自动化学院','1','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_uniacada values('3','福州大学','机械工程及自动化学院','2','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_uniacada values('4','厦门大学','新闻传播学院','3','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_uniacada values('5','厦门大学','经济学院','4','admin',sysdate(),'admin',sysdate(),null);
 
 -- 菜单管理表
 -- ----------------------------
@@ -100,10 +104,12 @@ create table sys_menu (
 -- 初始化菜单管理表数据
 -- ----------------------------
 insert into sys_menu values('1','系统管理','0','#','#',1,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('2','班课列表','0','#','#',2,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
 
 insert into sys_menu values('11','菜单管理','1','#','#',1,0,1,'system:menu','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('12','角色管理','1','#','#',2,0,1,'system:role','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('13','用户管理','1','#','#',3,0,1,'system:user','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('14','学校院系管理','1','#','#',4,0,1,'system:uniacada','admin',sysdate(),'admin',sysdate(),null);
 
 insert into sys_menu values('21','我创建的','2','#','#',1,0,1,'cla:course:create','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('22','我加入的','2','#','#',2,0,1,'cla:course:join','admin',sysdate(),'admin',sysdate(),null);
