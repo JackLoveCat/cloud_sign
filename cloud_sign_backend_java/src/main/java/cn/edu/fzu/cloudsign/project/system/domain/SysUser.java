@@ -11,67 +11,89 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 用户对象 sys_user
  * 
  */
+@ApiModel("用户")
 public class SysUser extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 用户ID */
+	@ApiModelProperty("用户ID")
 	private Long userId;
 
-	/** 部门ID */
+	/** 学校院系ID */
+	@ApiModelProperty("学校院系ID")
 	private Long uniacadaId;
 
 	/** 用户账号 */
+	@ApiModelProperty(value = "用户账号", required = true)
 	private String userName;
 
 	/** 用户昵称 */
+	@ApiModelProperty(value = "用户昵称", required = true)
 	private String nickName;
 
 	/** 学号 */
+	@ApiModelProperty("学号")
 	private String studentNum;
 
 	/** 用户邮箱 */
+	@ApiModelProperty("用户邮箱")
 	private String email;
 
 	/** 手机号码 */
+	@ApiModelProperty("手机号码")
 	private String phonenumber;
 
 	/** 用户头像 */
+	@ApiModelProperty("用户头像")
 	private String avatar;
 
 	/** 密码 */
+	@ApiModelProperty("密码")
 	private String password;
 
 	/** 盐加密 */
+	@ApiModelProperty(hidden = true)
 	private String salt;
 
 	/** 帐号状态（0正常 1停用） */
+	@ApiModelProperty("帐号状态（0正常 1停用）")
 	private String status;
 
 	/** 删除标志（0代表存在 2代表删除） */
+	@ApiModelProperty(hidden = true)
 	private String delFlag;
 
 	/** 最后登陆IP */
+	@ApiModelProperty("最后登陆IP")
 	private String loginIp;
 
 	/** 最后登陆时间 */
+	@ApiModelProperty("最后登陆时间 ")
 	private Date loginDate;
 
 	/** 学校院系 */
+	@ApiModelProperty("学校院系")
 	private SysUniacada uniacada;
 
 	/** 角色对象 */
+	@ApiModelProperty("所拥有角色列表")
 	private List<SysRole> roles;
 
 	/** 角色组 */
+	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	private Long[] roleIds;
 
 	public SysUser() {
@@ -90,10 +112,12 @@ public class SysUser extends BaseEntity {
 		this.userId = userId;
 	}
 
+	@ApiModelProperty(hidden = true)
 	public boolean isAdmin() {
 		return isAdmin(this.userId);
 	}
 
+	@ApiModelProperty(hidden = true)
 	public static boolean isAdmin(Long userId) {
 		return userId != null && 1L == userId;
 	}

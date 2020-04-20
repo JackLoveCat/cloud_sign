@@ -7,36 +7,47 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 角色表 sys_role
  * 
  */
+@ApiModel("角色")
 public class SysRole extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	/** 角色ID */
+	@ApiModelProperty("角色ID")
 	private Long roleId;
 
 	/** 角色名称 */
+	@ApiModelProperty(value = "角色名称", required = true)
 	private String roleName;
 
 	/** 是否固定角色 */
+	@ApiModelProperty(value = "是否固定角色", required = true)
 	private String editable;
 
 	/** 角色排序 */
+	@ApiModelProperty(value = "角色排序", required = true)
 	private String roleSort;
 
 	/** 角色状态（0正常 1停用） */
+	@ApiModelProperty(value = "角色状态（0正常 1停用）", required = true)
 	private String status;
 
 	/** 删除标志（0代表存在 2代表删除） */
+	@ApiModelProperty(hidden = true)
 	private String delFlag;
 
 	/** 用户是否存在此角色标识 默认不存在 */
+	@ApiModelProperty(hidden = true)
 	private boolean flag = false;
 
 	/** 菜单组 */
+	@ApiModelProperty("维护角色时，传入角色有权限访问的菜单ID")
 	private Long[] menuIds;
 
 	public SysRole() {
@@ -114,7 +125,7 @@ public class SysRole extends BaseEntity {
 		this.menuIds = menuIds;
 	}
 
-	@NotBlank(message = "是否允许修改不能为空")
+	@NotBlank(message = "是否固定角色不能为空")
 	public String getEditable() {
 		return editable;
 	}

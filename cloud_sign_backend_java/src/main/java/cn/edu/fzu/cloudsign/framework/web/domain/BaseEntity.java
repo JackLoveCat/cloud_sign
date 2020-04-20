@@ -7,6 +7,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Entity基类
  * 
@@ -15,37 +17,50 @@ public class BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 搜索值 */
+	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	private String searchValue;
 
 	/** 创建者 */
+	@ApiModelProperty(hidden = true)
 	private String createBy;
 
 	/** 创建时间 */
+	@ApiModelProperty(hidden = true)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 
 	/** 更新者 */
+	@ApiModelProperty(hidden = true)
 	private String updateBy;
 
 	/** 更新时间 */
+	@ApiModelProperty(hidden = true)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
 
 	/** 备注 */
+	@ApiModelProperty("备注")
 	private String remark;
 
 	/** 数据权限 */
+	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	private String dataScope;
 
 	/** 开始时间 */
+	@ApiModelProperty(hidden = true)
 	@JsonIgnore
 	private String beginTime;
 
 	/** 结束时间 */
+	@ApiModelProperty(hidden = true)
 	@JsonIgnore
 	private String endTime;
 
 	/** 请求参数 */
+	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	private Map<String, Object> params;
 
 	public String getSearchValue() {
