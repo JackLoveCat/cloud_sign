@@ -28,7 +28,7 @@ public class SysUniacada extends BaseEntity {
 	@ApiModelProperty(value = "院系名称", required = true)
 	private String academyName;
 
-	@ApiModelProperty(value = "开课数量", required = true)
+	@ApiModelProperty(value = "开课数量")
 	private Long classNum;
 
 	/** 显示顺序 */

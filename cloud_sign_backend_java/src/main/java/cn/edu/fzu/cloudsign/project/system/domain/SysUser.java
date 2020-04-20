@@ -113,11 +113,13 @@ public class SysUser extends BaseEntity {
 	}
 
 	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	public boolean isAdmin() {
 		return isAdmin(this.userId);
 	}
 
 	@ApiModelProperty(hidden = true)
+	@JsonIgnore
 	public static boolean isAdmin(Long userId) {
 		return userId != null && 1L == userId;
 	}

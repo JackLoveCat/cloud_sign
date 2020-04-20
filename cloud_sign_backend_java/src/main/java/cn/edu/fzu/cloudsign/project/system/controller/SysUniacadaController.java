@@ -49,7 +49,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 获取学校院系详细信息
 	 */
-	@ApiOperation("获取学校院系详细信息")
+//	@ApiOperation("获取学校院系详细信息")
 	@PreAuthorize("@ss.hasPermi('system:uniacada')")
 	@GetMapping(value = "/{uniacadaId}")
 	public AjaxResult getInfo(@PathVariable("uniacadaId") Long uniacadaId) {
@@ -59,7 +59,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 新增学校院系
 	 */
-	@ApiOperation("新增学校院系")
+//	@ApiOperation("新增学校院系")
 	@PreAuthorize("@ss.hasPermi('system:uniacada')")
 	@Log(title = "学校院系", businessType = BusinessType.INSERT)
 	@PostMapping
@@ -70,7 +70,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 修改学校院系
 	 */
-	@ApiOperation("修改学校院系")
+//	@ApiOperation("修改学校院系")
 	@PreAuthorize("@ss.hasPermi('system:uniacada')")
 	@Log(title = "学校院系", businessType = BusinessType.UPDATE)
 	@PutMapping
@@ -81,7 +81,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 删除学校院系
 	 */
-	@ApiOperation("删除学校院系")
+//	@ApiOperation("删除学校院系")
 	@PreAuthorize("@ss.hasPermi('system:uniacada')")
 	@Log(title = "学校院系", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{uniacadaIds}")
@@ -92,7 +92,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 查询学校
 	 */
-	@ApiOperation("查询学校")
+//	@ApiOperation("查询学校")
 	@GetMapping("/listuni")
 	public AjaxResult listUniversity() {
 		return AjaxResult.success(sysUniacadaService.selectUniversityList());
@@ -101,7 +101,7 @@ public class SysUniacadaController extends BaseController {
 	/**
 	 * 按学校查询学院
 	 */
-	@ApiOperation("按学校查询学院，与查询学校接口级联查询，用于创建用户或班课时查询得到学校院系id")
+//	@ApiOperation("按学校查询学院，与查询学校接口级联查询，用于创建用户或班课时查询得到学校院系id")
 	@GetMapping(value = "/listacabyuni/{uniName}")
 	public AjaxResult listAcademyByUniversity(@PathVariable("uniName") String uniName) {
 		return AjaxResult.success(sysUniacadaService.selectAcademyListByUniversity(uniName));
