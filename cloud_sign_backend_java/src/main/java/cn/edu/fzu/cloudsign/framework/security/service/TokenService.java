@@ -13,7 +13,6 @@ import cn.edu.fzu.cloudsign.common.constant.Constants;
 import cn.edu.fzu.cloudsign.common.utils.IdUtils;
 import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
 import cn.edu.fzu.cloudsign.common.utils.StringUtils;
-import cn.edu.fzu.cloudsign.common.utils.ip.AddressUtils;
 import cn.edu.fzu.cloudsign.common.utils.ip.IpUtils;
 import cn.edu.fzu.cloudsign.framework.redis.CaffeineCache;
 import cn.edu.fzu.cloudsign.framework.security.LoginUser;
@@ -153,7 +152,6 @@ public class TokenService {
 		UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
 		String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
 		loginUser.setIpaddr(ip);
-		loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
 		loginUser.setBrowser(userAgent.getBrowser().getName());
 		loginUser.setOs(userAgent.getOperatingSystem().getName());
 	}
