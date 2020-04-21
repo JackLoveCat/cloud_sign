@@ -15,9 +15,9 @@ import cn.edu.fzu.cloudsign.common.exception.user.UserPasswordNotMatchException;
 import cn.edu.fzu.cloudsign.common.utils.MessageUtils;
 import cn.edu.fzu.cloudsign.framework.manager.AsyncManager;
 import cn.edu.fzu.cloudsign.framework.manager.factory.AsyncFactory;
-import cn.edu.fzu.cloudsign.framework.redis.RedisCache;
 import cn.edu.fzu.cloudsign.framework.security.LoginUser;
-
+//TODO 没用了
+//import cn.edu.fzu.cloudsign.framework.redis.RedisCache;
 /**
  * 登录校验方法
  * 
@@ -29,9 +29,9 @@ public class SysLoginService {
 
 	@Resource
 	private AuthenticationManager authenticationManager;
-
-	@Autowired
-	private RedisCache redisCache;
+//  TODO 没用了
+//	@Autowired
+//	private RedisCache redisCache;
 
 	/**
 	 * 登录验证

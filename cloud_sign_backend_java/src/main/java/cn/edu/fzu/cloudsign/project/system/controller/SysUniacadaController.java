@@ -30,64 +30,80 @@ import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
 @Api("学校院系")
 @RestController
 @RequestMapping("/system/uniacada")
-public class SysUniacadaController extends BaseController
-{
-    @Autowired
-    private ISysUniacadaService sysUniacadaService;
+public class SysUniacadaController extends BaseController {
+	@Autowired
+	private ISysUniacadaService sysUniacadaService;
 
-    /**
-     * 查询学校院系列表
-     */
-    @ApiOperation("查询学校院系列表")
-    @PreAuthorize("@ss.hasPermi('system:uniacada')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysUniacada sysUniacada)
-    {
-        startPage();
-        List<SysUniacada> list = sysUniacadaService.selectSysUniacadaList(sysUniacada);
-        return getDataTable(list);
-    }
+	/**
+	 * 查询学校院系列表
+	 */
+	@ApiOperation("查询学校院系列表")
+	@PreAuthorize("@ss.hasPermi('system:uniacada')")
+	@GetMapping("/list")
+	public TableDataInfo list(SysUniacada sysUniacada) {
+		startPage();
+		List<SysUniacada> list = sysUniacadaService.selectSysUniacadaList(sysUniacada);
+		return getDataTable(list);
+	}
 
-    /**
-     * 获取学校院系详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:uniacada')")
-    @GetMapping(value = "/{uniacadaId}")
-    public AjaxResult getInfo(@PathVariable("uniacadaId") Long uniacadaId)
-    {
-        return AjaxResult.success(sysUniacadaService.selectSysUniacadaById(uniacadaId));
-    }
+	/**
+	 * 获取学校院系详细信息
+	 */
+//	@ApiOperation("获取学校院系详细信息")
+	@PreAuthorize("@ss.hasPermi('system:uniacada')")
+	@GetMapping(value = "/{uniacadaId}")
+	public AjaxResult getInfo(@PathVariable("uniacadaId") Long uniacadaId) {
+		return AjaxResult.success(sysUniacadaService.selectSysUniacadaById(uniacadaId));
+	}
 
-    /**
-     * 新增学校院系
-     */
-    @PreAuthorize("@ss.hasPermi('system:uniacada')")
-    @Log(title = "学校院系", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody SysUniacada sysUniacada)
-    {
-        return toAjax(sysUniacadaService.insertSysUniacada(sysUniacada));
-    }
+	/**
+	 * 新增学校院系
+	 */
+//	@ApiOperation("新增学校院系")
+	@PreAuthorize("@ss.hasPermi('system:uniacada')")
+	@Log(title = "学校院系", businessType = BusinessType.INSERT)
+	@PostMapping
+	public AjaxResult add(@RequestBody SysUniacada sysUniacada) {
+		return toAjax(sysUniacadaService.insertSysUniacada(sysUniacada));
+	}
 
-    /**
-     * 修改学校院系
-     */
-    @PreAuthorize("@ss.hasPermi('system:uniacada')")
-    @Log(title = "学校院系", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody SysUniacada sysUniacada)
-    {
-        return toAjax(sysUniacadaService.updateSysUniacada(sysUniacada));
-    }
+	/**
+	 * 修改学校院系
+	 */
+//	@ApiOperation("修改学校院系")
+	@PreAuthorize("@ss.hasPermi('system:uniacada')")
+	@Log(title = "学校院系", businessType = BusinessType.UPDATE)
+	@PutMapping
+	public AjaxResult edit(@RequestBody SysUniacada sysUniacada) {
+		return toAjax(sysUniacadaService.updateSysUniacada(sysUniacada));
+	}
 
-    /**
-     * 删除学校院系
-     */
-    @PreAuthorize("@ss.hasPermi('system:uniacada')")
-    @Log(title = "学校院系", businessType = BusinessType.DELETE)
+	/**
+	 * 删除学校院系
+	 */
+//	@ApiOperation("删除学校院系")
+	@PreAuthorize("@ss.hasPermi('system:uniacada')")
+	@Log(title = "学校院系", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{uniacadaIds}")
-    public AjaxResult remove(@PathVariable Long[] uniacadaIds)
-    {
-        return toAjax(sysUniacadaService.deleteSysUniacadaByIds(uniacadaIds));
-    }
+	public AjaxResult remove(@PathVariable Long[] uniacadaIds) {
+		return toAjax(sysUniacadaService.deleteSysUniacadaByIds(uniacadaIds));
+	}
+
+	/**
+	 * 查询学校
+	 */
+//	@ApiOperation("查询学校")
+	@GetMapping("/listuni")
+	public AjaxResult listUniversity() {
+		return AjaxResult.success(sysUniacadaService.selectUniversityList());
+	}
+
+	/**
+	 * 按学校查询学院
+	 */
+//	@ApiOperation("按学校查询学院，与查询学校接口级联查询，用于创建用户或班课时查询得到学校院系id")
+	@GetMapping(value = "/listacabyuni/{uniName}")
+	public AjaxResult listAcademyByUniversity(@PathVariable("uniName") String uniName) {
+		return AjaxResult.success(sysUniacadaService.selectAcademyListByUniversity(uniName));
+	}
 }

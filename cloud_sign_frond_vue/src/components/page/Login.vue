@@ -16,7 +16,7 @@
                   id="account"
                   v-model="params.account"
                   class="weui-input"
-                  placeholder="支持手机号/邮箱/用户名登录"
+                  placeholder="手机/邮箱/用户名"
                 />
               </div>
             </div>
@@ -57,28 +57,29 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { LoginParams } from "@/types/model/User";
-import state from "@/store/index";
-import API from "@/utils/api";
+import API, { KResponse } from "@/utils/api";
+import { ToastOptions } from "../base/toast/index";
 
 @Component
 export default class Login extends Vue {
-  // @Action("login") saveLogin: Function;
+  @Action("User/login") saveLogin!: Function;
   private params: LoginParams = {
     account: "",
     password: "",
   };
   login() {
-    state.dispatch("User/login", "jack");
-    // API.login(this.params.account, this.params.password)
-    //   .then((res) => {
-    //     // this.saveLogin(res);
-    //     // state.commit("login", "Jack login token");
-    //     console.log("login success:" + JSON.stringify(this.params));
-    //     // this.$router.push({ name: "Home" });
-    //   })
-    //   .catch((res) => {
-    //     console.log("login failed:" + res);
-    //   });
+    if (!this.params.account || !this.params.password) {
+      this.$toptips.show(new ToastOptions("请输入账号密码~"));
+      return;
+    }
+    API.login(this.params.account, this.params.password)
+      .then((res: KResponse) => {
+        this.saveLogin(res.data.token);
+        this.$router.push({ name: "Home" });
+      })
+      .catch((res: KResponse) => {
+        this.$toptips.show(new ToastOptions(res.msg));
+      });
   }
   goRegister() {
     this.$router.push({ name: "Register" });

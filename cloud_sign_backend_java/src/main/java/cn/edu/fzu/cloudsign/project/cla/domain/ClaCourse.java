@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 班课信息对象 cla_course
@@ -13,54 +15,56 @@ import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
  * @author fanxuenan
  * @date 2020-03-23
  */
+@ApiModel("班课信息")
 public class ClaCourse extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	/** 班课ID */
+	@ApiModelProperty("班课ID")
 	private Long courseId;
 
 	/** 课程名称 */
-
+	@ApiModelProperty(value = "课程名称", required = true)
 	private String courseName;
 
 	/** 班课号 */
-
+	@ApiModelProperty("班课号")
 	private String courseNum;
 
 	/** 班级名称 */
-
+	@ApiModelProperty(value = "班级名称", required = true)
 	private String className;
 
 	/** 班课封面 */
-
+	@ApiModelProperty("班课封面")
 	private String coursePage;
 
 	/** 学期 */
-
+	@ApiModelProperty("学期 ")
 	private String semester;
 
 	/** 学校课表班课 */
-
+	@ApiModelProperty("学校课表班课")
 	private String curriculum;
 
 	/** 云教材 */
-
+	@ApiModelProperty("云教材")
 	private String textbook;
 
 	/** 学校院系ID */
-
+	@ApiModelProperty(value = "学校院系ID", required = true)
 	private Long uniacadaId;
 
 	/** 学习要求 */
-
+	@ApiModelProperty("学习要求")
 	private String studyRequirement;
 
 	/** 教学进度 */
-
+	@ApiModelProperty("教学进度")
 	private String lectureProgress;
 
 	/** 考试安排 */
-
+	@ApiModelProperty("考试安排")
 	private String examArrangement;
 
 	public void setCourseId(Long courseId) {

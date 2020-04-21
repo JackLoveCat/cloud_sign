@@ -14,10 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="classNum"    column="class_num"    />
     </resultMap>
 
     <sql id="selectSysUniacadaVo">
-        select uniacada_id, university_name, academy_name, order_num, create_by, create_time, update_by, update_time, remark from sys_uniacada
+        select t.uniacada_id, university_name, academy_name, order_num, create_by, create_time, update_by, update_time, remark,c.class_num 
+		from sys_uniacada t
+		left join (select uniacada_id,count(1) class_num from cla_course group by uniacada_id) c
+		on t.uniacada_id = c.uniacada_id
     </sql>
 
     <select id="selectSysUniacadaList" parameterType="SysUniacada" resultMap="SysUniacadaResult">
@@ -83,5 +87,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{uniacadaId}
         </foreach>
     </delete>
-    
+ 
+    <select id="selectUniversityList" resultType="String">
+        select distinct university_name from sys_uniacada
+    </select>  
+     
+    <select id="selectAcademyListByUniversity" parameterType="String" resultMap="SysUniacadaResult">
+         select uniacada_id, university_name, academy_name, order_num, create_by, create_time, update_by, update_time, remark from sys_uniacada t where t.university_name = #{uniName}
+    </select>     
+       
 </mapper>

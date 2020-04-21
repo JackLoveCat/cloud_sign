@@ -23,6 +23,7 @@ import cn.edu.fzu.cloudsign.framework.security.LoginUser;
 import cn.edu.fzu.cloudsign.framework.security.service.TokenService;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
+import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
 import cn.edu.fzu.cloudsign.project.system.domain.SysMenu;
 import cn.edu.fzu.cloudsign.project.system.service.ISysMenuService;
 import io.swagger.annotations.Api;
@@ -47,11 +48,12 @@ public class SysMenuController extends BaseController {
 	 */
 	@ApiOperation("获取菜单列表")
 	@GetMapping("/list")
-	public AjaxResult list(SysMenu menu) {
+	public TableDataInfo list(SysMenu menu) {
 		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
 		Long userId = loginUser.getUser().getUserId();
+		startPage();
 		List<SysMenu> menus = menuService.selectMenuList(menu, userId);
-		return AjaxResult.success(menus);
+		return getDataTable(menus);
 	}
 
 	/**
