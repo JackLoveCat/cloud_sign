@@ -79,7 +79,6 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("aaa")
           this.$http({
             url: this.$http.adornUrl('register'),
             method: 'post',

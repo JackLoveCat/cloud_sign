@@ -46,121 +46,118 @@
 <script>
   import editActivity from './editActivity'
   import addNewAc from './addNewAc'
-    export default {
-      data(){
-        return{
-          activityName:'',
-          checkState:'1',
-          activityList:[],
-          advanceList:[],
-          nowPage:1,
-          countall:0,
-          countprocess:0,
-          countover:0,
-          max:1,
+  export default {
+    data () {
+      return {
+        activityName: '',
+        checkState: '1',
+        activityList: [],
+        advanceList: [],
+        nowPage: 1,
+        countall: 0,
+        countprocess: 0,
+        countover: 0,
+        max: 1
 
-        }
-      },
-      components:{
-        'editActivity':editActivity,
-        'addNewAc':addNewAc
-      },
-      mounted(){
+      }
+    },
+    components: {
+      'editActivity': editActivity,
+      'addNewAc': addNewAc
+    },
+    mounted () {
+      this.getActivityByState(this.checkState)
+    },
+    methods: {
+      selectAc (page) {
+        this.nowPage = page
         this.getActivityByState(this.checkState)
       },
-      methods:{
-        selectAc(page){
-          this.nowPage=page
-          this.getActivityByState(this.checkState)
-        },
-        getActivityByState(State){
-          this.nowPage=1
-          this.$http({
-            url: this.$http.adornUrl('/teacher/queryPublishWork.dotime'),
-            method: 'post',
-            data:this.$http.adornData({
-              'page':this.nowPage,
-              'cId': localStorage.getItem('cId'),
-              'state':State
+      getActivityByState (State) {
+        this.nowPage = 1
+        this.$http({
+          url: this.$http.adornUrl('/teacher/queryPublishWork.dotime'),
+          method: 'post',
+          data: this.$http.adornData({
+            'page': this.nowPage,
+            'cId': localStorage.getItem('cId'),
+            'state': State
+          })
+        }).then(({data}) => {
+          if (data && data.status === 200) {
+            this.activityList = data.publishWorks
+            this.max = data.max
+            this.countall = data.countall
+            this.countprocess = data.countprocess
+            this.countover = data.countover
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
             })
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              this.activityList=data.publishWorks
-              this.max=data.max
-              this.countall=data.countall
-              this.countprocess=data. countprocess
-              this.countover=data.countover
-            }
-            else {
-              this.$message({
-                message:data.msg,
-                type:'error'
-              })
-            }
-          })
-        },
-        getActivityByName(name,cb){
-          this.$http({
-            url: this.$http.adornUrl('/teacher/fuzzySearchWorkNames.do'),
-            method: 'post',
-            data:this.$http.adornData({
-              'cId': localStorage.getItem('cId'),
-              'pwName':name
-            })
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              this.advanceList=data.fuzzySearchWorks
-              cb(this.advanceList)
-            }
-            else {
-              this.$message({
-                message:data.msg,
-                type:'error'
-              })
-            }
-          })
-        },
-        handSelect(val){
-          this.$http({
-            url: this.$http.adornUrl('/teacher/SearchPwByPwName.dotime'),
-            method: 'post',
-            data:this.$http.adornData({
-              'cId': localStorage.getItem('cId'),
-              'pwName':val.value
-            })
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              this.activityList=data.fuzzySearchWorks
-            }
-            else {
-              this.$message({
-                message:data.msg,
-                type:'error'
-              })
-            }
-          })
-        },
-        inActivity(pwId){
-          localStorage.setItem('nowAcId',pwId)
-          this.$router.push({name:'teacher-Correction'})
-        },
-        editAcInfo(pwId){
-          localStorage.setItem('nowAcId',pwId)
-          this.$router.push({name:'teacher-editActivity'})
-        },
-        addNewAc(){
-          this.$nextTick(() => {
-            this.$refs.addNewAc.init()
-          })
-        },
-        listenAdd(data){
-          if(data){
-            this.getActivityByState(this.checkState)
           }
+        })
+      },
+      getActivityByName (name, cb) {
+        this.$http({
+          url: this.$http.adornUrl('/teacher/fuzzySearchWorkNames.do'),
+          method: 'post',
+          data: this.$http.adornData({
+            'cId': localStorage.getItem('cId'),
+            'pwName': name
+          })
+        }).then(({data}) => {
+          if (data && data.status === 200) {
+            this.advanceList = data.fuzzySearchWorks
+            cb(this.advanceList)
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+          }
+        })
+      },
+      handSelect (val) {
+        this.$http({
+          url: this.$http.adornUrl('/teacher/SearchPwByPwName.dotime'),
+          method: 'post',
+          data: this.$http.adornData({
+            'cId': localStorage.getItem('cId'),
+            'pwName': val.value
+          })
+        }).then(({data}) => {
+          if (data && data.status === 200) {
+            this.activityList = data.fuzzySearchWorks
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+          }
+        })
+      },
+      inActivity (pwId) {
+        localStorage.setItem('nowAcId', pwId)
+        this.$router.push({name: 'teacher-Correction'})
+      },
+      editAcInfo (pwId) {
+        localStorage.setItem('nowAcId', pwId)
+        this.$router.push({name: 'teacher-editActivity'})
+      },
+      addNewAc () {
+        this.$nextTick(() => {
+          this.$refs.addNewAc.init()
+        })
+      },
+      listenAdd (data) {
+        if (data) {
+          this.getActivityByState(this.checkState)
         }
       }
-
     }
+
+  }
 </script>
 
 <style scoped>
