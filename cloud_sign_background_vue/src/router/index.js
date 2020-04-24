@@ -70,15 +70,16 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     http({
-      // url:http.adornUrl('system/menu/treeselect') 正常要用这个来请求，下面这个只能用于本地测试
-      url: http.adornUrl('role/getMenuList.do'),
+      //正常要用这个来请求，下面这个只能用于本地测试
+      url: http.adornUrl('system/menu/treeselect'),
+      //url: http.adornUrl('role/getMenuList.do'),
       method: 'get',
       params: http.adornParams()
     }).then(({data}) => {
-      if (data && data.status === 200) {
-        fnAddDynamicMenuRoutes(data.menuList)
+      if (data && data.code === 200) {
+        fnAddDynamicMenuRoutes(data.data)
         router.options.isAddDynamicMenuRoutes = true
-        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))
+        sessionStorage.setItem('menuList', JSON.stringify(data.data || '[]'))
         next({ ...to, replace: true })
       } else {
         sessionStorage.setItem('menuList', '[]')
@@ -116,8 +117,8 @@ function fnCurrentRouteType (route, globalRoutes = []) {
 function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   var temp = []
   for (var i = 0; i < menuList.length; i++) {
-    if (menuList[i].list && menuList[i].list.length >= 1) {
-      temp = temp.concat(menuList[i].list)
+    if (menuList[i].children && menuList[i].children.length >= 1) {
+      temp = temp.concat(menuList[i].children)
     } else if (menuList[i].url && /\S/.test(menuList[i].url)) {
       menuList[i].url = menuList[i].url.replace(/^\//, '')
       var route = {
@@ -125,8 +126,8 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
         component: null,
         name: menuList[i].url.replace('/', '-'),
         meta: {
-          menuId: menuList[i].menuId,
-          title: menuList[i].name,
+          menuId: menuList[i].id,
+          title: menuList[i].label,
           isDynamic: true,
           isTab: true,
           iframeUrl: ''
@@ -134,18 +135,21 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
       }
       // url以http[s]://开头, 通过iframe展示
       if (isURL(menuList[i].url)) {
-        route['path'] = `i-${menuList[i].menuId}`
-        route['nacme'] = `i-${menuList[i].menuId}`
+        route['path'] = `i-${menuList[i].id}`
+        route['nacme'] = `i-${menuList[i].id}`
         route['meta']['iframeUrl'] = menuList[i].url
       } else {
         try {
           route['component'] = _import(`modules/${menuList[i].url}`) || null
         } catch (e) {}
       }
+      console.log('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
+      console.log(route)
       routes.push(route)
     }
   }
   if (temp.length >= 1) {
+    console.log(temp)
     fnAddDynamicMenuRoutes(temp, routes)
   } else {
     mainRoutes.name = 'main-dynamic'

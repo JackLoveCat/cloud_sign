@@ -106,9 +106,6 @@
       TableTreeColumn,
       AddOrUpdate
     },
-    activated () {
-      this.getDataList()
-    },
     mounted () {
       this.getDataList()
     },

@@ -1,7 +1,5 @@
 import http from '@/utils/httpRequest'
 export function fetchList ({params}) {
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~')
-  console.log(params)
   return http({
     url: '/api/dictionary/list',
     method: 'get',
