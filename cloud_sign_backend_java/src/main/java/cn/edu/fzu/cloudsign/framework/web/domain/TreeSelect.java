@@ -12,59 +12,75 @@ import cn.edu.fzu.cloudsign.project.system.domain.SysMenu;
  * Treeselect树结构实体类
  * 
  */
-public class TreeSelect implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class TreeSelect implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    /** 节点ID */
-    private Long id;
+	/** 节点ID */
+	private Long id;
 
-    /** 节点名称 */
-    private String label;
+	/** 节点名称 */
+	private String label;
 
-    /** 子节点 */
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<TreeSelect> children;
+	/** 菜单链接 */
+	private String url;
 
-    public TreeSelect()
-    {
+	/** 菜单啊图标 */
+	private String icon;
 
-    }
+	/** 子节点 */
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<TreeSelect> children;
 
-    public TreeSelect(SysMenu menu)
-    {
-        this.id = menu.getMenuId();
-        this.label = menu.getMenuName();
-        this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-    }
+	public TreeSelect() {
 
-    public Long getId()
-    {
-        return id;
-    }
+	}
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
+	public TreeSelect(SysMenu menu) {
+		this.id = menu.getMenuId();
+		this.label = menu.getMenuName();
+		this.url = menu.getLink();
+		this.icon = menu.getIcon();
+		this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+	}
 
-    public String getLabel()
-    {
-        return label;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setLabel(String label)
-    {
-        this.label = label;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public List<TreeSelect> getChildren()
-    {
-        return children;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public void setChildren(List<TreeSelect> children)
-    {
-        this.children = children;
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public List<TreeSelect> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<TreeSelect> children) {
+		this.children = children;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 }
