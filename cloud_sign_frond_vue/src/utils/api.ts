@@ -3,11 +3,12 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:23:12
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-04-06 17:30:15
+ * @LastEditTime: 2020-04-18 11:44:07
  */
 import axios, { AxiosResponse } from "axios";
 import Vue from "vue";
 import { UserInfo } from "@/types/model/User";
+import { CourseInfo } from "@/types/model/Class";
 import { checkAndGetToen } from "../store/model/User";
 const HOST_DOMAIN = "/apis";
 // const HOST_DOMAIN = "http://123.206.49.117:8080";
@@ -26,7 +27,7 @@ class Response implements KResponse {
     this.data = data;
   }
 }
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
   let xtoken = checkAndGetToen(); //我的token 存储在 localStorage中
   // console.log(xtoken) 如果 xtoken 存在 就设置请求头
   if (xtoken) {
@@ -49,7 +50,7 @@ export default class Api {
     return axios.post(HOST_DOMAIN + "/loginbyphone", {
       phonenum: userNmae,
       password: password,
-      uuid: this.uuid(),
+      uuid: this.uuid()
     });
   }
   static toQueryString(obj?: Map<string, string>) {
@@ -65,7 +66,7 @@ export default class Api {
   static login(userNmae: string, password: string) {
     return this.post(HOST_DOMAIN + "/login", {
       account: userNmae,
-      passward: password,
+      passward: password
     });
   }
 
@@ -77,10 +78,20 @@ export default class Api {
     return this.get(HOST_DOMAIN + "/system/role/teacherandstudent");
   }
 
-  static getMyClass(param: any) {
-    return this.get(HOST_DOMAIN + "/cla/course/listmyjoin", param);
+  static getMyCreate(param: any) {
+    return this.get(HOST_DOMAIN + "/cla/course/listmycreate", param);
   }
 
+  static getMyJoin(param: any) {
+    return this.get(HOST_DOMAIN + "/cla/course/listmyjoin", param);
+  }
+  static createCourse(param: CourseInfo) {
+    return this.post(HOST_DOMAIN + "/cla/course/create", param);
+  }
+
+  static listCourse(param: any) {
+    return this.get(HOST_DOMAIN + "/cla/course/list", param);
+  }
   /**
    * 封装post请求，封装统一的loading
    * @param url
@@ -94,7 +105,7 @@ export default class Api {
         .finally(() => {
           Vue.prototype.$loading.hidden();
         })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
               new Response(
@@ -112,7 +123,7 @@ export default class Api {
               )
             );
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           if (err.response && err.response.data) {
             rejext(
@@ -156,7 +167,7 @@ export default class Api {
         .finally(() => {
           Vue.prototype.$loading.hidden();
         })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
               new Response(
@@ -174,7 +185,7 @@ export default class Api {
               )
             );
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.response.data) {
             rejext(
               new Response(
