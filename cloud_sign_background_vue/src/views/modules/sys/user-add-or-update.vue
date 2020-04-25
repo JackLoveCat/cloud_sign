@@ -7,11 +7,14 @@
       <el-form-item label="用户账号" prop="userName">
         <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
+      <el-form-item label="用户昵称" prop="nickName">
+        <el-input v-model="dataForm.nickName" placeholder="用户昵称"></el-input>
+      </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+        <el-input v-model="dataForm.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="确认密码"></el-input>
+        <el-input v-model="dataForm.comfirmPassword" placeholder="确认密码"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
@@ -19,15 +22,16 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
       </el-form-item>
-      <el-form-item label="角色" size="mini" prop="roleIdList">
-        <el-checkbox-group v-model="dataForm.roleIdList">
-          <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}</el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="角色" size="mini" prop="roleId">
+        <el-radio-group v-model="dataForm.roleId">
+          <el-radio :label="0">学生</el-radio>
+          <el-radio :label="1">教师</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="状态" size="mini" prop="status">
         <el-radio-group v-model="dataForm.status">
-          <el-radio :label="0">禁用</el-radio>
-          <el-radio :label="1">正常</el-radio>
+          <el-radio label="0">禁用</el-radio>
+          <el-radio label="1">正常</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -76,19 +80,22 @@
         visible: false,
         roleList: [],
         dataForm: {
-          id: 0,
+          id: -1,
           userName: '',
           password: '',
           comfirmPassword: '',
-          salt: '',
+          nickName: '',
           email: '',
           mobile: '',
-          roleIdList: [],
-          status: 1
+          roleId: 0,
+          status: '0'
         },
         dataRule: {
           userName: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
+          ],
+          nickName: [
+            { required: true, message: '昵称不能为空', trigger: 'blur' }
           ],
           password: [
             { validator: validatePassword, trigger: 'blur' }
@@ -123,18 +130,21 @@
           })
         }).then(() => {
           if (this.dataForm.id) {
+            alert(this.dataForm.id)
             this.$http({
-              url: this.$http.adornUrl(`/sys/user/info/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`/system/user/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.userName = data.user.username
-                this.dataForm.salt = data.user.salt
-                this.dataForm.email = data.user.email
-                this.dataForm.mobile = data.user.mobile
-                this.dataForm.roleIdList = data.user.roleIdList
-                this.dataForm.status = data.user.status
+              if (data && data.code === 200) {
+                this.dataForm.userName = data.data.userName
+                this.dataForm.nickName = data.data.nickName
+                this.dataForm.password = data.data.password
+                this.dataForm.comfirmPassword = data.data.password
+                this.dataForm.email = data.data.email
+                this.dataForm.mobile = data.data.phonenumber
+                this.dataForm.roleId = data.data.role[0].roleId
+                this.dataForm.status = data.data.status
               }
             })
           }
@@ -146,20 +156,20 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/system/user`),
+              url: this.$http.adornUrl('system/user'),
               method: methodtype,
               data: this.$http.adornData({
                 'userId': this.dataForm.id || undefined,
                 'userName': this.dataForm.userName,
+                'nickName': this.dataForm.nickName,
                 'password': this.dataForm.password,
-                'salt': this.dataForm.salt,
                 'email': this.dataForm.email,
-                'mobile': this.dataForm.mobile,
+                'phonenumber': this.dataForm.mobile,
                 'status': this.dataForm.status,
-                'roleIdList': this.dataForm.roleIdList
+                'roleId': this.dataForm.roleId
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',

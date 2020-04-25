@@ -2,29 +2,26 @@
   <div class="mod-menu">
     <el-form :inline="true" :model="dataForm">
       <el-form-item>
-        <el-button v-if="haveAuth('sys:menu:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="dataList"
-      border
-      style="width: 100%;">
+    <tree-table :data="data" border style="width: 100%;">
       <el-table-column
-        prop="menuId"
+        prop="id"
         header-align="center"
         align="center"
         width="80"
         label="ID">
       </el-table-column>
       <table-tree-column
-        prop="menuName"
+        prop="label"
         header-align="center"
         treeKey="menuId"
         width="150"
         label="名称">
       </table-tree-column>
       <el-table-column
-        prop="parentName"
+        prop="url"
         header-align="center"
         align="center"
         width="120"
@@ -78,11 +75,11 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.menuId === 1" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
-          <el-button v-if="haveAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
+          <el-button  type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
+          <el-button  type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </tree-table>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
@@ -93,18 +90,113 @@
   import AddOrUpdate from './menu-add-or-update'
   import { treeDataTranslate } from '@/utils'
   import {isAuth} from '../../../utils'
-  export default {
+  import treeTable from '@/components/tree-table'
+export default {
     data () {
       return {
         dataForm: {},
         dataList: [],
         dataListLoading: false,
-        addOrUpdateVisible: true
+        addOrUpdateVisible: true,
+        columns: [
+          {
+            text: '事件',
+            value: 'event',
+            width: 200
+          },
+          {
+            text: 'ID',
+            value: 'id'
+          }
+        ],
+        data: [
+          {
+            id: 0,
+            event: '事件1',
+            timeLine: 50,
+            comment: '无'
+          },
+          {
+            id: 1,
+            event: '事件2',
+            timeLine: 100,
+            comment: '无',
+            children: [
+              {
+                id: 2,
+                event: '事件2',
+                timeLine: 10,
+                comment: '无'
+              },
+              {
+                id: 3,
+                event: '事件3',
+                timeLine: 90,
+                comment: '无',
+                children: [
+                  {
+                    id: 4,
+                    event: '事件4',
+                    timeLine: 5,
+                    comment: '无'
+                  },
+                  {
+                    id: 5,
+                    event: '事件5',
+                    timeLine: 10,
+                    comment: '无'
+                  },
+                  {
+                    id: 6,
+                    event: '事件6',
+                    timeLine: 75,
+                    comment: '无',
+                    children: [
+                      {
+                        id: 7,
+                        event: '事件7',
+                        timeLine: 50,
+                        comment: '无',
+                        children: [
+                          {
+                            id: 71,
+                            event: '事件71',
+                            timeLine: 25,
+                            comment: 'xx'
+                          },
+                          {
+                            id: 72,
+                            event: '事件72',
+                            timeLine: 5,
+                            comment: 'xx'
+                          },
+                          {
+                            id: 73,
+                            event: '事件73',
+                            timeLine: 20,
+                            comment: 'xx'
+                          }
+                        ]
+                      },
+                      {
+                        id: 8,
+                        event: '事件8',
+                        timeLine: 25,
+                        comment: '无'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     },
     components: {
       TableTreeColumn,
-      AddOrUpdate
+      AddOrUpdate,
+      treeTable
     },
     mounted () {
       this.getDataList()
@@ -114,12 +206,11 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('system/menu/list'),
+          url: this.$http.adornUrl('system/menu/treeselect'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          alert('qqqq')
-          //this.dataList = treeDataTranslate(data, 'menuId')
+          // this.dataList = treeDataTranslate(data, 'menuId')
           this.dataList = data.rows
           this.dataListLoading = false
         })
