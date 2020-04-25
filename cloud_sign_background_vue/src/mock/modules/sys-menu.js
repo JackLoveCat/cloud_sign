@@ -490,40 +490,12 @@ var navDataList = [
     'parentId': 0,
     'parentName': null,
     'name': '数据字典管理',
-    'url': '',
+    'url': 'dictionary/dictionarylist',
     'perms': null,
     'type': 1,
     'icon': 'log',
     'orderNum': 99,
-    'open': null,
-    'list': [
-      {
-        'menuId': 36,
-        'parentId': 33,
-        'parentName': null,
-        'name': '类型管理',
-        'url': 'teacher/teacherClassList',
-        'perms': null,
-        'type': 1,
-        'icon': 'log',
-        'orderNum': 999,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 37,
-        'parentId': 33,
-        'parentName': null,
-        'name': '信息管理',
-        'url': 'teacher/teacherClassList',
-        'perms': null,
-        'type': 1,
-        'icon': 'log',
-        'orderNum': 999,
-        'open': null,
-        'list': null
-      }
-    ]
+    'open': null
   },
   {
     'menuId': 39,
@@ -551,6 +523,14 @@ var navDataList = [
         'list': null
       }
     ]
+  }
+]
+
+var dictionaryList = [
+  {
+    'id': '111',
+    'auth': 'test',
+    'code': '123123'
   }
 ]
 
@@ -679,5 +659,13 @@ export function del () {
       'msg': 'success',
       'code': 0
     }
+  }
+}
+
+export function dic () {
+  return {
+    url: '/api/dictionary/list',
+    type: 'get',
+    data: dictionaryList
   }
 }

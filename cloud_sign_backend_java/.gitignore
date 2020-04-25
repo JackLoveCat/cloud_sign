@@ -16,6 +16,3 @@
 
 # logs
 /cloudsign_log
-
-#deploy jar
-/bin

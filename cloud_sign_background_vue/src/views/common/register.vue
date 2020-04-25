@@ -11,11 +11,11 @@
         <div class="login-main">
           <h3 class="login-title">账号注册</h3>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="名称" prop="userName">
+              <el-input v-model="ruleForm.userName"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="ruleForm.password" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
               <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
@@ -23,44 +23,43 @@
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
               <el-button @click="backToLogin()">返回</el-button>
-              <el-button @click="test()">test</el-button>
             </el-form-item>
           </el-form>
         </div>
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
+          this.$refs.ruleForm.validateField('checkPass')
         }
-        callback();
+        callback()
       }
-    };
-    var validatePass2 = (rule, value, callback) => {
+    }
+    const validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.ruleForm.password) {
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       activeName: 'second',
       ruleForm: {
-        name: '',
-        pass: '',
-        checkPass: '',
+        userName: '',
+        password: '',
+        checkPass: ''
       },
       rules: {
         name: [
@@ -72,54 +71,45 @@ export default {
         ],
         checkPass: [
           { required: true, validator: validatePass2, trigger: 'blur' }
-        ],
+        ]
       }
-    };
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          $http.adornData(this.ruleForm)
-            .then(({ data }) => {
-              if (data.success) {
-                this.$message({
-                  type: 'success',
-                  message: '注册成功'
-                });
-              } else {
-                this.$message({
-                  type: 'info',
-                  message: '用户名已经存在'
-                });
-              }
+          this.$http({
+            url: this.$http.adornUrl('register'),
+            method: 'post',
+            data: this.$http.adornData({
+              'userName': this.ruleForm.userName,
+              'password': this.ruleForm.password
             })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    backToLogin(){
-      this.$router.push('login');
-    },
-    test(){
-      console.log("123123123");
-        this.$http({
-          url: this.$http.adornUrl('login'),
-          method: 'post',
-          data: this.$http.adornData({
-            'account': 'admin',
-            'passward': 'admin123'
+          }).then(({ data }) => {
+            if (data.success) {
+              this.$message({
+                type: 'success',
+                message: '注册成功'
+              })
+            } else {
+              this.$message({
+                type: 'info',
+                message: '用户名已经存在'
+              })
+            }
           })
-        }).then(({data}) => {
-          if (data && data.status === 200) {
-            alert(data)
-          }
-        })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    },
+    backToLogin () {
+      this.$router.push('login')
     }
   }
 }

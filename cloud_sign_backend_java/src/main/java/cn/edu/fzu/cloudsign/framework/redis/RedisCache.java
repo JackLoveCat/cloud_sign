@@ -1,5 +1,5 @@
 package cn.edu.fzu.cloudsign.framework.redis;
-
+//TODO 没用了
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

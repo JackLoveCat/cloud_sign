@@ -106,9 +106,6 @@
       TableTreeColumn,
       AddOrUpdate
     },
-    activated () {
-      this.getDataList()
-    },
     mounted () {
       this.getDataList()
     },
@@ -121,8 +118,9 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          // this.dataList = treeDataTranslate(data, 'menuId')
-          this.dataList = data.data
+          alert('qqqq')
+          //this.dataList = treeDataTranslate(data, 'menuId')
+          this.dataList = data.rows
           this.dataListLoading = false
         })
       },

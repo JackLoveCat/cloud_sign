@@ -18,27 +18,13 @@
               <el-input v-model="dataForm.passward" type="password" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item prop="captcha">
-              <el-row :gutter="20">
-                <el-col :span="14">
-                  <el-input v-model="dataForm.captcha" placeholder="验证码">
-                  </el-input>
-                </el-col>
-                <el-col :span="10" class="login-captcha">
-                  <img :src="captchaPath" @click="updataPath()" alt="">
-                </el-col>
-              </el-row>
               <a @click="isForgetPwd=!isForgetPwd">忘记密码</a>
-            </el-form-item>
-            <el-form-item>
-              <el-radio v-model="dataForm.role" label="1">学生</el-radio>
-              <el-radio v-model="dataForm.role" label="2">教师</el-radio>
-              <el-radio v-model="dataForm.role" label="3">教务处</el-radio>
             </el-form-item>
             <el-form-item>
               <el-checkbox v-model="dataForm.remPsd">自动登陆</el-checkbox>
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
-            </el-form-item>            
-             <el-form-item prop="password">
+            </el-form-item>
+            <el-form-item prop="password">
                <a @click="toRegister">注册新账号</a>
             </el-form-item>
           </el-form>
@@ -69,15 +55,15 @@
           account: '',
           passward: '',
           // uuid: '',
-          //captcha: '',
-          role:'1',
-          remPsd:true,
+          // captcha: '',
+          role: '1',
+          remPsd: true
         },
-        isForgetPwd:true,
-        isForgetPwdUserName:'',
-        content:'发送验证码',
-        canClick:true,
-        totalTime: 60,      //记录具体倒计时时间
+        isForgetPwd: true,
+        isForgetPwdUserName: '',
+        content: '发送验证码',
+        canClick: true,
+        totalTime: 60,      // 记录具体倒计时时间
         dataRule: {
           account: [
             { required: true, message: '账号/工号不能为空', trigger: 'blur' }
@@ -85,11 +71,8 @@
           passward: [
             { required: true, message: '密码不能为空', trigger: 'blur' }
           ]
-          /*captcha: [
-            { required: true, message: '验证码不能为空', trigger: 'blur' }
-          ]*/
         },
-        captchaPath: '',
+        captchaPath: ''
       }
     },
     created () {
@@ -97,7 +80,7 @@
     },
     methods: {
       // 提交表单
-      dataFormSubmit() {
+      dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
@@ -106,9 +89,9 @@
               data: this.$http.adornData({
                 'account': this.dataForm.account,
                 'passward': this.dataForm.passward
-                //'captcha': this.dataForm.captcha,
-                //'role': this.dataForm.role,
-                //'rememberMe': this.dataForm.remPsd
+                // 'captcha': this.dataForm.captcha,
+                // 'role': this.dataForm.role,
+                // 'rememberMe': this.dataForm.remPsd
               })
             }).then(({data}) => {
               if (data && data.code === 200) {
@@ -124,13 +107,13 @@
         })
       },
       // 获取验证码
-      getCaptcha() {
-        this.captchaPath = this.$http.adornUrl(`/role/checkCode`)
+      getCaptcha () {
+        this.captchaPath = this.$http.adornUrl(``)
       },
-      updataPath() {
+      updataPath () {
         this.captchaPath += '?'
       },
-      countDown() {
+      countDown () {
         this.getPwd()
         if (!this.canClick) return
         this.canClick = false
@@ -142,15 +125,15 @@
             window.clearInterval(clock)
             this.content = '重新发送验证码'
             this.totalTime = 60
-            this.canClick = true  //这里重新开启
+            this.canClick = true  // 这里重新开启
           }
         }, 1000)
       },
 
-      getPwd() {
-        if (this.isForgetPwdUserName == null || this.isForgetPwdUserName == "") {
-          this.$message.error("账号或工号不能为空")
-          return false;
+      getPwd () {
+        if (this.isForgetPwdUserName === null || this.isForgetPwdUserName === '') {
+          this.$message.error('账号或工号不能为空')
+          return false
         } else {
           this.$http({
             url: this.$http.adornUrl('/role/forgetpassword.do'),
@@ -160,7 +143,7 @@
             })
           }).then(({data}) => {
             if (data && data.status === 200) {
-              this.$message.success("发送成功，请前往绑定邮箱查看")
+              this.$message.success('发送成功，请前往绑定邮箱查看')
               return true
             } else {
               this.$message.error(data.msg)
@@ -170,8 +153,8 @@
         }
       },
 
-      toRegister() {
-        this.$router.push('/register');
+      toRegister () {
+        this.$router.push('/register')
       }
     }
   }

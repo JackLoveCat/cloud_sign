@@ -58,6 +58,7 @@ spring:
       # 热部署开关
       enabled: true
   # redis 配置
+  # TODO 没用了
   redis:
     # 地址
     host: localhost
@@ -77,14 +78,26 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
-
+  cache:
+    type: caffeine
+    cache-names: cloudsign
+    caffeine:
+      # TODO 令牌有效期（默认30分钟）
+      spec: maximumSize=5000,expireAfterAccess=1440m
+      #initialCapacity=[integer]: 初始的缓存空间大小
+      #maximumSize=[long]: 缓存的最大条数
+      #maximumWeight=[long]: 缓存的最大权重
+      #expireAfterAccess=[duration]: 最后一次写入或访问后经过固定时间过期
+      #expireAfterWrite=[duration]: 最后一次写入后经过固定时间过期
+      #refreshAfterWrite=[duration]: 创建缓存或者最近一次更新缓存后经过固定的时间间隔，刷新缓存
+  
 # token配置
 token:
     # 令牌自定义标识
     header: Authorization
     # 令牌秘钥
     secret: abcdefghijklmnopqrstuvwxyz
-    # TODO
+    # TODO 没用了
     # 令牌有效期（默认30分钟）
     expireTime: 1440
   

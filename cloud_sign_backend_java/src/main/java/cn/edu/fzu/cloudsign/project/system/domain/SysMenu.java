@@ -10,45 +10,60 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 菜单权限表 sys_menu
  * 
  */
+@ApiModel("菜单")
 public class SysMenu extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 菜单ID */
+	@ApiModelProperty("菜单ID")
 	private Long menuId;
 
 	/** 菜单名称 */
+	@ApiModelProperty(value = "菜单名称", required = true)
 	private String menuName;
 
 	/** 父菜单名称 */
+	@ApiModelProperty("父菜单名称")
 	private String parentName;
 
 	/** 父菜单ID */
+	@ApiModelProperty("父菜单ID")
 	private Long parentId;
 
 	/** 菜单图标 */
+	@ApiModelProperty("菜单图标")
 	private String icon;
 
 	/** 菜单链接 */
+	@ApiModelProperty("菜单链接")
 	private String link;
 
 	/** 显示顺序 */
+	@ApiModelProperty(value = "显示顺序", required = true)
 	private String orderNum;
 
 	/** 是否菜单 */
+	@ApiModelProperty("是否菜单")
 	private String isMenu;
 
+	/** 是否页面 */
+	@ApiModelProperty("是否页面")
 	private String isPage;
 
 	/** 权限标识 */
+	@ApiModelProperty("权限标识")
 	private String perms;
 
 	/** 子菜单 */
+	@ApiModelProperty("子菜单,查询菜单树时会用到")
 	private List<SysMenu> children = new ArrayList<SysMenu>();
 
 	public Long getMenuId() {
