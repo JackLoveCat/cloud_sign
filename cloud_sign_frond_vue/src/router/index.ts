@@ -5,6 +5,8 @@ import Login from "../components/page/Login.vue";
 import store from "../store/index";
 import Register from "../components/page/Register.vue";
 import MyClass from "../views/MyClass.vue";
+import CourseCreate from "../views/course/CourseCreate.vue";
+import CourseJoin from "../views/course/CourseJoin.vue";
 import Sign from "../views/Sign.vue";
 
 Vue.use(VueRouter);
@@ -15,8 +17,8 @@ const routes = [
     name: "Home",
     component: Home,
     meta: {
-      title: "首页",
-    },
+      title: "首页"
+    }
   },
   {
     path: "/login",
@@ -24,8 +26,8 @@ const routes = [
     component: Login,
     meta: {
       title: "登录",
-      showFoot: true,
-    },
+      showFoot: true
+    }
   },
   {
     path: "/register",
@@ -33,8 +35,8 @@ const routes = [
     component: Register,
     meta: {
       title: "注册",
-      showFoot: false,
-    },
+      showFoot: false
+    }
   },
   {
     path: "/myclass",
@@ -42,8 +44,8 @@ const routes = [
     component: MyClass,
     meta: {
       title: "我的班课",
-      showFoot: false,
-    },
+      showFoot: false
+    }
   },
   {
     path: "/about",
@@ -52,8 +54,8 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/base/About.vue"),
     meta: {
       title: "关于",
-      showFoot: false,
-    },
+      showFoot: false
+    }
   },
   {
     path: "/sign",
@@ -61,26 +63,44 @@ const routes = [
     component: Sign,
     meta: {
       title: "签到",
-      showFoot: false,
-    },
+      showFoot: false
+    }
+  },
+  {
+    path: "/course_create",
+    name: "CourseCreate",
+    component: CourseCreate,
+    meta: {
+      title: "创建班课",
+      showFoot: false
+    }
+  },
+  {
+    path: "/course_join",
+    name: "CourseJoin",
+    component: CourseJoin,
+    meta: {
+      title: "加入班课",
+      showFoot: false
+    }
   },
 
   {
     path: "/404",
     name: "notFound",
     component: () =>
-      import(/* webpackChunkName: "404" */ "../views/base/404.vue"),
+      import(/* webpackChunkName: "404" */ "../views/base/404.vue")
   },
   {
     path: "*", // 此处需特别注意置于最底部
-    redirect: "/404",
-  },
+    redirect: "/404"
+  }
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 // 全局路由守卫
