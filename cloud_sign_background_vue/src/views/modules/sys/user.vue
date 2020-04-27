@@ -42,7 +42,7 @@
         label="用户昵称">
       </el-table-column>
       <el-table-column
-        prop="mobile"
+        prop="phonenumber"
         header-align="center"
         align="center"
         label="手机号">
