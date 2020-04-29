@@ -1,7 +1,10 @@
 package cn.edu.fzu.cloudsign.project.cla.service;
 
 import java.util.List;
+
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourse;
+import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseMember;
+import cn.edu.fzu.cloudsign.project.cla.domain.UniacadaClaCourse;
 
 /**
  * 班课信息Service接口
@@ -99,4 +102,20 @@ public interface IClaCourseService {
 	 * @return
 	 */
 	public ClaCourse selectClaCourseByCourseNum(String coursenum);
+
+	/**
+	 * 根据学校院系查询班课列表
+	 * 
+	 * @param uniacadaId
+	 * @return
+	 */
+	public List<UniacadaClaCourse> selectUniacadaClaCourseByUniversity(Long uniacadaId);
+	
+	/**
+	 * 根据班课查询班课学员
+	 * 
+	 * @param uniacadaId
+	 * @return
+	 */
+	public List<ClaCourseMember> selectClaCourseMemberByClaCourse(Long courseId);
 }

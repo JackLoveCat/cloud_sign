@@ -10,8 +10,10 @@ import cn.edu.fzu.cloudsign.common.utils.DateUtils;
 import cn.edu.fzu.cloudsign.common.utils.SecurityUtils;
 import cn.edu.fzu.cloudsign.common.utils.StringUtils;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourse;
+import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseMember;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseStudent;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseTeacher;
+import cn.edu.fzu.cloudsign.project.cla.domain.UniacadaClaCourse;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseMapper;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseStudentMapper;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseTeacherMapper;
@@ -186,5 +188,26 @@ public class ClaCourseServiceImpl implements IClaCourseService {
 	@Override
 	public ClaCourse selectClaCourseByCourseNum(String coursenum) {
 		return claCourseMapper.selectClaCourseByCourseNum(coursenum);
+	}
+
+	/**
+	 * 根据学校院系查询班课列表
+	 * 
+	 * @param uniacadaId
+	 * @return
+	 */
+	@Override
+	public List<UniacadaClaCourse> selectUniacadaClaCourseByUniversity(Long uniacadaId) {
+		return claCourseMapper.selectUniacadaClaCourseByUniversity(uniacadaId);
+	}
+	
+	/**
+	 * 根据班课查询班课学员
+	 * 
+	 * @param uniacadaId
+	 * @return
+	 */
+	public List<ClaCourseMember> selectClaCourseMemberByClaCourse(Long courseId){
+		return claCourseMapper.selectClaCourseMemberByClaCourse(courseId);
 	}
 }
