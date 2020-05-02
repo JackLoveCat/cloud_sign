@@ -3,6 +3,8 @@ package cn.edu.fzu.cloudsign.project.sysdicttype.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 字典类型对象 sys_dict_type
@@ -10,23 +12,25 @@ import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
  * @author linkai
  * @date 2020-03-27
  */
+@ApiModel("字典类型")
 public class DictType extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 字典类型主键 */
+    @ApiModelProperty("字典类型主键")
     private Long dictTypeId;
 
     /** 字典类型名称 */
-
+    @ApiModelProperty("字典类型名称")
     private String dictTypeName;
 
     /** 字典类型 */
-
+    @ApiModelProperty("字典类型")
     private String dictType;
 
     /** 状态（0正常 1停用） */
-
+    @ApiModelProperty("状态（0正常 1停用）")
     private String status;
 
     public void setDictTypeId(Long dictTypeId) 

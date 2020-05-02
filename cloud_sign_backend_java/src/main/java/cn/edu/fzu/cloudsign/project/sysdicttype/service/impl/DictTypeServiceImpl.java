@@ -1,12 +1,18 @@
 package cn.edu.fzu.cloudsign.project.sysdicttype.service.impl;
 
 import java.util.List;
-import cn.edu.fzu.cloudsign.common.utils.DateUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import cn.edu.fzu.cloudsign.project.sysdicttype.mapper.DictTypeMapper;
+
+import cn.edu.fzu.cloudsign.common.utils.DateUtils;
+import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
+import cn.edu.fzu.cloudsign.framework.security.LoginUser;
+import cn.edu.fzu.cloudsign.framework.security.service.TokenService;
 import cn.edu.fzu.cloudsign.project.sysdicttype.domain.DictType;
+import cn.edu.fzu.cloudsign.project.sysdicttype.mapper.DictTypeMapper;
 import cn.edu.fzu.cloudsign.project.sysdicttype.service.IDictTypeService;
+import cn.edu.fzu.cloudsign.project.system.domain.SysUser;
 
 /**
  * 字典类型Service业务层处理
@@ -19,6 +25,9 @@ public class DictTypeServiceImpl implements IDictTypeService
 {
     @Autowired
     private DictTypeMapper dictTypeMapper;
+    
+	@Autowired
+	private TokenService tokenService;
 
     /**
      * 查询字典类型
@@ -93,4 +102,11 @@ public class DictTypeServiceImpl implements IDictTypeService
     {
         return dictTypeMapper.deleteDictTypeById(dictTypeId);
     }
+
+	@Override
+	public boolean isPermit() {
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+		Long userId = loginUser.getUser().getUserId();
+		return SysUser.isAdmin(userId);
+	}
 }

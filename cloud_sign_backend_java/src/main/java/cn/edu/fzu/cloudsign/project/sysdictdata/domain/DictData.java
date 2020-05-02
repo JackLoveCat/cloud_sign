@@ -3,6 +3,8 @@ package cn.edu.fzu.cloudsign.project.sysdictdata.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 字典信息对象 sys_dict_data
@@ -10,39 +12,41 @@ import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
  * @author linkai
  * @date 2020-03-27
  */
+@ApiModel("字典信息")
 public class DictData extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 字典信息主键 */
+    @ApiModelProperty("字典信息主键")
     private Long dictDataId;
 
     /** 字典信息排序 */
-
+    @ApiModelProperty("字典信息排序")
     private Long dictDataSort;
 
     /** 字典信息标签 */
-
+    @ApiModelProperty("字典信息标签")
     private String dictLabel;
 
     /** 字典信息键值 */
-
+    @ApiModelProperty("字典信息键值")
     private String dictValue;
 
     /** 字典类型 */
-
+    @ApiModelProperty("字典类型")
     private String dictType;
 
     /** 表格回显样式 */
-
+    @ApiModelProperty("表格回显样式")
     private String listClass;
 
     /** 是否默认（Y是 N否） */
-
+    @ApiModelProperty("是否默认（Y是 N否）")
     private String isDefault;
 
     /** 状态（0正常 1停用） */
-
+    @ApiModelProperty("状态（0正常 1停用）")
     private String status;
 
     public void setDictDataId(Long dictDataId) 

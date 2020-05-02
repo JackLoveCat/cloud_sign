@@ -15,6 +15,8 @@ import cn.edu.fzu.cloudsign.framework.aspectj.lang.annotation.Log;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.enums.BusinessType;
 import cn.edu.fzu.cloudsign.project.sysdictdata.domain.DictData;
 import cn.edu.fzu.cloudsign.project.sysdictdata.service.IDictDataService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
@@ -25,6 +27,7 @@ import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
  * @author linkai
  * @date 2020-03-27
  */
+@Api("字典信息管理")
 @RestController
 @RequestMapping("/sysdictdata/data")
 public class DictDataController extends BaseController
@@ -35,6 +38,7 @@ public class DictDataController extends BaseController
     /**
      * 查询字典信息列表
      */
+    @ApiOperation("查询字典信息列表")
     @PreAuthorize("@ss.hasPermi('sysdictdata:data:list')")
     @GetMapping("/list")
     public TableDataInfo list(DictData dictData)
@@ -47,6 +51,7 @@ public class DictDataController extends BaseController
     /**
      * 获取字典信息详细信息
      */
+    @ApiOperation("获取字典信息详细信息")
     @PreAuthorize("@ss.hasPermi('sysdictdata:data:query')")
     @GetMapping(value = "/{dictDataId}")
     public AjaxResult getInfo(@PathVariable("dictDataId") Long dictDataId)
@@ -57,6 +62,7 @@ public class DictDataController extends BaseController
     /**
      * 新增字典信息
      */
+    @ApiOperation("新增字典信息")
     @PreAuthorize("@ss.hasPermi('sysdictdata:data:add')")
     @Log(title = "字典信息", businessType = BusinessType.INSERT)
     @PostMapping
@@ -68,6 +74,7 @@ public class DictDataController extends BaseController
     /**
      * 修改字典信息
      */
+    @ApiOperation("修改字典信息")
     @PreAuthorize("@ss.hasPermi('sysdictdata:data:edit')")
     @Log(title = "字典信息", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -79,6 +86,7 @@ public class DictDataController extends BaseController
     /**
      * 删除字典信息
      */
+    @ApiOperation("删除字典信息")
     @PreAuthorize("@ss.hasPermi('sysdictdata:data:remove')")
     @Log(title = "字典信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{dictDataIds}")

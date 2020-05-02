@@ -58,4 +58,6 @@ public interface ClaCourseTeacherMapper
      * @return 结果
      */
     public int deleteClaCourseTeacherByIds(Long[] courseIds);
+
+	public int updateClaCourseTeacherSignInfo(ClaCourseTeacher claCourseTeacher);
 }

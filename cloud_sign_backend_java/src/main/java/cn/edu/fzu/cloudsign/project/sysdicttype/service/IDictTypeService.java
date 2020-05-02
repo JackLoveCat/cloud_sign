@@ -58,4 +58,10 @@ public interface IDictTypeService
      * @return 结果
      */
     public int deleteDictTypeById(Long dictTypeId);
+    
+    /**
+     * 判断是否有管理员权限
+     * @return
+     */
+    public boolean isPermit();
 }

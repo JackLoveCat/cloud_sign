@@ -11,10 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.annotation.Log;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.enums.BusinessType;
+import cn.edu.fzu.cloudsign.framework.security.LoginUser;
+import cn.edu.fzu.cloudsign.framework.security.service.TokenService;
 import cn.edu.fzu.cloudsign.project.sysdicttype.domain.DictType;
 import cn.edu.fzu.cloudsign.project.sysdicttype.service.IDictTypeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
@@ -25,6 +31,7 @@ import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
  * @author linkai
  * @date 2020-03-27
  */
+@Api("字典类型管理")
 @RestController
 @RequestMapping("/sysdicttype/type")
 public class DictTypeController extends BaseController
@@ -35,11 +42,14 @@ public class DictTypeController extends BaseController
     /**
      * 查询字典类型列表
      */
+    @ApiOperation("查询字典类型列表")
     @PreAuthorize("@ss.hasPermi('sysdicttype:type:list')")
     @GetMapping("/list")
     public TableDataInfo list(DictType dictType)
     {
         startPage();
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//		Long userId = loginUser.getUser().getUserId();
         List<DictType> list = dictTypeService.selectDictTypeList(dictType);
         return getDataTable(list);
     }
@@ -47,6 +57,7 @@ public class DictTypeController extends BaseController
     /**
      * 获取字典类型详细信息
      */
+    @ApiOperation("获取字典类型详细信息")
     @PreAuthorize("@ss.hasPermi('sysdicttype:type:query')")
     @GetMapping(value = "/{dictTypeId}")
     public AjaxResult getInfo(@PathVariable("dictTypeId") Long dictTypeId)
@@ -57,6 +68,7 @@ public class DictTypeController extends BaseController
     /**
      * 新增字典类型
      */
+    @ApiOperation("新增字典类型")
     @PreAuthorize("@ss.hasPermi('sysdicttype:type:add')")
     @Log(title = "字典类型", businessType = BusinessType.INSERT)
     @PostMapping
@@ -68,6 +80,7 @@ public class DictTypeController extends BaseController
     /**
      * 修改字典类型
      */
+    @ApiOperation("修改字典类型")
     @PreAuthorize("@ss.hasPermi('sysdicttype:type:edit')")
     @Log(title = "字典类型", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -79,6 +92,7 @@ public class DictTypeController extends BaseController
     /**
      * 删除字典类型
      */
+    @ApiOperation("删除字典类型")
     @PreAuthorize("@ss.hasPermi('sysdicttype:type:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{dictTypeIds}")

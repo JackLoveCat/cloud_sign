@@ -66,4 +66,6 @@ public interface ClaCourseStudentMapper
      * @return
      */
     public int countClaCourseStudentByCourseId(Long courseId);
+
+	public int updateClaCourseStudentSignInfo(ClaCourseStudent claCourseStudent);
 }
