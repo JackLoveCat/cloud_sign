@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update cla_course_student
         <trim prefix="SET" suffixOverrides=",">
             actual_sign=actual_sign+1,
-            actual_exp=actual_exp+1,
+            actual_exp=actual_sign*(select each_sign_exp from sys_settings where status=0),
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>

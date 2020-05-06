@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Date;
  * @author linkai
  * @date 2020-04-26
  */
+@ApiModel("教师发起签到")
 public class ClaTeacherSign extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

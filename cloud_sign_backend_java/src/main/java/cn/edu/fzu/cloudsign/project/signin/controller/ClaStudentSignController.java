@@ -102,7 +102,7 @@ public class ClaStudentSignController extends BaseController
      * 教师发起签到
      */
     @ApiOperation("教师发起签到")
-//    @PreAuthorize("@ss.hasPermi('signin:sign')")
+    @PreAuthorize("@ss.hasPermi('signin:teacher:signin')")
     @Log(title = "教师发起签到", businessType = BusinessType.INSERT)
     @PostMapping("/teacherSignIn")
     public AjaxResult teacherSignIn(@Validated @RequestBody ClaTeacherSign claTeacherSign)
@@ -114,7 +114,7 @@ public class ClaStudentSignController extends BaseController
      * 教师结束签到
      */
     @ApiOperation("教师结束签到")
-//    @PreAuthorize("@ss.hasPermi('signin:sign')")
+    @PreAuthorize("@ss.hasPermi('signin:teacher:signin')")
     @Log(title = "教师结束签到", businessType = BusinessType.UPDATE)
     @PostMapping("/teacherSignInStop")
     public AjaxResult teacherSignInStop(@Validated @RequestBody ClaTeacherSign claTeacherSign)
@@ -127,7 +127,7 @@ public class ClaStudentSignController extends BaseController
      * 学生/教师查询正在进行中的班课签到
      */
     @ApiOperation("学生/教师查询正在进行中的班课签到")
-    @PreAuthorize("@ss.hasPermi('signin:sign')")
+    @PreAuthorize("@ss.hasAnyPermi('signin:teacher:signin,signin:student:signin')")
     @GetMapping(value = "/getSignInCourseInfo/{courseId}")
     public AjaxResult getSignInCourseInfo(@PathVariable("courseId") Long courseId)
     {
@@ -140,7 +140,7 @@ public class ClaStudentSignController extends BaseController
      * 学生记录签到
      */
     @ApiOperation("学生签到")
-//    @PreAuthorize("@ss.hasPermi('signin:sign')")
+    @PreAuthorize("@ss.hasPermi('signin:student:signin')")
     @Log(title = "学生签到", businessType = BusinessType.INSERT)
     @PostMapping("/studentSignIn")
     public AjaxResult studentSignIn(@Validated @RequestBody ClaStudentSign claStudentSign)

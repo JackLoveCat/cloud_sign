@@ -105,14 +105,22 @@ create table sys_menu (
 -- ----------------------------
 insert into sys_menu values('1','系统管理','0','#','#',1,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('2','班课列表','0','#','#',2,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('3','数据字典管理','0','#','#',3,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
+
+insert into sys_menu values('5','签到管理','0','#','#',5,1,0,null,'admin',sysdate(),'admin',sysdate(),null);
 
 insert into sys_menu values('11','菜单管理','1','#','#',1,0,1,'system:menu','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('12','角色管理','1','#','#',2,0,1,'system:role','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('13','用户管理','1','#','#',3,0,1,'system:user','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('14','学校院系管理','1','#','#',4,0,1,'system:uniacada','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('15','类型管理','3','#','#',1,0,1,'sysdicttype:type:list','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('16','信息管理','3','#','#',2,0,1,'sysdictdata:data:list','admin',sysdate(),'admin',sysdate(),null);
 
 insert into sys_menu values('21','我创建的','2','#','#',1,0,1,'cla:course:create','admin',sysdate(),'admin',sysdate(),null);
 insert into sys_menu values('22','我加入的','2','#','#',2,0,1,'cla:course:join','admin',sysdate(),'admin',sysdate(),null);
+
+insert into sys_menu values('23','教师签到','5','#','#',1,0,1,'signin:teacher:signin','admin',sysdate(),'admin',sysdate(),null);
+insert into sys_menu values('24','学生签到','5','#','#',2,0,1,'signin:student:signin','admin',sysdate(),'admin',sysdate(),null);
 
 -- 用户信息表
 -- ----------------------------
@@ -209,9 +217,11 @@ create table sys_role_menu (
 -- 初始化-角色和菜单关联表数据
 -- ----------------------------
 insert into sys_role_menu values ('2', '2');
+insert into sys_role_menu values ('2', '23');
 insert into sys_role_menu values ('3', '2');
 insert into sys_role_menu values ('2', '21');
 insert into sys_role_menu values ('3', '22');
+insert into sys_role_menu values ('3', '24');
 
 -- 班课信息表
 -- ----------------------------
@@ -296,3 +306,139 @@ create table sys_logininfor (
   login_time     datetime                                 comment '访问时间',
   primary key (info_id)
 ) engine=innodb auto_increment=100 comment = '系统访问记录';
+
+
+
+-- ----------------------------
+-- 11、字典类型表
+-- ----------------------------
+drop table if exists sys_dict_type;
+create table sys_dict_type
+(
+  dict_type_id     bigint(20)      not null auto_increment    comment '字典类型主键',
+  dict_type_name   varchar(100)    default ''                 comment '字典类型名称',
+  dict_type        varchar(100)    default ''                 comment '字典类型',
+  status           char(1)         default '0'                comment '状态（0正常 1停用）',
+  create_by        varchar(64)     default ''                 comment '创建者',
+  create_time      datetime                                   comment '创建时间',
+  update_by        varchar(64)     default ''                 comment '更新者',
+  update_time      datetime                                   comment '更新时间',
+  remark           varchar(500)    default null               comment '备注',
+  primary key (dict_type_id),
+  unique (dict_type)
+) engine=innodb auto_increment=100 comment = '字典类型表';
+
+insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '用户性别列表');
+insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '菜单状态列表');
+insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '系统开关列表');
+insert into sys_dict_type values(4,  '任务状态', 'sys_job_status',      '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '任务状态列表');
+insert into sys_dict_type values(5,  '任务分组', 'sys_job_group',       '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '任务分组列表');
+insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '系统是否列表');
+insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '通知类型列表');
+insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '通知状态列表');
+insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '操作类型列表');
+insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '登录状态列表');
+
+
+-- ----------------------------
+-- 12、字典信息表
+-- ----------------------------
+drop table if exists sys_dict_data;
+create table sys_dict_data
+(
+  dict_data_id     bigint(20)      not null auto_increment    comment '字典信息主键',
+  dict_data_sort   int(4)          default 0                  comment '字典信息排序',
+  dict_label       varchar(100)    default ''                 comment '字典信息标签',
+  dict_value       varchar(100)    default ''                 comment '字典信息键值',
+  dict_type        varchar(100)    default ''                 comment '字典类型',
+  list_class       varchar(100)    default null               comment '表格回显样式',
+  is_default       char(1)         default 'N'                comment '是否默认（Y是 N否）',
+  status           char(1)         default '0'                comment '状态（0正常 1停用）',
+  create_by        varchar(64)     default ''                 comment '创建者',
+  create_time      datetime                                   comment '创建时间',
+  update_by        varchar(64)     default ''                 comment '更新者',
+  update_time      datetime                                   comment '更新时间',
+  remark           varchar(500)    default null               comment '备注',
+  primary key (dict_data_id)
+) engine=innodb auto_increment=100 comment = '字典信息表';
+
+insert into sys_dict_data values(1,  1,  '男',       '0',       'sys_user_sex',         '',        'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '性别男');
+insert into sys_dict_data values(2,  2,  '女',       '1',       'sys_user_sex',         '',        'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '性别女');
+insert into sys_dict_data values(3,  3,  '未知',     '2',       'sys_user_sex',         '',        'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '性别未知');
+insert into sys_dict_data values(4,  1,  '显示',     '0',       'sys_show_hide',        'primary', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '显示菜单');
+insert into sys_dict_data values(5,  2,  '隐藏',     '1',       'sys_show_hide',        'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '隐藏菜单');
+insert into sys_dict_data values(6,  1,  '正常',     '0',       'sys_normal_disable',   'primary', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '正常状态');
+insert into sys_dict_data values(7,  2,  '停用',     '1',       'sys_normal_disable',   'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '停用状态');
+insert into sys_dict_data values(8,  1,  '正常',     '0',       'sys_job_status',       'primary', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '正常状态');
+insert into sys_dict_data values(9,  2,  '暂停',     '1',       'sys_job_status',       'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '停用状态');
+insert into sys_dict_data values(10, 1,  '默认',     'DEFAULT', 'sys_job_group',        '',        'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '默认分组');
+insert into sys_dict_data values(11, 2,  '系统',     'SYSTEM',  'sys_job_group',        '',        'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '系统分组');
+insert into sys_dict_data values(12, 1,  '是',       'Y',       'sys_yes_no',           'primary', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '系统默认是');
+insert into sys_dict_data values(13, 2,  '否',       'N',       'sys_yes_no',           'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '系统默认否');
+insert into sys_dict_data values(14, 1,  '通知',     '1',       'sys_notice_type',      'warning', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '通知');
+insert into sys_dict_data values(15, 2,  '公告',     '2',       'sys_notice_type',      'success', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '公告');
+insert into sys_dict_data values(16, 1,  '正常',     '0',       'sys_notice_status',    'primary', 'Y', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '正常状态');
+insert into sys_dict_data values(17, 2,  '关闭',     '1',       'sys_notice_status',    'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '关闭状态');
+insert into sys_dict_data values(18, 1,  '新增',     '1',       'sys_oper_type',        'info',    'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '新增操作');
+insert into sys_dict_data values(19, 2,  '修改',     '2',       'sys_oper_type',        'info',    'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '修改操作');
+insert into sys_dict_data values(20, 3,  '删除',     '3',       'sys_oper_type',        'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '删除操作');
+insert into sys_dict_data values(21, 4,  '授权',     '4',       'sys_oper_type',        'primary', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '授权操作');
+insert into sys_dict_data values(22, 5,  '导出',     '5',       'sys_oper_type',        'warning', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '导出操作');
+insert into sys_dict_data values(23, 6,  '导入',     '6',       'sys_oper_type',        'warning', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '导入操作');
+insert into sys_dict_data values(24, 7,  '强退',     '7',       'sys_oper_type',        'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '强退操作');
+insert into sys_dict_data values(25, 8,  '生成代码', '8',       'sys_oper_type',        'warning', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '生成操作');
+insert into sys_dict_data values(26, 9,  '清空数据', '9',       'sys_oper_type',        'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '清空操作');
+insert into sys_dict_data values(27, 1,  '成功',     '0',       'sys_common_status',    'primary', 'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '正常状态');
+insert into sys_dict_data values(28, 2,  '失败',     '1',       'sys_common_status',    'danger',  'N', '0', 'admin', '2020-03-18 00-00-00', 'admin', '2020-03-18 00-00-00', '停用状态');
+
+
+-- ----------------------------
+-- 11、教师发起签到表
+-- ----------------------------
+drop table if exists cla_teacher_sign;
+create table cla_teacher_sign
+(
+  teacher_sign_id       bigint(20)       not null auto_increment    comment '教师发起签到ID',
+  teacher_id            bigint(20)       not null                   comment '教师ID',
+  course_id             bigint(20)       not null                   comment '班课ID',
+  start_time            datetime                                     comment '开始时间',
+  stop_time              datetime                                     comment '结束时间',
+  ipaddr                varchar(50)     default ''                   comment '发起签到IP地址',
+  remark                varchar(100)    default null                comment '备注',
+  primary key (teacher_sign_id)
+) engine=innodb auto_increment=100 comment = '教师发起签到表';
+
+
+-- ----------------------------
+-- 12、学生签到记录表
+-- ----------------------------
+drop table if exists cla_student_sign;
+create table cla_student_sign
+(
+  student_sign_id       bigint(20)       not null auto_increment    comment '学生签到记录ID',
+  student_id            bigint(20)       not null                   comment '学生ID',
+  course_id             bigint(20)       not null                   comment '班课ID',
+  sign_time             datetime                                     comment '签到时间',
+  ipaddr                varchar(50)     default ''                   comment '签到IP地址',
+  remark                varchar(100)    default null                comment '备注',
+  primary key (student_sign_id)
+) engine=innodb auto_increment=100 comment = '学生签到记录表';
+
+-- ----------------------------
+-- 系统参数表
+-- ----------------------------
+drop table if exists sys_settings;
+CREATE TABLE sys_settings (
+    sys_settings_id BIGINT(20) NOT NULL COMMENT '系统设置ID',
+    each_sign_exp INT DEFAULT 2 COMMENT '每次签到经验',
+    each_sign_time INT DEFAULT 2 COMMENT '每次签到时间',
+    status     char(1) default '0' comment '状态（0正常 1停用）',
+    create_by VARCHAR(64) DEFAULT '' COMMENT '创建者',
+    create_time DATETIME COMMENT '创建时间',
+    update_by VARCHAR(64) DEFAULT '' COMMENT '更新者',
+    update_time DATETIME COMMENT '更新时间',
+    remark VARCHAR(500) DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (sys_settings_id)
+)  ENGINE=INNODB COMMENT='系统参数表';
+
+insert into sys_settings values(1, 2, 2, '0', 'admin', '2020-05-06 00-00-00', 'admin', '2020-05-06 00-00-00', 'lktest');

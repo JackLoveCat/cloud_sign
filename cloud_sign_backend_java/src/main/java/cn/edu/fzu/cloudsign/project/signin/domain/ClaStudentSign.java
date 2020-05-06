@@ -3,6 +3,7 @@ package cn.edu.fzu.cloudsign.project.signin.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import cn.edu.fzu.cloudsign.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author linkai
  * @date 2020-04-26
  */
+@ApiModel("学生签到记录")
 public class ClaStudentSign extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

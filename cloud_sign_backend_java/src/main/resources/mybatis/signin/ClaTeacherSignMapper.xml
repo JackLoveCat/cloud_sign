@@ -46,8 +46,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null ">course_id,</if>
             <if test="signType != null  and signType != ''">sign_type,</if>
             <if test="gesture != null  and gesture != ''">gesture,</if>
-            <if test="startTime != null ">start_time,</if>
-            <if test="stopTime != null ">stop_time,</if>
+            start_time,
+            stop_time,
             <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
             <if test="remark != null  and remark != ''">remark,</if>
          </trim>
@@ -56,8 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="courseId != null ">#{courseId},</if>
             <if test="signType != null  and signType != ''">#{signType},</if>
             <if test="gesture != null  and gesture != ''">#{gesture},</if>
-            <if test="startTime != null ">#{startTime},</if>
-            <if test="stopTime != null ">#{stopTime},</if>
+            sysdate(),
+            DATE_FORMAT(ADDDATE(sysdate(), INTERVAL (select each_sign_time from sys_settings) MINUTE),'%Y-%m-%d %H:%i:%s'),
             <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
             <if test="remark != null  and remark != ''">#{remark},</if>
          </trim>

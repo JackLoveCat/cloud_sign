@@ -116,7 +116,7 @@ public class ClaStudentSignServiceImpl implements IClaStudentSignService
 		ClaTeacherSign claTeacherSign=claTeacherSignMapper.getSignInCourseInfo(claStudentSign.getCourseId());
 		if(null == claTeacherSign )
 		{
-			throw new CustomException("签到时间已过！");
+			throw new CustomException("非签到时间！");
 		}
 		
 		//【判断签到类型】1-手势签到 0-点击签到
