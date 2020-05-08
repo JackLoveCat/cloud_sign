@@ -18,10 +18,11 @@ import cn.edu.fzu.cloudsign.framework.aspectj.lang.enums.BusinessType;
 import cn.edu.fzu.cloudsign.framework.web.controller.BaseController;
 import cn.edu.fzu.cloudsign.framework.web.domain.AjaxResult;
 import cn.edu.fzu.cloudsign.framework.web.page.TableDataInfo;
+import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseMember;
+import cn.edu.fzu.cloudsign.project.cla.domain.UniacadaClaCourse;
 import cn.edu.fzu.cloudsign.project.cla.service.IClaCourseService;
 import cn.edu.fzu.cloudsign.project.system.domain.SysUniacada;
 import cn.edu.fzu.cloudsign.project.system.service.ISysUniacadaService;
-import cn.edu.fzu.cloudsign.project.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -120,7 +121,8 @@ public class SysUniacadaController extends BaseController {
 	@ApiOperation("按学校院系查询学校的班课列表")
 	@GetMapping(value = "/listclacoursebyuni/{uniacadaId}")
 	public AjaxResult listClaCourseByUniversity(@PathVariable("uniacadaId") Long uniacadaId) {
-		return AjaxResult.success(claCourseService.selectUniacadaClaCourseByUniversity(uniacadaId));
+		List<UniacadaClaCourse> list = claCourseService.selectUniacadaClaCourseByUniversity(uniacadaId);
+		return AjaxResult.success(list);
 	}
 
 	/**
@@ -129,6 +131,19 @@ public class SysUniacadaController extends BaseController {
 	@ApiOperation("按班课查询班课的学员列表")
 	@GetMapping(value = "/listmemberbycla/{courseId}")
 	public AjaxResult listClaCourseMemberByClaCourse(@PathVariable("courseId") Long courseId) {
-		return AjaxResult.success(claCourseService.selectClaCourseMemberByClaCourse(courseId));
+		List<ClaCourseMember> list = claCourseService.selectClaCourseMemberByClaCourse(courseId);
+		return AjaxResult.success(list);
+	}
+
+	@ApiOperation("仅用于在Swagger页面能够展示：学校院系的开课列表Model，不要调用此方法")
+	@GetMapping(value = "/justforswaggerdisplay1")
+	public UniacadaClaCourse justForDisplay1() {
+		return null;
+	}
+
+	@ApiOperation("仅用于在Swagger页面能够展示：学校院系的开课列表Model，不要调用此方法")
+	@GetMapping(value = "/justforswaggerdisplay2")
+	public ClaCourseMember justForDisplay2() {
+		return null;
 	}
 }
