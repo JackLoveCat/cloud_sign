@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.edu.fzu.cloudsign.common.constant.UserConstants;
 import cn.edu.fzu.cloudsign.common.exception.CustomException;
 import cn.edu.fzu.cloudsign.common.utils.DateUtils;
 import cn.edu.fzu.cloudsign.common.utils.SecurityUtils;
@@ -200,14 +201,31 @@ public class ClaCourseServiceImpl implements IClaCourseService {
 	public List<UniacadaClaCourse> selectUniacadaClaCourseByUniversity(Long uniacadaId) {
 		return claCourseMapper.selectUniacadaClaCourseByUniversity(uniacadaId);
 	}
-	
+
 	/**
 	 * 根据班课查询班课学员
 	 * 
 	 * @param uniacadaId
 	 * @return
 	 */
-	public List<ClaCourseMember> selectClaCourseMemberByClaCourse(Long courseId){
+	public List<ClaCourseMember> selectClaCourseMemberByClaCourse(Long courseId) {
 		return claCourseMapper.selectClaCourseMemberByClaCourse(courseId);
+	}
+
+	/**
+	 * 校验是否已加入过班课
+	 * 
+	 * @param claCourse
+	 * @return
+	 */
+	public String checkCourseStudentUnique(ClaCourse claCourse) {
+		ClaCourseStudent claCourseStudent = new ClaCourseStudent();
+		claCourseStudent.setCourseId(claCourse.getCourseId());
+		claCourseStudent.setStudentId(SecurityUtils.getUserId());
+		int count = claCourseStudentMapper.checkCourseStudentUnique(claCourseStudent);
+		if (count > 0) {
+			return UserConstants.NOT_UNIQUE;
+		}
+		return UserConstants.UNIQUE;
 	}
 }

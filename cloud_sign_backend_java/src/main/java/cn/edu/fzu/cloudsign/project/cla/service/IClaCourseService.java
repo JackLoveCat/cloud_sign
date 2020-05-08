@@ -110,7 +110,7 @@ public interface IClaCourseService {
 	 * @return
 	 */
 	public List<UniacadaClaCourse> selectUniacadaClaCourseByUniversity(Long uniacadaId);
-	
+
 	/**
 	 * 根据班课查询班课学员
 	 * 
@@ -118,4 +118,12 @@ public interface IClaCourseService {
 	 * @return
 	 */
 	public List<ClaCourseMember> selectClaCourseMemberByClaCourse(Long courseId);
+
+	/**
+	 * 校验是否已加入过班课
+	 * 
+	 * @param claCourse
+	 * @return
+	 */
+	public String checkCourseStudentUnique(ClaCourse claCourse);
 }
