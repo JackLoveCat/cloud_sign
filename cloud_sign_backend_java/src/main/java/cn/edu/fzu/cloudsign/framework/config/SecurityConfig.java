@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 import cn.edu.fzu.cloudsign.framework.security.filter.JwtAuthenticationTokenFilter;
 import cn.edu.fzu.cloudsign.framework.security.handle.AuthenticationEntryPointImpl;
@@ -89,6 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 过滤请求
                 .authorizeRequests()
+                // 当请求是preflight时(跨域访问需要),允许所有请求
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() 
                 // 对于登录login 验证码captchaImage 允许匿名访问
                 .antMatchers("/login","/captchaImage","/register","/system/role/teacherandstudent").anonymous()
                 .antMatchers(
