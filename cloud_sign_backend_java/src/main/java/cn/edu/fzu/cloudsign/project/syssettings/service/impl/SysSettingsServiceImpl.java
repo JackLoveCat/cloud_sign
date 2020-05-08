@@ -93,4 +93,17 @@ public class SysSettingsServiceImpl implements ISysSettingsService
     {
         return sysSettingsMapper.deleteSysSettingsById(sysSettingsId);
     }
+
+	@Override
+	public int setValid(Long sysSettingsId) {
+		//先把其他参数置为停用1
+		SysSettings sysSettings = new SysSettings();
+		sysSettings.setUpdateTime(DateUtils.getNowDate());
+		sysSettingsMapper.setSysSettingsInvalid(sysSettings);
+		//本条id置为正常0-启用
+		SysSettings sysSettings1 = new SysSettings();
+		sysSettings1.setSysSettingsId(sysSettingsId);
+		sysSettings1.setStatus("0");
+		return sysSettingsMapper.updateSysSettings(sysSettings1);
+	}
 }

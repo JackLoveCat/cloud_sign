@@ -94,4 +94,16 @@ public class SysSettingsController extends BaseController
     {
         return toAjax(sysSettingsService.deleteSysSettingsByIds(sysSettingsIds));
     }
+    
+    /**
+     * 启用系统参数
+     */
+    @ApiOperation("启用系统参数")
+    @PreAuthorize("@ss.hasPermi('syssettings:settings')")
+    @Log(title = "系统参数", businessType = BusinessType.UPDATE)
+    @PutMapping("setValid/{sysSettingsId}")
+    public AjaxResult setValid(@PathVariable("sysSettingsId") Long sysSettingsId)
+    {
+        return toAjax(sysSettingsService.setValid(sysSettingsId));
+    }
 }

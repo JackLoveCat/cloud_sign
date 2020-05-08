@@ -58,4 +58,6 @@ public interface SysSettingsMapper
      * @return 结果
      */
     public int deleteSysSettingsByIds(Long[] sysSettingsIds);
+    
+    public int setSysSettingsInvalid(SysSettings sysSettings);
 }

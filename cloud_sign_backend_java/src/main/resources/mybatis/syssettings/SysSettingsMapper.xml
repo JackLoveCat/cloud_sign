@@ -86,4 +86,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     
+    
+    <update id="setSysSettingsInvalid" parameterType="SysSettings">
+        update sys_settings
+        <trim prefix="SET" suffixOverrides=",">
+            status = 1,
+            update_time = #{updateTime},
+        </trim>
+    </update>
+    
 </mapper>

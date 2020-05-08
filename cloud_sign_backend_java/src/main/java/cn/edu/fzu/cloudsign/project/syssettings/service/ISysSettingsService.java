@@ -58,4 +58,6 @@ public interface ISysSettingsService
      * @return 结果
      */
     public int deleteSysSettingsById(Long sysSettingsId);
+
+	public int setValid(Long sysSettingsId);
 }
