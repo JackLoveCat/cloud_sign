@@ -63,6 +63,8 @@ import { ToastOptions } from "../base/toast/index";
 @Component
 export default class Login extends Vue {
   @Action("User/login") saveLogin!: Function;
+  @Action("User/logout") logout!: Function;
+  @Action("User/saveUserInfo") saveUserInfo!: Function;
   private params: LoginParams = {
     account: "",
     password: "",
@@ -75,7 +77,17 @@ export default class Login extends Vue {
     API.login(this.params.account, this.params.password)
       .then((res: KResponse) => {
         this.saveLogin(res.data.token);
-        this.$router.push({ name: "Home" });
+        API.getLoginUserInfo()
+          .then((user: KResponse) => {
+            console.log(user);
+            this.saveUserInfo(user.data.user);
+            this.$router.push({ name: "Home" });
+          })
+          .catch((res: KResponse) => {
+            this.logout();
+            console.log(res);
+            this.$toptips.show(new ToastOptions(res.msg));
+          });
       })
       .catch((res: KResponse) => {
         this.$toptips.show(new ToastOptions(res.msg));

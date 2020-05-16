@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-24 21:39:10
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-04-08 23:55:34
+ * @LastEditTime: 2020-05-06 23:01:50
  -->
 <template>
   <div class="page__bd">
@@ -10,49 +10,52 @@
       <div class="weui-cell  weui-cell_example">
         <div class="weui-cell__hd">
           <img
-            src="../../assets/imgs/icon/icon_tabbar.png"
+            src="../../assets/imgs/icon/user_icon_default.jpg"
             alt=""
             style="width: 20px; margin-right: 16px; display: block;"
           />
         </div>
         <div class="weui-cell__bd">
-          <p>叶斌</p>
+          <p>{{ user.userName }}</p>
         </div>
-        <div class="weui-cell__ft">今天心情好</div>
+        <div class="weui-cell__ft">{{ user.nickName }}</div>
+      </div>
+      <div class="weui-cell  weui-cell_example">
+        <div class="weui-cell__bd">
+          <p>邮箱</p>
+        </div>
+        <div class="weui-cell__ft">{{ user.email }}</div>
+      </div>
+      <div class="weui-cell  weui-cell_example">
+        <div class="weui-cell__bd">
+          <p>手机号</p>
+        </div>
+        <div class="weui-cell__ft">{{ user.phonenumber }}</div>
+      </div>
+      <div class="weui-cell  weui-cell_example">
+        <div class="weui-cell__bd">
+          <p>性别</p>
+        </div>
+        <div class="weui-cell__ft">{{ user.avatar }}</div>
+      </div>
+      <div class="weui-cell  weui-cell_example">
+        <div class="weui-cell__bd">
+          <p>角色</p>
+        </div>
+        <div class="weui-cell__ft">{{ user.roleName }}</div>
       </div>
     </div>
+
     <div class="weui-cells">
-      <div class="weui-flex">
-        <div class="weui-flex__item"><div class="placeholder">28</div></div>
-        <div class="weui-flex__item"><div class="placeholder">30</div></div>
-        <div class="weui-flex__item"><div class="placeholder">27</div></div>
-        <div class="weui-flex__item"><div class="placeholder">12</div></div>
-      </div>
-      <div class="weui-flex">
-        <div class="weui-flex__item"><div class="placeButtom">经验</div></div>
-        <div class="weui-flex__item"><div class="placeButtom">魅力</div></div>
-        <div class="weui-flex__item"><div class="placeButtom">兰豆</div></div>
-        <div class="weui-flex__item"><div class="placeButtom">心意</div></div>
-      </div>
-    </div>
-    <div class="weui-cells">
-      <a class="weui-cell  weui-cell_access" href="javascript:">
+      <a
+        class="weui-cell  weui-cell_access"
+        href="javascript:"
+        @click="goMyMedal"
+      >
         <div class="weui-cell__bd">
           <p>我的勋章</p>
         </div>
-        <div class="weui-cell__ft">已占用80M</div>
-      </a>
-      <a class="weui-cell  weui-cell_access" href="javascript:">
-        <div class="weui-cell__bd">
-          <p>文件暂存区</p>
-        </div>
-        <div class="weui-cell__ft"></div>
-      </a>
-      <a class="weui-cell  weui-cell_access" href="javascript:">
-        <div class="weui-cell__bd">
-          <p>分享给朋友</p>
-        </div>
-        <div class="weui-cell__ft"></div>
+        <div class="weui-cell__ft">敬请期待</div>
       </a>
       <a class="weui-cell  weui-cell_access" @click="goPage('About')">
         <div class="weui-cell__bd">
@@ -71,17 +74,22 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, State, Getter } from "vuex-class";
 import Api from "@/utils/api";
+import { SuccessToastOptions } from "../../components/base/toast/index";
 
 @Component
 export default class My extends Vue {
   @Action("User/logout") logoutAction!: Function;
+  @Getter("User/getUserInfo") user: any;
   constructor() {
     super();
   }
   goPage(page: string) {
-    this.$router.push({ name: page });
+    this.$router.push({ name: "PrivatePolicy" });
+  }
+  goMyMedal() {
+    this.$toptips.show(new SuccessToastOptions("勋章功能开发中,敬请期待"));
   }
   logout() {
     this.logoutAction();

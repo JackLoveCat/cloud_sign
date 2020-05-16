@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-18 09:54:26
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-04-18 22:22:12
+ * @LastEditTime: 2020-05-06 23:00:50
  -->
 <template>
   <div class="page">
@@ -23,6 +23,7 @@
                     id="courseCode"
                     v-model.trim="courseCode"
                     class="weui-input"
+                    type="number"
                     placeholder="请输入课程编号"
                   />
                 </div>
@@ -53,20 +54,43 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { CourseInfo } from "@/types/model/Class";
 import API, { KResponse } from "@/utils/api";
-import { ToastOptions } from "../../components/base/toast/index";
+import {
+  ToastOptions,
+  SuccessToastOptions,
+} from "../../components/base/toast/index";
 
 @Component
 export default class CourseJoin extends Vue {
-  private courseCode: "";
+  private courseCode = "";
   constructor() {
     super();
   }
   joinCourse() {
-    API.joinCourse(this.courseCode)
-      .then(res => {
-        console.log(res);
+    if (this.courseCode === undefined || this.courseCode === "") {
+      this.$toptips.show(new ToastOptions("请输入班课号"));
+      return;
+    }
+    API.getCourseInfoBynum(this.courseCode)
+      .then((res) => {
+        if (!res.data.courseId) {
+          this.$toptips.show(new ToastOptions("班课号不存在"));
+          return;
+        }
+        const courseName = res.data.courseName;
+        API.joinCourse({
+          courseId: res.data.courseId,
+        })
+          .then((res: KResponse) => {
+            this.$toptips.show(
+              new SuccessToastOptions(`欢迎加入${courseName}`)
+            );
+            this.$router.push({ name: "Home" });
+          })
+          .catch((res: KResponse) => {
+            this.$toptips.show(new ToastOptions(res.msg));
+          });
       })
-      .catch(res => {
+      .catch((res) => {
         this.$toptips.show(new ToastOptions(res.msg));
       });
   }

@@ -41,21 +41,6 @@
         </label>
       </form>
     </div>
-    <div
-      class="weui-cells searchbar-result"
-      id="searchResult"
-      v-show="isSuggest && isShowResult"
-      style=" transform-origin: 0px 0px; opacity: 1; transform: scale(1, 1);"
-    >
-      <div
-        class="weui-cell weui-cell_active weui-cell_access"
-        @click="chooseText('输入测试文本')"
-      >
-        <div class="weui-cell__bd weui-cell_primary">
-          <p>实时搜索文本</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -67,37 +52,35 @@ export default class Search extends Vue {
   private isSearchFocus = false;
   private isShowSearchText = true;
   private isShowResult = false;
-  private isSuggest = false;
   suggestSearch() {
     if (this.searchInput !== undefined && this.searchInput.length > 0) {
-      console.log("search text:" + this.searchInput);
       this.isShowResult = true;
     }
   }
   starSearch() {
-    console.log("start search");
     this.isSearchFocus = true;
     (this.$refs.searchRef as HTMLInputElement).focus();
     this.isShowSearchText = false;
   }
   clearInput() {
+    this.$emit("reset");
     this.searchInput = "";
     this.isShowResult = false;
+    this.isShowSearchText = false;
     (this.$refs.searchRef as HTMLInputElement).focus();
   }
   cancelSearch() {
-    if (this.searchInput !== undefined && this.searchInput.length > 0) {
-      return;
-    }
+    console.log("cancelsearch");
+    this.searchInput = "";
     this.isSearchFocus = false;
     this.isShowSearchText = true;
+    this.$emit("reset");
   }
   submit() {
     this.$emit("search", this.searchInput);
-    console.log(this.searchInput);
   }
   chooseText(chooseText: string) {
-    console.log("text:" + chooseText);
+    this.$emit("search", chooseText);
   }
 }
 </script>

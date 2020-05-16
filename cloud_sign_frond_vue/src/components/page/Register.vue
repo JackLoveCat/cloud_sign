@@ -160,7 +160,7 @@ export default class Register extends Vue {
     repassword: "",
     email: "",
     phonenumber: "",
-    roleIds: [2]
+    roleIds: [2],
   };
   constructor() {
     super();
@@ -174,7 +174,7 @@ export default class Register extends Vue {
   }
   register() {
     API.register(this.params)
-      .then(res => {
+      .then((res) => {
         API.login(this.params.phonenumber, this.params.password)
           .then((res: KResponse) => {
             this.saveLogin(res.data.token);
@@ -184,7 +184,7 @@ export default class Register extends Vue {
             this.$toptips.show(new ToastOptions(res.msg));
           });
       })
-      .catch(res => {
+      .catch((res) => {
         this.$toptips.show(new ToastOptions(res.msg));
       });
   }

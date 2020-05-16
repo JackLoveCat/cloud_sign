@@ -3,15 +3,17 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:23:12
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-04-18 11:44:07
+ * @LastEditTime: 2020-05-07 00:22:21
  */
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import Vue from "vue";
 import { UserInfo } from "@/types/model/User";
 import { CourseInfo } from "@/types/model/Class";
-import { checkAndGetToen } from "../store/model/User";
-const HOST_DOMAIN = "/apis";
-// const HOST_DOMAIN = "http://123.206.49.117:8080";
+import { getToken, getUserId } from "../store/model/User";
+const HOST_DOMAIN =
+  process.env.NODE_ENV === "production"
+    ? "http://123.206.49.117:8080"
+    : "/apis";
 export interface KResponse {
   ret: number;
   msg: string;
@@ -27,8 +29,8 @@ class Response implements KResponse {
     this.data = data;
   }
 }
-axios.interceptors.request.use(config => {
-  let xtoken = checkAndGetToen(); //我的token 存储在 localStorage中
+axios.interceptors.request.use((config) => {
+  let xtoken = getToken(); //我的token 存储在 localStorage中
   // console.log(xtoken) 如果 xtoken 存在 就设置请求头
   if (xtoken) {
     xtoken = "Bearer " + xtoken;
@@ -50,7 +52,7 @@ export default class Api {
     return axios.post(HOST_DOMAIN + "/loginbyphone", {
       phonenum: userNmae,
       password: password,
-      uuid: this.uuid()
+      uuid: this.uuid(),
     });
   }
   static toQueryString(obj?: Map<string, string>) {
@@ -66,11 +68,13 @@ export default class Api {
   static login(userNmae: string, password: string) {
     return this.post(HOST_DOMAIN + "/login", {
       account: userNmae,
-      passward: password
+      passward: password,
     });
   }
-
-  static register(user: UserInfo) {
+  static getLoginUserInfo() {
+    return this.get(HOST_DOMAIN + "/getInfo");
+  }
+  static register(user: UserInfo): Promise<KResponse> {
     return this.post(HOST_DOMAIN + "/register", user);
   }
 
@@ -78,12 +82,12 @@ export default class Api {
     return this.get(HOST_DOMAIN + "/system/role/teacherandstudent");
   }
 
-  static getMyCreate(param: any) {
-    return this.get(HOST_DOMAIN + "/cla/course/listmycreate", param);
+  static getMyCreate() {
+    return this.get(HOST_DOMAIN + "/cla/course/listmycreate");
   }
 
-  static getMyJoin(param: any) {
-    return this.get(HOST_DOMAIN + "/cla/course/listmyjoin", param);
+  static getMyJoin() {
+    return this.get(HOST_DOMAIN + "/cla/course/listmyjoin");
   }
   static createCourse(param: CourseInfo) {
     return this.post(HOST_DOMAIN + "/cla/course/create", param);
@@ -92,12 +96,78 @@ export default class Api {
   static listCourse(param: any) {
     return this.get(HOST_DOMAIN + "/cla/course/list", param);
   }
+  static joinCourse(courseId: any) {
+    return this.post(HOST_DOMAIN + "/cla/course/join", courseId);
+  }
+  static getCourseInfo(classId: string) {
+    return this.get(HOST_DOMAIN + "cla/course/" + classId);
+  }
+
+  static listUni() {
+    return this.get(HOST_DOMAIN + "/system/uniacada/listuni");
+  }
+
+  static listUniByName(uniName: string) {
+    return this.get(HOST_DOMAIN + "/system/uniacada/listacabyuni/" + uniName);
+  }
+
+  static getCourseInfoBynum(coursenum: string) {
+    return this.get(HOST_DOMAIN + "/cla/course/coursenum/" + coursenum);
+  }
+  static getSignInfo(courseId: string) {
+    return this.get(
+      HOST_DOMAIN + "/signin/sign/getSignInCourseInfo/" + courseId
+    );
+  }
+  static studentSignIn(courseId: string, gesture: string, signType = 1) {
+    return this.post(HOST_DOMAIN + "/signin/sign/studentSignIn", {
+      courseId: courseId,
+      studentId: getUserId(),
+      signType: signType,
+      gesture: gesture,
+      remark: "",
+      ipaddr: "127.0.0.1",
+    });
+  }
+  static teacherSignIn(courseId: string, gesture: string, signType = 1) {
+    return this.post(HOST_DOMAIN + "/signin/sign/teacherSignIn", {
+      courseId: courseId,
+      teacherId: getUserId(),
+      startTime: this.formatDate(new Date()),
+      signType: signType,
+      gesture: gesture,
+      remark: "",
+      ipaddr: "127.0.0.1",
+      stopTime: this.formatDate(new Date(new Date().getTime() + 3600000)),
+    });
+  }
+
+  private static formatDate(date: Date) {
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const H = date.getHours();
+    const mm = date.getMinutes();
+    const s = date.getSeconds();
+    const ms = m < 10 ? "0" + m : m.toString();
+    const ds = d < 10 ? "0" + d : d.toString();
+    const Hs = H < 10 ? "0" + H : H.toString();
+    return y + "-" + ms + "-" + ds + " " + Hs + ":" + mm + ":" + s;
+  }
+
+  static teacherSignInStop(courseId: string) {
+    return this.post(HOST_DOMAIN + "/signin/sign/teacherSignInStop", {
+      courseId: courseId,
+      teacherId: getUserId(),
+    });
+  }
+
   /**
    * 封装post请求，封装统一的loading
    * @param url
    * @param param
    */
-  private static post(url: string, param?: any): Promise<Response> {
+  private static post(url: string, param?: any): Promise<KResponse> {
     Vue.prototype.$loading.show({ text: "加载中" });
     return new Promise(function(resolve, rejext) {
       axios
@@ -105,7 +175,7 @@ export default class Api {
         .finally(() => {
           Vue.prototype.$loading.hidden();
         })
-        .then(res => {
+        .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
               new Response(
@@ -123,8 +193,7 @@ export default class Api {
               )
             );
         })
-        .catch(err => {
-          console.log(err);
+        .catch((err) => {
           if (err.response && err.response.data) {
             rejext(
               new Response(
@@ -159,7 +228,7 @@ export default class Api {
    * @param url
    * @param param
    */
-  private static get(url: string, param?: any) {
+  private static get(url: string, param?: any): Promise<KResponse> {
     Vue.prototype.$loading.show({ text: "加载中" });
     return new Promise(function(resolve, rejext) {
       axios
@@ -167,7 +236,7 @@ export default class Api {
         .finally(() => {
           Vue.prototype.$loading.hidden();
         })
-        .then(res => {
+        .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
               new Response(
@@ -185,7 +254,7 @@ export default class Api {
               )
             );
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.data) {
             rejext(
               new Response(
