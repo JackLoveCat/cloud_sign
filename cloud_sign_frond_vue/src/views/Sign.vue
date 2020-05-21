@@ -14,18 +14,17 @@
         ></canvas>
         <div class="button-sp-area">
           <a
-            v-show="signState.step === 2 || signState.step === 4"
+            v-show="signState.step === 7"
             href="javascript:"
-            @click="startSign"
+            @click="endSign"
             class="weui-btn weui-btn_mini weui-btn_primary"
-            >发起签到</a
+            >结束</a
           >
           <a
-            v-show="signState.step === 5"
             href="javascript:"
             class="weui-btn weui-btn_mini weui-btn_primary"
-            @click="signIn"
-            >签到</a
+            @click="goBack"
+            >返回</a
           >
         </div>
       </div>
@@ -35,13 +34,22 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
-const START = 1;
-const REDRAW = 2;
-const CHECK = 3;
-const REDRAW_FAILED = 4;
-const CHECK_SUCCESS = 5;
-const CHECK_FAILED = 6;
+import { Getter } from "vuex-class";
+import API, { KResponse } from "@/utils/api";
+import {
+  ToastOptions,
+  SuccessToastOptions,
+} from "../components/base/toast/index";
+const COLUMN_NUM = 3; // 九宫格行数 列数
+// 手势签到状态
+const START = 1; // 开始准备画手势
+const REDRAW = 2; // 确认手势
+const REDRAW_FAILED = 3; // 确认手势错误
+const CHECK = 4; // 检查手势
+const CHECK_SUCCESS = 5; // 手势签到成功
+const CHECK_FAILED = 6; // 手势签到失败
+const READY_END_SIGN = 7; // 等待结束签到
+const SIGN_NOT_START = 8; // 签到未开始
 
 class Position {
   x: number;
@@ -55,6 +63,7 @@ class Position {
 }
 @Component
 export default class Sign extends Vue {
+  @Getter("User/getUserInfo") userInfo: any;
   private title = {
     text: "",
     color: "",
@@ -64,35 +73,101 @@ export default class Sign extends Vue {
   private r = 0; // 公式计算
   private touchDown = false;
   private devicePixelRatio = 0;
-
-  private chooseType = 1;
-  private lastPoint: Array<Position> = [];
+  private drawPath: Array<Position> = [];
   private circleInfo: Array<Position> = [];
   private restPoint: Array<Position> = [];
-  private signState = { step: START, password: Array<Position>() };
+  private signState = { step: START, password: "" };
 
   constructor() {
     super();
   }
   mounted() {
+    if (!this.$route.query.myClassId) {
+      this.$toptips.show(new ToastOptions("未知参数"));
+      return;
+    }
     this.canvas = this.$refs.signCanvas as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.r = this.ctx.canvas.width / (2 + 4 * 3); // 公式计算
-    this.setChooseType(3);
+    this.init();
   }
   init() {
     this.initDom();
-    this.lastPoint = [];
+    this.drawPath = [];
     this.touchDown = false;
     this.resetCanvas();
     this.setShowTitle();
+    // TODO:根据课程查询签到活动 根据角色不同做不同处理
+    API.getSignInfo(this.$route.query.myClassId as string)
+      .then((res: KResponse) => {
+        if (this.userInfo.roleid === 2 || this.userInfo.roleid === 1) {
+          //教师
+          if (!res.data || res.data.gesture === undefined) {
+            this.signState.step = START;
+          } else {
+            this.signState.step = READY_END_SIGN;
+            this.signState.password = res.data.gesture;
+            // console.log("老师已经开始签到");
+          }
+        } else {
+          if (!res.data || res.data.gesture === undefined) {
+            this.signState.step = SIGN_NOT_START;
+          } else {
+            this.signState.step = CHECK;
+            this.signState.password = res.data.gesture;
+            // console.log("学生准备签到");
+          }
+        }
+        this.setShowTitle();
+      })
+      .catch((res: KResponse) => {
+        this.$toptips.show(new ToastOptions(res.msg));
+      });
   }
-  signIn() {
-    console.log(this.signState.password.map((e) => e.index).join(""));
-    this.resetAll();
+  endSign() {
+    //TODO 老师请求服务器结束签到
+    // console.log(this.signState.password);
+    API.teacherSignInStop(this.$route.query.myClassId as string)
+      .then((res: KResponse) => {
+        this.$toptips.show(new SuccessToastOptions("签到结束"));
+        this.$router.go(-1);
+      })
+      .catch((res: KResponse) => {
+        this.$toptips.show(new ToastOptions(res.msg));
+      });
   }
-  startSign() {
-    console.log(this.signState.password.map((e) => e.index).join(""));
+  userOperationEnd() {
+    if (this.userInfo.roleid === 2) {
+      // TODO:根据课程查询签到活动 根据角色不同做不同处理
+      API.teacherSignIn(
+        this.$route.query.myClassId as string,
+        this.signState.password
+      )
+        .then((res: KResponse) => {
+          this.$toptips.show(new SuccessToastOptions("签到发起成功~"));
+        })
+        .catch((res: KResponse) => {
+          this.$toptips.show(new ToastOptions(res.msg));
+        });
+    } else {
+      // TODO:根据课程查询签到活动 根据角色不同做不同处理
+      API.studentSignIn(
+        this.$route.query.myClassId as string,
+        this.signState.password
+      )
+        .then((res: KResponse) => {
+          this.$toptips.show(new SuccessToastOptions("签到成功"));
+          this.$router.go(-1);
+        })
+        .catch((res: KResponse) => {
+          this.$toptips.show(new ToastOptions(res.msg));
+        });
+    }
+    // console.log("user operation end");
+  }
+  goBack() {
+    // console.log(this.signState.password);
+    this.$router.go(-1);
   }
   drawCle(x: number, y: number) {
     if (!this.ctx) {
@@ -111,12 +186,12 @@ export default class Sign extends Vue {
       return;
     }
     // 初始化圆心
-    for (let i = 0; i < this.lastPoint.length; i++) {
+    for (let i = 0; i < this.drawPath.length; i++) {
       this.ctx.fillStyle = style;
       this.ctx.beginPath();
       this.ctx.arc(
-        this.lastPoint[i].x,
-        this.lastPoint[i].y,
+        this.drawPath[i].x,
+        this.drawPath[i].y,
         this.r / 2.5,
         0,
         Math.PI * 2,
@@ -131,12 +206,12 @@ export default class Sign extends Vue {
       return;
     }
     // 初始化状态线条
-    for (let i = 0; i < this.lastPoint.length; i++) {
+    for (let i = 0; i < this.drawPath.length; i++) {
       this.ctx.strokeStyle = type;
       this.ctx.beginPath();
       this.ctx.arc(
-        this.lastPoint[i].x,
-        this.lastPoint[i].y,
+        this.drawPath[i].x,
+        this.drawPath[i].y,
         this.r,
         0,
         Math.PI * 2,
@@ -149,7 +224,7 @@ export default class Sign extends Vue {
   drawLine(
     style: string | CanvasGradient | CanvasPattern,
     po: Position,
-    lastPoint: Array<Position>
+    drawPath: Array<Position>
   ) {
     if (!this.ctx) {
       return;
@@ -158,9 +233,9 @@ export default class Sign extends Vue {
     this.ctx.beginPath();
     this.ctx.strokeStyle = style;
     this.ctx.lineWidth = 3;
-    this.ctx.moveTo(this.lastPoint[0].x, this.lastPoint[0].y);
-    for (let i = 1; i < this.lastPoint.length; i++) {
-      this.ctx.lineTo(this.lastPoint[i].x, this.lastPoint[i].y);
+    this.ctx.moveTo(this.drawPath[0].x, this.drawPath[0].y);
+    for (let i = 1; i < this.drawPath.length; i++) {
+      this.ctx.lineTo(this.drawPath[i].x, this.drawPath[i].y);
     }
     this.ctx.lineTo(po.x, po.y);
     this.ctx.stroke();
@@ -171,15 +246,14 @@ export default class Sign extends Vue {
       return;
     }
     // 创建解锁点的坐标，根据canvas的大小来平均分配半径
-    const n = this.chooseType;
     let count = 0;
-    this.r = this.ctx.canvas.width / (2 + 4 * n); // 公式计算
-    this.lastPoint = [];
+    this.r = this.ctx.canvas.width / (2 + 4 * COLUMN_NUM); // 公式计算
+    this.drawPath = [];
     this.circleInfo = [];
     this.restPoint = [];
     const r = this.r;
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n; j++) {
+    for (let i = 0; i < COLUMN_NUM; i++) {
+      for (let j = 0; j < COLUMN_NUM; j++) {
         count++;
         const obj = {
           x: j * 4 * r + 3 * r,
@@ -217,32 +291,26 @@ export default class Sign extends Vue {
     }
     this.drawPoint("#27AED5"); // 每帧花轨迹
     this.drawStatusPoint("#27AED5"); // 每帧花轨迹
-    this.drawLine("#27AED5", po, this.lastPoint); // 每帧画圆心
+    this.drawLine("#27AED5", po, this.drawPath); // 每帧画圆心
     for (let i = 0; i < this.restPoint.length; i++) {
       if (
         Math.abs(po.x - this.restPoint[i].x) < this.r &&
         Math.abs(po.y - this.restPoint[i].y) < this.r
       ) {
         this.drawPoint("#27AED5");
-        this.lastPoint.push(this.restPoint[i]);
+        this.drawPath.push(this.restPoint[i]);
         this.restPoint.splice(i, 1);
         break;
       }
     }
   }
-  checkPass(psw1: Array<Position>, psw2: Array<Position>) {
-    // 检测密码
-    let p1 = "",
-      p2 = "";
-    for (let i = 0; i < psw1.length; i++) {
-      p1 += psw1[i].index + psw1[i].index;
+  checkPass(psw1: string, psw2: string) {
+    if (!psw1) {
+      return false;
     }
-    for (let i = 0; i < psw2.length; i++) {
-      p2 += psw2[i].index + psw2[i].index;
-    }
-    return p1 === p2;
+    return psw1 === psw2;
   }
-  storePass(psw: Array<Position>) {
+  updateCurrentStep(psw: string) {
     // touchend结束之后对密码和状态的处理
     if (this.signState.step === START) {
       this.signState.password = psw;
@@ -255,7 +323,11 @@ export default class Sign extends Vue {
         this.drawStatusPoint("#2CFF26");
         this.drawPoint("#2CFF26");
         this.signState.password;
-        this.signState.step = CHECK;
+        if (this.userInfo.roleid === 2) {
+          this.signState.step = READY_END_SIGN;
+        } else {
+          this.signState.step = CHECK;
+        }
       } else {
         this.drawStatusPoint("red");
         this.drawPoint("red");
@@ -271,8 +343,8 @@ export default class Sign extends Vue {
         this.drawPoint("#2CFF26");
         this.drawLine(
           "#2CFF26",
-          this.lastPoint[this.lastPoint.length - 1],
-          this.lastPoint
+          this.drawPath[this.drawPath.length - 1],
+          this.drawPath
         ); // 每帧画圆心
         this.signState.step = CHECK_SUCCESS;
       } else {
@@ -280,14 +352,14 @@ export default class Sign extends Vue {
         this.drawPoint("red");
         this.drawLine(
           "red",
-          this.lastPoint[this.lastPoint.length - 1],
-          this.lastPoint
+          this.drawPath[this.drawPath.length - 1],
+          this.drawPath
         ); // 每帧画圆心
         this.signState.step = CHECK_FAILED;
       }
     }
   }
-  setShowTitle() {
+  setTeacherTitle() {
     if (this.signState.step === START) {
       this.title.text = "请输入签到手势";
       this.title.color = "gray";
@@ -297,24 +369,40 @@ export default class Sign extends Vue {
     } else if (this.signState.step === REDRAW_FAILED) {
       this.title.text = "两次签到手势不一致，重新输入";
       this.title.color = "red";
-    } else if (this.signState.step === CHECK) {
-      this.title.text = "请输入手势签到";
+    } else if (this.signState.step === READY_END_SIGN) {
+      this.title.text = "等待学生签到，结束请点击结束按钮";
       this.title.color = "gray";
-    } else if (this.signState.step === CHECK_FAILED) {
-      this.title.text = "手势错误,签到失败";
-      this.title.color = "red";
-    } else if (this.signState.step === CHECK_SUCCESS) {
-      this.title.color = "#2CFF26";
-      this.title.text = "签到成功";
     } else {
-      console.log(this.signState.step);
+      // console.log(this.signState.step);
       this.title.color = "red";
       this.title.text = "未知签到状态";
     }
   }
-  setChooseType(type: number) {
-    this.chooseType = type;
-    this.init();
+  setStudentTitle() {
+    if (this.signState.step === CHECK) {
+      this.title.text = "请输入手势签到";
+      this.title.color = "gray";
+    } else if (this.signState.step === CHECK_FAILED) {
+      this.title.text = "手势错误,请重新输入";
+      this.title.color = "red";
+    } else if (this.signState.step === CHECK_SUCCESS) {
+      this.title.color = "#2CFF26";
+      this.title.text = "签到成功";
+    } else if (this.signState.step === SIGN_NOT_START) {
+      this.title.color = "red";
+      this.title.text = "教师未开始签到";
+    } else {
+      // console.log(this.signState.step);
+      this.title.color = "red";
+      this.title.text = "未知签到状态";
+    }
+  }
+  setShowTitle() {
+    if (this.userInfo.roleid === 2) {
+      this.setTeacherTitle();
+    } else {
+      this.setStudentTitle();
+    }
   }
   showReset() {
     return this.signState.step === REDRAW;
@@ -323,7 +411,6 @@ export default class Sign extends Vue {
     if (!this.canvas) {
       return;
     }
-    this.chooseType = Number(window.localStorage.getItem("chooseType")) || 3;
     this.devicePixelRatio = window.devicePixelRatio || 1;
     const width = 320;
     const height = 320;
@@ -335,8 +422,6 @@ export default class Sign extends Vue {
   }
 
   resetAll() {
-    window.localStorage.removeItem("passwordxx");
-    window.localStorage.removeItem("chooseType");
     this.signState.step = START;
     this.setShowTitle();
     this.resetCanvas();
@@ -351,7 +436,7 @@ export default class Sign extends Vue {
       ) {
         this.touchDown = true;
         this.drawPoint("#27AED5");
-        this.lastPoint.push(this.circleInfo[i]);
+        this.drawPath.push(this.circleInfo[i]);
         this.restPoint.splice(i, 1);
         break;
       }
@@ -362,13 +447,22 @@ export default class Sign extends Vue {
       this.update(this.getPosition(e));
     }
   }
+  conver2Pass(drawPath: Array<Position>): string {
+    return drawPath.map((e) => e.index).join("");
+  }
   canvasTrouchend(e: TouchEvent) {
     if (this.touchDown) {
       this.touchDown = false;
-      this.storePass(this.lastPoint);
+      const drawPass = this.conver2Pass(this.drawPath);
+      this.updateCurrentStep(drawPass);
       this.setShowTitle();
-      if (this.signState.step !== CHECK_SUCCESS) {
-        console.log("reset");
+      if (
+        this.signState.step === CHECK_SUCCESS ||
+        this.signState.step === READY_END_SIGN
+      ) {
+        this.userOperationEnd();
+      } else {
+        // console.log("reset canvas");
         this.resetCanvas();
       }
     }

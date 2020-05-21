@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.fzu.cloudsign.project.signin.mapper.ClaStudentSignMapper">
+    
+    <resultMap type="ClaStudentSign" id="ClaStudentSignResult">
+        <result property="studentSignId"    column="student_sign_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="signType"    column="sign_type"    />
+        <result property="gesture"    column="gesture"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="ipaddr"    column="ipaddr"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClaStudentSignVo">
+        select student_sign_id, student_id, course_id, sign_type, gesture, sign_time, ipaddr, remark from cla_student_sign
+    </sql>
+
+    <select id="selectClaStudentSignList" parameterType="ClaStudentSign" resultMap="ClaStudentSignResult">
+        <include refid="selectClaStudentSignVo"/>
+        <where>  
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="signType != null  and signType != ''"> and sign_type = #{signType}</if>
+            <if test="gesture != null  and gesture != ''"> and gesture = #{gesture}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+            <if test="ipaddr != null  and ipaddr != ''"> and ipaddr = #{ipaddr}</if>
+        </where>
+    </select>
+    
+    <select id="selectClaStudentSignById" parameterType="Long" resultMap="ClaStudentSignResult">
+        <include refid="selectClaStudentSignVo"/>
+        where student_sign_id = #{studentSignId}
+    </select>
+    
+    <select id="selectClaStudentSignBySignTime" parameterType="java.util.Map" resultMap="ClaStudentSignResult">
+        <include refid="selectClaStudentSignVo"/>
+        where 
+        <![CDATA[sign_time>=#{startTime} and sign_time<=#{stopTime}]]>  
+    </select>
+        
+    <insert id="insertClaStudentSign" parameterType="ClaStudentSign" useGeneratedKeys="true" keyProperty="studentSignId">
+        insert into cla_student_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null ">student_id,</if>
+            <if test="courseId != null ">course_id,</if>
+            <if test="signType != null  and signType != ''">sign_type,</if>
+            <if test="gesture != null  and gesture != ''">gesture,</if>
+            <if test="signTime != null ">sign_time,</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null ">#{studentId},</if>
+            <if test="courseId != null ">#{courseId},</if>
+            <if test="signType != null  and signType != ''">#{signType},</if>
+            <if test="gesture != null  and gesture != ''">#{gesture},</if>
+            <if test="signTime != null ">#{signTime},</if>
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+    
+    
+    <insert id="studentSignIn" parameterType="ClaStudentSign" useGeneratedKeys="true" keyProperty="studentSignId">
+        insert into cla_student_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null ">student_id,</if>
+            <if test="courseId != null ">course_id,</if>
+            <if test="signType != null  and signType != ''">sign_type,</if>
+            sign_time,
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null ">#{studentId},</if>
+            <if test="courseId != null ">#{courseId},</if>
+            <if test="signType != null  and signType != ''">#{signType},</if>
+            sysdate(),
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClaStudentSign" parameterType="ClaStudentSign">
+        update cla_student_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null ">student_id = #{studentId},</if>
+            <if test="courseId != null ">course_id = #{courseId},</if>
+            <if test="signType != null  and signType != ''">sign_type = #{signType},</if>
+            <if test="gesture != null  and gesture != ''">gesture = #{gesture},</if>
+            <if test="signTime != null ">sign_time = #{signTime},</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr = #{ipaddr},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where student_sign_id = #{studentSignId}
+    </update>
+
+    <delete id="deleteClaStudentSignById" parameterType="Long">
+        delete from cla_student_sign where student_sign_id = #{studentSignId}
+    </delete>
+
+    <delete id="deleteClaStudentSignByIds" parameterType="String">
+        delete from cla_student_sign where student_sign_id in 
+        <foreach item="studentSignId" collection="array" open="(" separator="," close=")">
+            #{studentSignId}
+        </foreach>
+    </delete>
+    
+</mapper>

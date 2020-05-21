@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.edu.fzu.cloudsign.common.constant.UserConstants;
 import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.annotation.Log;
 import cn.edu.fzu.cloudsign.framework.aspectj.lang.enums.BusinessType;
@@ -157,6 +158,9 @@ public class ClaCourseController extends BaseController {
 	@Log(title = "班课信息", businessType = BusinessType.INSERT)
 	@PostMapping("/join")
 	public AjaxResult join(@RequestBody ClaCourse claCourse) {
+		if (UserConstants.NOT_UNIQUE.equals(claCourseService.checkCourseStudentUnique(claCourse))) {
+			return AjaxResult.error("加入课程失败，该生已加入过此课程");
+		}
 		return toAjax(claCourseService.joinClaCourse(claCourse));
 	}
 }

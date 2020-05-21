@@ -69,7 +69,12 @@ public class SysRoleServiceImpl implements ISysRoleService {
 	 * @return 角色对象信息
 	 */
 	public SysRole selectRoleById(Long roleId) {
-		return roleMapper.selectRoleById(roleId);
+		SysRole role = roleMapper.selectRoleById(roleId);
+		Long[] menuIds = roleMenuMapper.selectMenuIdsByRoleId(roleId);
+		if (StringUtils.isNotNull(role)) {
+			role.setMenuIds(menuIds);
+		}
+		return role;
 	}
 
 	/**

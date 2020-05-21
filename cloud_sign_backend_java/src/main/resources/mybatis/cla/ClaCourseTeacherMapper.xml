@@ -74,6 +74,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where course_id = #{courseId}
     </update>
+    
+    <update id="updateClaCourseTeacherSignInfo" parameterType="ClaCourseTeacher">
+        update cla_course_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            sign=sign+1,
+            full_exp=sign*(select each_sign_exp from sys_settings where status=0),
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where course_id = #{courseId} and teacher_id = #{teacherId}
+    </update>
 
     <delete id="deleteClaCourseTeacherById" parameterType="Long">
         delete from cla_course_teacher where course_id = #{courseId}

@@ -72,4 +72,5 @@ public interface ISysUniacadaService {
 	 * @return
 	 */
 	public List<SysUniacada> selectAcademyListByUniversity(String uniName);
+
 }

@@ -24,4 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 	</insert>
 	
+	<select id="selectMenuIdsByRoleId" parameterType="Long" resultType="Long">
+		select m.menu_id from sys_role_menu m where m.role_id = #{roleId}
+	</select>	
 </mapper> 

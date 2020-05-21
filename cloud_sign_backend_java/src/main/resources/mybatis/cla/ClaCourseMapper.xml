@@ -23,7 +23,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
     </resultMap>
+    
+    <resultMap type="UniacadaClaCourse" id="UniacadaClaCourseResult">
+        <result property="courseId"    column="course_id"    />
+        <result property="courseName"    column="course_name"    />
+        <result property="teacherName"    column="teacher_name"    />
+        <result property="studentNum"    column="student_num"    />
+        <result property="universityName"    column="university_name"    />
+        <result property="academyName"    column="academy_name"    />
+    </resultMap>
 
+    <resultMap type="ClaCourseMember" id="ClaCourseMemberResult">
+        <result property="courseId"    column="course_id"    />
+        <result property="courseName"    column="course_name"    />
+        <result property="teacherName"    column="teacher_name"    />
+		<result property="studentName"    column="student_name"    />
+        <result property="studentNo"    column="student_no"    />
+        <result property="studentPhonenumber"    column="student_phonenumber"    />
+        <result property="universityName"    column="university_name"    />
+        <result property="academyName"    column="academy_name"    />
+    </resultMap>
+    
     <sql id="selectClaCourseVo">
         select course_id, course_name, course_num, class_name, course_page, semester, curriculum, textbook, uniacada_id, study_requirement, lecture_progress, exam_arrangement, create_by, create_time, update_by, update_time, remark from cla_course
     </sql>
@@ -171,6 +191,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on c.course_id = cs.course_id
         where cs.student_id	= #{userId}
     </select>  
+
+    <select id="selectClaCourseVoByUniversity" parameterType="Long" resultType="Integer">
+		select count(1) from cla_course c
+		inner join cla_course_student cs
+		on c.course_id = cs.course_id
+        where cs.student_id	= #{userId}
+    </select>      
     
+    <select id="selectUniacadaClaCourseByUniversity" parameterType="Long" resultMap="UniacadaClaCourseResult">
+    	select c.course_id,c.course_name,u.user_name as teacher_name,s.student_num,uni.university_name,uni.academy_name from cla_course c
+		inner join sys_uniacada uni
+		on c.uniacada_id = uni.uniacada_id
+		inner join cla_course_teacher t
+		on c.course_id = t.course_id
+		inner join sys_user u
+		on t.teacher_id = u.user_id
+		inner join (select s.course_id,count(1) as student_num from cla_course_student s group by s.course_id) s
+		on c.course_id = s.course_id
+		where c.uniacada_id = #{uniacadaId}
+    </select>
     
+	<select id="selectClaCourseMemberByClaCourse" parameterType="Long" resultMap="ClaCourseMemberResult">    
+        select c.course_id,c.course_name,u1.user_name as teacher_name,u2.user_name as student_name,
+		u2.student_num as student_no,u2.phonenumber as student_phonenumber,uni.university_name,uni.academy_name from cla_course c
+		inner join sys_uniacada uni
+		on c.uniacada_id = uni.uniacada_id
+		inner join cla_course_teacher t
+		on c.course_id = t.course_id
+		inner join sys_user u1
+		on t.teacher_id = u1.user_id
+		inner join cla_course_student s
+		on c.course_id = s.course_id
+		inner join sys_user u2
+		on s.student_id = u2.user_id
+		where c.course_id = #{courseId}
+	</select>
 </mapper>

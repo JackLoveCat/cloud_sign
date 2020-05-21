@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.fzu.cloudsign.project.signin.mapper.ClaTeacherSignMapper">
+    
+    <resultMap type="ClaTeacherSign" id="ClaTeacherSignResult">
+        <result property="teacherSignId"    column="teacher_sign_id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="signType"    column="sign_type"    />
+        <result property="gesture"    column="gesture"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="stopTime"    column="stop_time"    />
+        <result property="ipaddr"    column="ipaddr"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClaTeacherSignVo">
+        select teacher_sign_id, teacher_id, course_id, sign_type, gesture, start_time, stop_time, ipaddr, remark from cla_teacher_sign
+    </sql>
+
+    <select id="selectClaTeacherSignList" parameterType="ClaTeacherSign" resultMap="ClaTeacherSignResult">
+        <include refid="selectClaTeacherSignVo"/>
+        <where>  
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="signType != null  and signType != ''"> and sign_type = #{signType}</if>
+            <if test="gesture != null  and gesture != ''"> and gesture = #{gesture}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="stopTime != null "> and stop_time = #{stopTime}</if>
+            <if test="ipaddr != null  and ipaddr != ''"> and ipaddr = #{ipaddr}</if>
+        </where>
+    </select>
+    
+    <select id="getSignInCourseInfo" parameterType="Long" resultMap="ClaTeacherSignResult">
+        select teacher_sign_id, teacher_id, course_id, sign_type, gesture, start_time, stop_time, ipaddr, remark from cla_teacher_sign
+        where course_id = #{courseId}
+        <![CDATA[and sysdate()>=start_time and sysdate()<=stop_time]]>
+    </select>
+        
+    <insert id="insertClaTeacherSign" parameterType="ClaTeacherSign" useGeneratedKeys="true" keyProperty="teacherSignId">
+        insert into cla_teacher_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null ">teacher_id,</if>
+            <if test="courseId != null ">course_id,</if>
+            <if test="signType != null  and signType != ''">sign_type,</if>
+            <if test="gesture != null  and gesture != ''">gesture,</if>
+            start_time,
+            stop_time,
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null ">#{teacherId},</if>
+            <if test="courseId != null ">#{courseId},</if>
+            <if test="signType != null  and signType != ''">#{signType},</if>
+            <if test="gesture != null  and gesture != ''">#{gesture},</if>
+            sysdate(),
+            DATE_FORMAT(ADDDATE(sysdate(), INTERVAL (select each_sign_time from sys_settings) MINUTE),'%Y-%m-%d %H:%i:%s'),
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClaTeacherSign" parameterType="ClaTeacherSign">
+        update cla_teacher_sign
+        <trim prefix="SET" suffixOverrides=",">
+            stop_time = sysdate(),
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr = #{ipaddr},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where 1=1
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+        	<![CDATA[and sysdate()>=start_time and sysdate()<=stop_time]]>
+    </update>
+
+    <delete id="deleteClaTeacherSignById" parameterType="Long">
+        delete from cla_teacher_sign where teacher_sign_id = #{teacherSignId}
+    </delete>
+
+    <delete id="deleteClaTeacherSignByIds" parameterType="String">
+        delete from cla_teacher_sign where teacher_sign_id in 
+        <foreach item="teacherSignId" collection="array" open="(" separator="," close=")">
+            #{teacherSignId}
+        </foreach>
+    </delete>
+    
+</mapper>

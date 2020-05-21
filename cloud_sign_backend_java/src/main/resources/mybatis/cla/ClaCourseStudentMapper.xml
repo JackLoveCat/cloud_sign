@@ -73,6 +73,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where course_id = #{courseId}
     </update>
+    
+    <update id="updateClaCourseStudentSignInfo" parameterType="ClaCourseTeacher">
+        update cla_course_student
+        <trim prefix="SET" suffixOverrides=",">
+            actual_sign=actual_sign+1,
+            actual_exp=actual_sign*(select each_sign_exp from sys_settings where status=0),
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where course_id = #{courseId} and student_id = #{studentId}
+    </update>
+    
 
     <delete id="deleteClaCourseStudentById" parameterType="Long">
         delete from cla_course_student where course_id = #{courseId}
@@ -87,5 +100,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="countClaCourseStudentByCourseId" parameterType="Long" resultType="Integer">
 		select count(1) from cla_course_student where course_id = #{courseId}
+    </select>
+    
+    <select id="checkCourseStudentUnique" parameterType="ClaCourseStudent" resultType="Integer">
+		select count(1) from cla_course_student where course_id = #{courseId} and student_id = #{studentId}
     </select>
 </mapper>

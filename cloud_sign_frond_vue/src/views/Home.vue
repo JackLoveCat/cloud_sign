@@ -8,24 +8,24 @@ import TabBar from "@/components/base/TabBar.vue";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  components: { TabBar }
+  components: { TabBar },
 })
 export default class Home extends Vue {
   tabInfo = [
     {
       name: "班课",
-      icon: require("../assets/imgs/icon/icon_tabbar.png"),
+      icon: require("../assets/imgs/icon/class.png"),
       msgType: 1,
       msgCount: 0,
       active: true,
-      view: "Class"
+      view: "Class",
     },
     {
       name: "我的",
-      icon: require("../assets/imgs/icon/icon_tabbar.png"),
+      icon: require("../assets/imgs/icon/my.png"),
       msgType: 0,
-      view: "My"
-    }
+      view: "My",
+    },
   ];
 }
 </script>

@@ -17,8 +17,8 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Footer extends Vue {
   goHome() {
-    this.$router.push({ name: "Home" }).catch(res => {
-      console.log("page go failed:" + res);
+    this.$router.push({ name: "Home" }).catch((res) => {
+      console.debug("page go failed:" + res);
     });
   }
 }

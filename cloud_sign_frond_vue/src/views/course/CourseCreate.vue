@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-18 09:54:26
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-04-18 11:24:08
+ * @LastEditTime: 2020-05-07 00:05:12
  -->
 <template>
   <div class="page">
@@ -14,6 +14,50 @@
         <div class="weui-form__control-area">
           <div class="weui-cells__group weui-cells__group_form">
             <div class="weui-cells weui-cells_form">
+              <div
+                class="weui-cell weui-cell_active weui-cell_select weui-cell_select-after"
+              >
+                <div class="weui-cell__hd">
+                  <label for="school" class="weui-label">学校</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <select
+                    class="weui-select"
+                    name="school"
+                    v-model="chooseSchoole"
+                    @change="loadschool"
+                  >
+                    <option
+                      v-for="(school, index) in schooles"
+                      :key="index"
+                      :value="school"
+                      >{{ school }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+              <div
+                class="weui-cell weui-cell_active weui-cell_select weui-cell_select-after"
+                v-show="departments.length > 0"
+              >
+                <div class="weui-cell__hd">
+                  <label for="department" class="weui-label">院系</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <select
+                    class="weui-select"
+                    name="department"
+                    v-model="params.uniacadaId"
+                  >
+                    <option
+                      v-for="department in departments"
+                      :key="department.uniacadaId"
+                      :value="department.uniacadaId"
+                      >{{ department.academyName }}</option
+                    >
+                  </select>
+                </div>
+              </div>
               <div class="weui-cell weui-cell_active">
                 <div class="weui-cell__hd">
                   <label class="weui-label">班级名称</label>
@@ -42,30 +86,19 @@
               </div>
               <div class="weui-cell weui-cell_active">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">班课数量</label>
+                  <label class="weui-label">学期</label>
                 </div>
                 <div class="weui-cell__bd">
-                  <input
-                    id="courseNum"
-                    v-model="params.courseNum"
-                    type="number"
-                    pattern="[0-9]*"
-                    class="weui-input"
-                    placeholder="请输入班课数量"
-                  />
-                </div>
-              </div>
-              <div class="weui-cell weui-cell_active">
-                <div class="weui-cell__hd">
-                  <label class="weui-label">课程首页</label>
-                </div>
-                <div class="weui-cell__bd">
-                  <input
-                    id="coursePage"
-                    v-model="params.coursePage"
-                    class="weui-input"
-                    placeholder="请输入课程首页"
-                  />
+                  <select
+                    class="weui-select"
+                    id="semester"
+                    v-model="params.semester"
+                  >
+                    <option value="第一学期" selected="selected"
+                      >第一学期</option
+                    >
+                    <option value="第二学期">第二学期</option>
+                  </select>
                 </div>
               </div>
               <div class="weui-cell weui-cell_active">
@@ -83,7 +116,7 @@
               </div>
               <div class="weui-cell weui-cell_active">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">课程描述</label>
+                  <label class="weui-label">备注</label>
                 </div>
                 <div class="weui-cell__bd">
                   <textarea
@@ -128,29 +161,85 @@ export default class CourseCreate extends Vue {
   private params: CourseInfo = {
     className: "",
     courseName: "",
-    courseNum: "",
     coursePage: "",
-    curriculum: "",
     dataScope: "",
+    courseNum: "",
     examArrangement: "",
     lectureProgress: "",
     remark: "",
     semester: "",
     studyRequirement: "",
-    textbook: "",
-    uniacada_id: 1
+    uniacadaId: -1,
   };
-  createCourse() {
-    API.createCourse(this.params)
-      .then(res => {
-        console.log(res);
+  private chooseSchoole = "";
+  private schooles = [];
+  private departments = [];
+
+  mounted() {
+    API.listUni()
+      .then((res) => {
+        this.schooles = res.data;
       })
-      .catch(res => {
+      .catch((res) => {
+        this.schooles = [];
+        this.$toptips.show(new ToastOptions(res.msg));
+      });
+  }
+  isEmpty(obj: any) {
+    return typeof obj == "undefined" || obj == null || obj == "";
+  }
+  checkParam() {
+    if (this.isEmpty(this.chooseSchoole)) {
+      this.$toptips.show(new ToastOptions("请选择学校"));
+      return false;
+    }
+    if (this.isEmpty(this.params.uniacadaId) || this.params.uniacadaId === -1) {
+      this.$toptips.show(new ToastOptions("请选择院系"));
+      return false;
+    }
+    if (this.isEmpty(this.params.className)) {
+      this.$toptips.show(new ToastOptions("请输入班级"));
+      return false;
+    }
+    if (this.isEmpty(this.params.courseName)) {
+      this.$toptips.show(new ToastOptions("请课程名称"));
+      return false;
+    }
+    if (this.isEmpty(this.params.examArrangement)) {
+      this.$toptips.show(new ToastOptions("请课程考试安排"));
+      return false;
+    }
+    if (this.isEmpty(this.params.semester)) {
+      this.$toptips.show(new ToastOptions("请选择学期"));
+      return false;
+    }
+
+    return true;
+  }
+  createCourse() {
+    if (!this.checkParam()) {
+      return;
+    }
+    API.createCourse(this.params)
+      .then((res) => {
+        this.$router.push({ name: "Home" });
+      })
+      .catch((res) => {
         this.$toptips.show(new ToastOptions(res.msg));
       });
   }
   cancel() {
     this.$router.go(-1);
+  }
+  loadschool() {
+    API.listUniByName(this.chooseSchoole)
+      .then((res) => {
+        this.departments = res.data;
+      })
+      .catch((res) => {
+        this.departments = [];
+        this.$toptips.show(new ToastOptions(res.msg));
+      });
   }
 }
 </script>

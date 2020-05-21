@@ -163,7 +163,7 @@ public class SysLoginController extends BaseController {
 	 * 
 	 * @return 用户信息
 	 */
-//	@ApiOperation("获取当前登录用户信息")
+	@ApiOperation("获取当前登录用户信息")
 	@GetMapping("getInfo")
 	public AjaxResult getInfo() {
 		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
