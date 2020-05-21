@@ -36,6 +36,8 @@ const mainRoutes = {
     // 提示: 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
     { path: '/home', component: _import('common/home'), name: 'home', meta: { title: '首页' } },
     { path: '/theme', component: _import('common/theme'), name: 'theme', meta: { title: '主题' } },
+    { path: '/building', component: _import('common/building'), name: 'building', meta: { title: '建设中' } },
+    { path: '/student-classList', component: _import('modules/student/classList'), name: 'classList', meta: { title: '班课列表' ,isTab: true }},
     { path: '/student-class', component: _import('modules/student/class'), name: 'class', meta: { title: '我的课堂' ,isTab: true }},
     { path: '/student-updateActivity', component: _import('modules/student/updateActivity'), name: 'updateActivity', meta: { title: '活动详情' ,isTab: true }},
     { path: '/student-inEvaluate', component: _import('modules/student/inEvaluate'), name: 'inEvaluate', meta: { title: '评价' ,isTab: true }},
@@ -45,6 +47,7 @@ const mainRoutes = {
     { path: '/teacher-editActivity', component: _import('modules/teacher/editActivity'), name: 'teacher-editActivity', meta: { title: '修改活动信息' ,isTab: true }},
     { path: '/teacher-dealWork', component: _import('modules/teacher/dealWork'), name: 'teacher-dealWork', meta: { title: '批改作业' ,isTab: true }},
     { path: '/teacher-inEvaluate', component: _import('modules/teacher/inEvaluate'), name: 'teacher-inEvaluate', meta: { title: '查看评价' ,isTab: true }},
+    { path: '/dictionary-dictionarylist', component: _import('modules/dictionary/dictionarylist'), name: 'dictionarylist', meta: { title: '字典详情', isTab: true }}
   ],
   beforeEnter (to, from, next) {
     let token = Vue.cookie.get('token')

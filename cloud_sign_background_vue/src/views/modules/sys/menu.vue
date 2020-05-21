@@ -1,32 +1,25 @@
 <template>
   <div class="mod-menu">
-    <el-form :inline="true" :model="dataForm">
+    <el-form :inline="true" :model="form">
       <el-form-item>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
       </el-form-item>
     </el-form>
-    <tree-table :data="data" border style="width: 100%;">
+    <el-table
+      :data="menuList"
+      style="width: 100%"
+      row-key="menuId"
+      border
+      lazy
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
       <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        width="80"
-        label="ID">
-      </el-table-column>
-      <table-tree-column
-        prop="label"
-        header-align="center"
-        treeKey="menuId"
+        prop="menuName"
         width="150"
         label="名称">
-      </table-tree-column>
-      <el-table-column
-        prop="url"
-        header-align="center"
-        align="center"
-        width="120"
-        label="上级菜单">
       </el-table-column>
+
       <el-table-column
         header-align="center"
         align="center"
@@ -36,14 +29,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="type"
         header-align="center"
         align="center"
         label="类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === 0" size="small">目录</el-tag>
-          <el-tag v-else-if="scope.row.type === 1" size="small" type="success">菜单</el-tag>
-          <el-tag v-else-if="scope.row.type === 2" size="small" type="info">按钮</el-tag>
+          <el-tag v-if="scope.row.isMenu === '1'" size="small">目录</el-tag>
+          <el-tag v-else-if="scope.row.isMenu === '0'" size="small" type="success">菜单</el-tag>
+          <!--<el-tag v-else-if="scope.row.type === '1'" size="small" type="info">按钮</el-tag>-->
         </template>
       </el-table-column>
       <el-table-column
@@ -53,20 +45,11 @@
         label="排序号">
       </el-table-column>
       <el-table-column
-        prop="url"
+        prop="link"
         header-align="center"
         align="center"
         width="150"
-        :show-overflow-tooltip="true"
         label="菜单URL">
-      </el-table-column>
-      <el-table-column
-        prop="perms"
-        header-align="center"
-        align="center"
-        width="150"
-        :show-overflow-tooltip="true"
-        label="授权标识">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -75,145 +58,72 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button  type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
-          <el-button  type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
         </template>
       </el-table-column>
-    </tree-table>
+    </el-table>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
 <script>
-  import TableTreeColumn from '@/components/table-tree-column'
+  import { listMenu,treeMenu} from '@/api/sys/menu'
   import AddOrUpdate from './menu-add-or-update'
-  import { treeDataTranslate } from '@/utils'
+  import "element-ui/lib/theme-chalk/index.css"
+  import { handleTree } from '@/utils'
   import {isAuth} from '../../../utils'
-  import treeTable from '@/components/tree-table'
-export default {
+  export default {
+    name: 'Menu',
+    components: { AddOrUpdate },
     data () {
       return {
-        dataForm: {},
-        dataList: [],
-        dataListLoading: false,
-        addOrUpdateVisible: true,
-        columns: [
-          {
-            text: '事件',
-            value: 'event',
-            width: 200
-          },
-          {
-            text: 'ID',
-            value: 'id'
-          }
-        ],
-        data: [
-          {
-            id: 0,
-            event: '事件1',
-            timeLine: 50,
-            comment: '无'
-          },
-          {
-            id: 1,
-            event: '事件2',
-            timeLine: 100,
-            comment: '无',
-            children: [
-              {
-                id: 2,
-                event: '事件2',
-                timeLine: 10,
-                comment: '无'
-              },
-              {
-                id: 3,
-                event: '事件3',
-                timeLine: 90,
-                comment: '无',
-                children: [
-                  {
-                    id: 4,
-                    event: '事件4',
-                    timeLine: 5,
-                    comment: '无'
-                  },
-                  {
-                    id: 5,
-                    event: '事件5',
-                    timeLine: 10,
-                    comment: '无'
-                  },
-                  {
-                    id: 6,
-                    event: '事件6',
-                    timeLine: 75,
-                    comment: '无',
-                    children: [
-                      {
-                        id: 7,
-                        event: '事件7',
-                        timeLine: 50,
-                        comment: '无',
-                        children: [
-                          {
-                            id: 71,
-                            event: '事件71',
-                            timeLine: 25,
-                            comment: 'xx'
-                          },
-                          {
-                            id: 72,
-                            event: '事件72',
-                            timeLine: 5,
-                            comment: 'xx'
-                          },
-                          {
-                            id: 73,
-                            event: '事件73',
-                            timeLine: 20,
-                            comment: 'xx'
-                          }
-                        ]
-                      },
-                      {
-                        id: 8,
-                        event: '事件8',
-                        timeLine: 25,
-                        comment: '无'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        // 遮罩层
+        loading: true,
+        // 菜单表格树数据
+        menuList: [],
+        // 菜单树选项
+        menuOptions: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          menuName: undefined,
+          visible: undefined
+        },
+        form: {},
+        // 显示状态数据字典
+        visibleOptions: [],
+        addOrUpdateVisible: true
       }
     },
-    components: {
-      TableTreeColumn,
-      AddOrUpdate,
-      treeTable
-    },
-    mounted () {
+    created () {
       this.getDataList()
     },
     methods: {
+      // 显示行
+      showTr: function (row, index) {
+        let show = (row._parent ? (row._parent._expanded && row._parent._show) : true)
+        row._show = show
+        return show ? '' : 'display:none;'
+      },
       // 获取数据列表
       getDataList () {
-        this.dataListLoading = true
-        this.$http({
-          url: this.$http.adornUrl('system/menu/treeselect'),
-          method: 'get',
-          params: this.$http.adornParams()
-        }).then(({data}) => {
-          // this.dataList = treeDataTranslate(data, 'menuId')
-          this.dataList = data.rows
-          this.dataListLoading = false
+        this.loading = true
+        //treeMenu(this.queryParams).then(res => {
+        listMenu(this.queryParams).then(res => {
+          console.log(res.data.rows)
+          this.menuList = handleTree(res.data.rows, 'menuId')
+          this.loading = false
         })
+      },
+      load(tree, treeNode, resolve) {
+        setTimeout(() => {
+          resolve(tree.children)
+        }, 1)
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {

@@ -102,6 +102,10 @@
                 this.getCaptcha()
                 this.$message.error(data.msg)
               }
+            }).catch((err) => {
+              if (err.response && err.response.data) {
+                this.$message.error(err.response.data.message)
+              }
             })
           }
         })

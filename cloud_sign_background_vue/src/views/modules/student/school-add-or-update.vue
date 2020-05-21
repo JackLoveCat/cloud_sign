@@ -2,23 +2,26 @@
   <el-dialog
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
-    :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="dataForm.roleName" placeholder="角色名称"></el-input>
+    :visible.sync="visible"
+  >
+    <el-form
+      :model="dataForm"
+      :rules="dataRule"
+      ref="dataForm"
+      @keyup.enter.native="dataFormSubmit()"
+      label-width="80px"
+    >
+      <el-form-item label="学校名称" prop="universityName">
+        <el-input
+          v-model="dataForm.universityName"
+          placeholder="学校名称"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="dataForm.remark" placeholder="备注"></el-input>
-      </el-form-item>
-      <el-form-item size="mini" label="授权">
-        <el-tree
-          :data="menuList"
-          :props="menuListTreeProps"
-          node-key="menuId"
-          ref="menuListTree"
-          :default-expand-all="true"
-          show-checkbox>
-        </el-tree>
+      <el-form-item label="院系名称" prop="academyName">
+        <el-input
+          v-model="dataForm.academyName"
+          placeholder="院系名称"
+        ></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -29,95 +32,108 @@
 </template>
 
 <script>
-  import { treeDataTranslate } from '@/utils'
-  export default {
-    data () {
-      return {
-        visible: false,
-        menuList: [],
-        menuListTreeProps: {
-          label: 'name',
-          children: 'children'
-        },
-        dataForm: {
-          id: 0,
-          roleName: '',
-          remark: ''
-        },
-        dataRule: {
-          roleName: [
-            { required: true, message: '角色名称不能为空', trigger: 'blur' }
-          ]
-        },
-        tempKey: -666666 // 临时key, 用于解决tree半选中状态项不能传给后台接口问题. # 待优化
+import { isEmail, isMobile } from "@/utils/validate";
+export default {
+  data() {
+    var validatePassword = (rule, value, callback) => {
+      if (!this.dataForm.id && !/\S/.test(value)) {
+        callback(new Error("密码不能为空"));
+      } else {
+        callback();
       }
-    },
-    methods: {
-      init (id) {
-        this.dataForm.id = id || 0
-        this.$http({
-          url: this.$http.adornUrl('/sys/menu/list'),
-          method: 'get',
-          params: this.$http.adornParams()
-        }).then(({data}) => {
-          this.menuList = treeDataTranslate(data, 'menuId')
-        }).then(() => {
-          this.visible = true
-          this.$nextTick(() => {
-            this.$refs['dataForm'].resetFields()
-            this.$refs.menuListTree.setCheckedKeys([])
-          })
-        }).then(() => {
-          if (this.dataForm.id) {
-            this.$http({
-              url: this.$http.adornUrl(`/sys/role/info/${this.dataForm.id}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.roleName = data.role.roleName
-                this.dataForm.remark = data.role.remark
-                var idx = data.role.menuIdList.indexOf(this.tempKey)
-                if (idx !== -1) {
-                  data.role.menuIdList.splice(idx, data.role.menuIdList.length - idx)
-                }
-                this.$refs.menuListTree.setCheckedKeys(data.role.menuIdList)
-              }
-            })
-          }
-        })
+    };
+    var validateComfirmPassword = (rule, value, callback) => {
+      if (!this.dataForm.id && !/\S/.test(value)) {
+        callback(new Error("确认密码不能为空"));
+      } else if (this.dataForm.password !== value) {
+        callback(new Error("确认密码与密码输入不一致"));
+      } else {
+        callback();
+      }
+    };
+    var validateEmail = (rule, value, callback) => {
+      if (!isEmail(value)) {
+        callback(new Error("邮箱格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var validateMobile = (rule, value, callback) => {
+      if (!isMobile(value)) {
+        callback(new Error("手机号格式错误"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      visible: false,
+      roleList: [],
+      dataForm: {
+        id: null,
+        universityName: "",
+        academyName: ""
+        // classNum: ""
       },
-      // 表单提交
-      dataFormSubmit () {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            this.$http({
-              url: this.$http.adornUrl(`/sys/role/${!this.dataForm.id ? 'save' : 'update'}`),
-              method: 'post',
-              data: this.$http.adornData({
-                'roleId': this.dataForm.id || undefined,
-                'roleName': this.dataForm.roleName,
-                'remark': this.dataForm.remark,
-                'menuIdList': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
-              })
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.$message({
-                  message: '操作成功',
-                  type: 'success',
-                  duration: 1500,
-                  onClose: () => {
-                    this.visible = false
-                    this.$emit('refreshDataList')
-                  }
-                })
-              } else {
-                this.$message.error(data.msg)
-              }
-            })
-          }
-        })
+      dataRule: {
+        universityName: [
+          { required: true, message: "学校名称不能为空", trigger: "blur" }
+        ],
+        academyName: [
+          { required: true, message: "院系名称不能为空", trigger: "blur" }
+        ]
       }
+    };
+  },
+  methods: {
+    init(row) {
+      let id;
+      if (row) {
+        id = row.uniacadaId;
+      }
+      console.log(row);
+
+      this.dataForm.id = id || null;
+      this.visible = true;
+      this.$nextTick(() => {
+        this.$refs["dataForm"].resetFields();
+        if (this.dataForm.id != null) {
+          this.dataForm.universityName = row.universityName;
+          this.dataForm.academyName = row.academyName;
+        }
+      });
+    },
+    // 表单提交
+    dataFormSubmit() {
+      var methodtype = this.dataForm.id ? "put" : "post";
+      this.$refs["dataForm"].validate(valid => {
+        if (valid) {
+          this.$http({
+            url: this.$http.adornUrl("system/uniacada"),
+            method: methodtype,
+            data: this.$http.adornData({
+              uniacadaId: this.dataForm.id || null,
+              universityName: this.dataForm.universityName,
+              academyName: this.dataForm.academyName
+              // classNum: this.dataForm.classNum
+            })
+          }).then(({ data }) => {
+            if (data && data.code === 200) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1500,
+                onClose: () => {
+                  this.visible = false;
+                  this.$emit("refreshDataList");
+                }
+              });
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
+        }
+      });
     }
   }
+};
 </script>

@@ -7,6 +7,9 @@
       <el-form-item label="角色名称" prop="roleName">
         <el-input v-model="dataForm.roleName" placeholder="角色名称"></el-input>
       </el-form-item>
+      <el-form-item label="显示顺序" prop="roleSort">
+        <el-input v-model="dataForm.roleSort" placeholder="显示顺序"></el-input>
+      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="dataForm.remark" placeholder="备注"></el-input>
       </el-form-item>
@@ -14,7 +17,7 @@
         <el-tree
           :data="menuList"
           :props="menuListTreeProps"
-          node-key="menuId"
+          node-key="id"
           ref="menuListTree"
           :default-expand-all="true"
           show-checkbox>
@@ -36,12 +39,13 @@
         visible: false,
         menuList: [],
         menuListTreeProps: {
-          label: 'name',
+          label: 'label',
           children: 'children'
         },
         dataForm: {
           id: 0,
           roleName: '',
+          roleSort: '',
           remark: ''
         },
         dataRule: {
@@ -56,11 +60,11 @@
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
-          url: this.$http.adornUrl('/sys/menu/list'),
+          url: this.$http.adornUrl(`system/menu/treeselect`),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.menuList = treeDataTranslate(data, 'menuId')
+          this.menuList = data.data
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
@@ -70,18 +74,21 @@
         }).then(() => {
           if (this.dataForm.id) {
             this.$http({
-              url: this.$http.adornUrl(`/sys/role/info/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`system/role/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.roleName = data.role.roleName
-                this.dataForm.remark = data.role.remark
-                var idx = data.role.menuIdList.indexOf(this.tempKey)
+              if (data && data.code === 200) {
+                this.dataForm.roleName = data.data.roleName
+                this.dataForm.remark = data.data.remark
+                this.dataForm.roleId = data.data.roleId
+                this.dataForm.roleSort = data.data.roleSort
+              /*  var idx = data.data.menuIdList.indexOf(this.tempKey)
                 if (idx !== -1) {
                   data.role.menuIdList.splice(idx, data.role.menuIdList.length - idx)
-                }
-                this.$refs.menuListTree.setCheckedKeys(data.role.menuIdList)
+                }*/
+                // this.$refs.menuListTree.setCheckedKeys(data.role.menuIdList)
+                this.$refs.menuListTree.setCheckedKeys(data.data.menuIds)
               }
             })
           }
@@ -91,17 +98,21 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            var req = this.dataForm.id ? 'put' : 'post'
             this.$http({
-              url: this.$http.adornUrl(`/sys/role/${!this.dataForm.id ? 'save' : 'update'}`),
-              method: 'post',
+              url: this.$http.adornUrl(`system/role`),
+              method: req,
               data: this.$http.adornData({
+                'editable': '1',
+                'roleSort': this.dataForm.roleSort,
                 'roleId': this.dataForm.id || undefined,
                 'roleName': this.dataForm.roleName,
                 'remark': this.dataForm.remark,
-                'menuIdList': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
+                'status': 0,
+                'menuIds': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+              if (data && data.code === 200) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',
@@ -113,6 +124,10 @@
                 })
               } else {
                 this.$message.error(data.msg)
+              }
+            }).catch((err) => {
+              if (err.response && err.response.data) {
+                this.$message.error(err.response.data.message)
               }
             })
           }

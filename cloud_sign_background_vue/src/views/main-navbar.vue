@@ -69,8 +69,10 @@
       userName: {
         get () { return this.$store.state.user.name }
       },
-      userImgSrc:{
-        get(){return this.$store.state.user.userImgSrc}
+      userImgSrc: {
+        get () {
+          return this.$store.state.user.userImgSrc
+        }
       }
 
     },
@@ -89,15 +91,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/role/quit.do'),
-            method: 'get',
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              clearLoginInfo()
-              this.$router.push({ name: 'login' })
-            }
-          })
+          clearLoginInfo()
+          this.$router.push({ name: 'login' })
         }).catch(() => {})
       }
     }
