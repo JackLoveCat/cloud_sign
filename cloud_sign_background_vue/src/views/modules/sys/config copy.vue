@@ -1,8 +1,13 @@
 <template>
-  <div class="mod-role">
+  <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
+        <el-input v-model="dataForm.paramKey" placeholder="参数名" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="getDataList()">查询</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -18,40 +23,29 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="roleId"
+        prop="id"
         header-align="center"
         align="center"
         width="80"
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="roleName"
+        prop="paramKey"
         header-align="center"
         align="center"
-        label="角色名称">
+        label="参数名">
       </el-table-column>
       <el-table-column
-        prop="roleSort"
+        prop="paramValue"
         header-align="center"
         align="center"
-        label="显示顺序">
+        label="参数值">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="remark"
         header-align="center"
         align="center"
-        label="角色状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === '0'" size="small">正常</el-tag>
-          <el-tag v-else-if="scope.row.status === '1'" size="small" type="info">停用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        width="180"
-        label="创建时间">
+        label="备注">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -60,8 +54,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,12 +74,12 @@
 </template>
 
 <script>
-  import AddOrUpdate from './role-add-or-update'
+  import AddOrUpdate from './config-add-or-update'
   export default {
     data () {
       return {
         dataForm: {
-          roleName: ''
+          paramKey: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -102,39 +96,22 @@
     activated () {
       this.getDataList()
     },
-    /*mounted (){
-        this.dataListLoading = true
-        this.$http({
-          url: this.$http.adornUrl('/system/menu/1'),
-          method: 'delete',
-          params: this.$http.delete({
-          })
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
-        })
-    },*/
-    mounted () {
-      this.getDataList()
-    },
     methods: {
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('system/role/list'),
+          url: this.$http.adornUrl('/sys/config/list'),
           method: 'get',
-          params: this.$http.adornParams()
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'paramKey': this.dataForm.paramKey
+          })
         }).then(({data}) => {
-          if (data && data.code === 200) {
-            this.dataList = data.rows
-            this.totalPage = data.total
+          if (data && data.code === 0) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -166,17 +143,20 @@
       },
       // 删除
       deleteHandle (id) {
-        this.$confirm(`确定对[id=${id}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        var ids = id ? [id] : this.dataListSelections.map(item => {
+          return item.id
+        })
+        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl(`system/role/${id}`),
-            method: 'delete',
-            data: this.$http.adornData()
+            url: this.$http.adornUrl('/sys/config/delete'),
+            method: 'post',
+            data: this.$http.adornData(ids, false)
           }).then(({data}) => {
-            if (data && data.code === 200) {
+            if (data && data.code === 0) {
               this.$message({
                 message: '操作成功',
                 type: 'success',
@@ -187,10 +167,6 @@
               })
             } else {
               this.$message.error(data.msg)
-            }
-          }).catch((err) => {
-            if (err.response && err.response.data) {
-              this.$message.error(err.response.data.message)
             }
           })
         }).catch(() => {})

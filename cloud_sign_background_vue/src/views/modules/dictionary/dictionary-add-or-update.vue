@@ -11,7 +11,7 @@
         <el-input v-model="dataForm.nickName" placeholder="用户昵称"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" placeholder="密码" :disabled="isDisabled"></el-input>
+        <el-input v-model="dataForm.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.comfirmPassword" placeholder="确认密码"></el-input>
@@ -131,15 +131,15 @@
         }).then(() => {
           if (this.dataForm.id) {
             this.$http({
-              url: this.$http.adornUrl(`system/user/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`/system/user/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 200) {
                 this.dataForm.userName = data.data.userName
                 this.dataForm.nickName = data.data.nickName
-                this.dataForm.password = '123456'
-                this.dataForm.comfirmPassword = '123456'
+                this.dataForm.password = data.data.password
+                this.dataForm.comfirmPassword = data.data.password
                 this.dataForm.email = data.data.email
                 this.dataForm.mobile = data.data.phonenumber
                 this.dataForm.roleId = data.data.role[0].roleId
@@ -161,7 +161,7 @@
                 'userId': this.dataForm.id || undefined,
                 'userName': this.dataForm.userName,
                 'nickName': this.dataForm.nickName,
-                'password': '123456',
+                'password': this.dataForm.password,
                 'email': this.dataForm.email,
                 'phonenumber': this.dataForm.mobile,
                 'status': this.dataForm.status,

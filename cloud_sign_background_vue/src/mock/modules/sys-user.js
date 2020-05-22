@@ -18,6 +18,7 @@ for (let i = 0; i < Math.floor(Math.random() * 10 + 1); i++) {
 
 // 获取用户信息
 export function info () {
+  console.log(dataList[0])
   return {
     // isOpen: false,
     url: 'role/getRole.do',
