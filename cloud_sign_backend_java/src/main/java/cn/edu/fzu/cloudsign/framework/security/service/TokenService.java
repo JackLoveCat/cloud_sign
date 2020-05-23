@@ -14,7 +14,7 @@ import cn.edu.fzu.cloudsign.common.utils.IdUtils;
 import cn.edu.fzu.cloudsign.common.utils.ServletUtils;
 import cn.edu.fzu.cloudsign.common.utils.StringUtils;
 import cn.edu.fzu.cloudsign.common.utils.ip.IpUtils;
-import cn.edu.fzu.cloudsign.framework.redis.CaffeineCache;
+import cn.edu.fzu.cloudsign.framework.cache.CaffeineCache;
 import cn.edu.fzu.cloudsign.framework.security.LoginUser;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
