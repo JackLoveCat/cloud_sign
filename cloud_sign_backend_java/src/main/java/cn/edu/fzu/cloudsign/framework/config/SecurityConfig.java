@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     
     /**
      * 解决 无法直接注入 AuthenticationManager
-     * TODO
      *
      * @return
      * @throws Exception
@@ -64,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     }
 
     /**
+     * TODO
+     * 
      * anyRequest          |   匹配所有请求路径
      * access              |   SpringEl表达式结果为true时可以访问
      * anonymous           |   匿名可以访问

@@ -45,15 +45,11 @@ public class TokenService {
 
 	private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
-//  TODO 没用了
-//	@Autowired
-//	private RedisCache redisCache;
-
 	@Autowired
 	private CaffeineCache caffeineCache;
 
 	/**
-	 * 获取用户身份信息 TODO 增加获取登录用户
+	 * 获取用户身份信息
 	 * 
 	 * @return 用户信息
 	 */
@@ -66,16 +62,10 @@ public class TokenService {
 			// 解析对应的权限以及用户信息
 			String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
 			String userKey = getTokenKey(uuid);
-			// TODO 没用了
-//			LoginUser user = redisCache.getCacheObject(userKey);
 			LoginUser user = caffeineCache.getCacheObject(userKey);
 			return user;
 		}
 		return null;
-//        LoginUser admin = new LoginUser(new SysUser(1L), null);
-//        //直接把超时设成一天后
-//        admin.setExpireTime(System.currentTimeMillis()+86400000);
-//        return admin;
 	}
 
 	/**
@@ -138,8 +128,6 @@ public class TokenService {
 		loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
 		// 根据uuid将loginUser缓存
 		String userKey = getTokenKey(loginUser.getToken());
-		// TODO 没用了
-//		redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
 		caffeineCache.setCacheObject(userKey, loginUser);
 	}
 
