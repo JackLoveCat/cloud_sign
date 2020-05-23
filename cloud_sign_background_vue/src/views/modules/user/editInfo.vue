@@ -79,7 +79,7 @@
       methods:{
           getUserInfo(){
             this.$http({
-              url: this.$http.adornUrl('/role/getRole.do'),
+              url: this.$http.adornUrl('role/getRole.do'),
               method: 'post',
             }).then(({data}) => {
               if (data && data.status === 200) {

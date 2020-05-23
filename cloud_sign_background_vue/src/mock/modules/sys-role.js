@@ -102,7 +102,7 @@ export function del () {
 //获取用户信息
 export function getRole () {
   return {
-    url: '/role/getRole.do',
+    url: 'role/getRole.do',
     type: 'post',
     data: {
       "role": {

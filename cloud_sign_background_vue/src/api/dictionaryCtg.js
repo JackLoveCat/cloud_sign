@@ -1,4 +1,4 @@
-import http from '@/utils/httphttp'
+import http from '@/utils/httpRequest'
 export function fetchList (params) {
   return http({
     url: '/api/dictionaryCtg/list',

@@ -72,94 +72,92 @@
 </template>
 
 <script>
-  import ueditor from  'ueditor'
-    export default {
-      data(){
-        return {
-          publishWork:[
-            {
-              sName:"",
-              sId:"",
-              wRemark: "",
-              wContent:"",
-              wProblem: "",
-              wScore: 0,
-              pwContent: ""
-            }
-          ],
-          studentFilesImages:[],
-          studentFiles:[],
-          wRemark:null,
-          wRemarkId:`wRemark`
-        }
-      },
-      mounted(){
-          this.getStudentWork()
-          this.wRemark = ueditor.getEditor(this.wRemarkId, {
-          })
-      },
-      methods:{
-        getStudentWork(){
-          this.$http({
-            url: this.$http.adornUrl('/teacher/selectOneWorkDetail.do'),
-            method: 'post',
-            data:this.$http.adornData({
-              'pwId': localStorage.getItem('nowAcId'),
-              'sId':sessionStorage.getItem('sId')
-            })
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              this.publishWork = data.publishWork
-              this.studentFiles = data.studentFiles
-              this.studentFilesImages = data.studentFilesImages
-              this.wRemark.ready(()=>{
-                this.wRemark.setContent(this.publishWork[0].wRemark)
-              })
-            }
-            else {
-              this.$message({
-                message:data.msg,
-                type:'error'
-              })
-            }
-          })
-        },
-        formatTooltip(val){
-          return val+'分'
-        },
-        updateDealWork(){
-          this.$http({
-            url: this.$http.adornUrl('/teacher/TeacherUpadte.do'),
-            method: 'post',
-            data:this.$http.adornData({
-              'pwId': localStorage.getItem('nowAcId'),
-              'sId':sessionStorage.getItem('sId'),
-              'wScore':this.publishWork[0].wScore,
-              'wRemark':this.wRemark.getContent()
-            })
-          }).then(({data}) => {
-            if (data && data.status === 200) {
-              this.$notify({
-                title: '成功提示',
-                message: '提交成功',
-                type: 'success'
-              });
-              this.$router.push({ name: 'teacher-Correction' })
-            }
-            else {
-              this.$message({
-                message:data.msg,
-                type:'error'
-              })
-            }
-          })
-        },
-      },
-
-      destroyed() {
-        this.wRemark.destroy();
+  import ueditor from 'ueditor'
+  export default {
+    data () {
+      return {
+        publishWork: [
+          {
+            sName: '',
+            sId: '',
+            wRemark: '',
+            wContent: '',
+            wProblem: '',
+            wScore: 0,
+            pwContent: ''
+          }
+        ],
+        studentFilesImages: [],
+        studentFiles: [],
+        wRemark: null,
+        wRemarkId: `wRemark`
       }
+    },
+    mounted () {
+      this.getStudentWork()
+      this.wRemark = ueditor.getEditor(this.wRemarkId, {
+      })
+    },
+    methods: {
+      getStudentWork () {
+        this.$http({
+          url: this.$http.adornUrl('/teacher/selectOneWorkDetail.do'),
+          method: 'post',
+          data: this.$http.adornData({
+            'pwId': localStorage.getItem('nowAcId'),
+            'sId': sessionStorage.getItem('sId')
+          })
+        }).then(({data}) => {
+          if (data && data.status === 200) {
+            this.publishWork = data.publishWork
+            this.studentFiles = data.studentFiles
+            this.studentFilesImages = data.studentFilesImages
+            this.wRemark.ready(() => {
+              this.wRemark.setContent(this.publishWork[0].wRemark)
+            })
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+          }
+        })
+      },
+      formatTooltip (val) {
+        return val + '分'
+      },
+      updateDealWork () {
+        this.$http({
+          url: this.$http.adornUrl('/teacher/TeacherUpadte.do'),
+          method: 'post',
+          data: this.$http.adornData({
+            'pwId': localStorage.getItem('nowAcId'),
+            'sId': sessionStorage.getItem('sId'),
+            'wScore': this.publishWork[0].wScore,
+            'wRemark': this.wRemark.getContent()
+          })
+        }).then(({data}) => {
+          if (data && data.status === 200) {
+            this.$notify({
+              title: '成功提示',
+              message: '提交成功',
+              type: 'success'
+            })
+            this.$router.push({ name: 'teacher-Correction' })
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+          }
+        })
+      }
+    },
+
+    destroyed () {
+      this.wRemark.destroy()
     }
+  }
 </script>
 
 <style scoped>

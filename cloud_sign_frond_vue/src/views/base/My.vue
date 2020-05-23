@@ -2,12 +2,12 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-24 21:39:10
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-05-06 23:01:50
+ * @LastEditTime: 2020-05-22 23:19:29
  -->
 <template>
   <div class="page__bd">
     <div class="weui-cells">
-      <div class="weui-cell  weui-cell_example">
+      <div class="weui-cell weui-cell_example">
         <div class="weui-cell__hd">
           <img
             src="../../assets/imgs/icon/user_icon_default.jpg"
@@ -20,25 +20,25 @@
         </div>
         <div class="weui-cell__ft">{{ user.nickName }}</div>
       </div>
-      <div class="weui-cell  weui-cell_example">
+      <div class="weui-cell weui-cell_example">
         <div class="weui-cell__bd">
           <p>邮箱</p>
         </div>
         <div class="weui-cell__ft">{{ user.email }}</div>
       </div>
-      <div class="weui-cell  weui-cell_example">
+      <div class="weui-cell weui-cell_example">
         <div class="weui-cell__bd">
           <p>手机号</p>
         </div>
         <div class="weui-cell__ft">{{ user.phonenumber }}</div>
       </div>
-      <div class="weui-cell  weui-cell_example">
+      <div class="weui-cell weui-cell_example">
         <div class="weui-cell__bd">
           <p>性别</p>
         </div>
         <div class="weui-cell__ft">{{ user.avatar }}</div>
       </div>
-      <div class="weui-cell  weui-cell_example">
+      <div class="weui-cell weui-cell_example">
         <div class="weui-cell__bd">
           <p>角色</p>
         </div>
@@ -48,7 +48,7 @@
 
     <div class="weui-cells">
       <a
-        class="weui-cell  weui-cell_access"
+        class="weui-cell weui-cell_access"
         href="javascript:"
         @click="goMyMedal"
       >
@@ -57,13 +57,19 @@
         </div>
         <div class="weui-cell__ft">敬请期待</div>
       </a>
-      <a class="weui-cell  weui-cell_access" @click="goPage('About')">
+      <a class="weui-cell weui-cell_access" @click="goPage('About')">
         <div class="weui-cell__bd">
           <p>隐私政策</p>
         </div>
         <div class="weui-cell__ft"></div>
       </a>
-      <a class="weui-cell  weui-cell_access" @click="logout">
+      <a class="weui-cell weui-cell_access" @click="changePassword">
+        <div class="weui-cell__bd">
+          <p>修改密码</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+      </a>
+      <a class="weui-cell weui-cell_access" @click="logout">
         <div class="weui-cell__bd">
           <p>登出</p>
         </div>
@@ -94,6 +100,9 @@ export default class My extends Vue {
   logout() {
     this.logoutAction();
     this.$router.push({ name: "Login" });
+  }
+  changePassword() {
+    this.$toptips.show(new SuccessToastOptions("修改功能开发中,敬请期待"));
   }
 }
 </script>

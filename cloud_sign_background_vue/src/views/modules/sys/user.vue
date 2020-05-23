@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
     <el-table
-      :data="dataList"
+      :data="dataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex - 1) * this.pageSize + this.pageSize)"
       border
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
@@ -92,9 +92,9 @@
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="[5, 10, 20, 50]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="this.dataList.length"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
@@ -113,7 +113,7 @@
         },
         dataList: [],
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 5,
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
@@ -143,6 +143,7 @@
         }).then(({data}) => {
           if (data && data.code === 200) {
             this.dataList = data.rows
+            this.totalPage = data.total
           } else {
             this.dataList = []
             this.totalPage = 0
