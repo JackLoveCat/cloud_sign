@@ -1,9 +1,3 @@
-/**
- * 全站路由配置
- *
- * 建议:
- * 1. 代码中路由统一使用name属性跳转(不使用path属性)
- */
 import Vue from 'vue'
 import Router from 'vue-router'
 import http from '@/utils/httpRequest'
@@ -12,17 +6,16 @@ import { clearLoginInfo } from '@/utils'
 
 Vue.use(Router)
 
-// 开发环境不使用懒加载, 因为懒加载页面太多的话会造成webpack热更新太慢, 所以只有生产环境使用懒加载
 const _import = require('./import-' + process.env.NODE_ENV)
 
-// 全局路由(无需嵌套上左右整体布局)
+// 全局路由
 const globalRoutes = [
   { path: '/404', component: _import('common/404'), name: '404', meta: { title: '404未找到' } },
   { path: '/register', component: _import('common/register'), name: 'register', meta: { title: '注册' } },
   { path: '/login', component: _import('common/login'), name: 'login', meta: { title: '登录' } }
 ]
 
-// 主入口路由(需嵌套上左右整体布局)
+// 主入口路由
 const mainRoutes = {
   path: '/',
   component: _import('main'),
@@ -38,14 +31,6 @@ const mainRoutes = {
     { path: '/theme', component: _import('common/theme'), name: 'theme', meta: { title: '主题' } },
     { path: '/building', component: _import('common/building'), name: 'building', meta: { title: '建设中' } },
     { path: '/student-classList', component: _import('modules/student/classList'), name: 'classList', meta: { title: '班课列表' ,isTab: true }},
-    { path: '/student-class', component: _import('modules/student/class'), name: 'class', meta: { title: '我的课堂' ,isTab: true }},
-    { path: '/student-updateActivity', component: _import('modules/student/updateActivity'), name: 'updateActivity', meta: { title: '活动详情' ,isTab: true }},
-    { path: '/teacher-class', component: _import('modules/teacher/class'), name: 'teacher-class', meta: { title: '我的课堂' ,isTab: true }},
-    { path: '/teacher-Correction', component: _import('modules/teacher/Correction'), name: 'teacher-Correction', meta: { title: '查看作业' ,isTab: true }},
-    { path: '/user-editInfo', component: _import('modules/user/editInfo'), name: 'user-editInfo', meta: { title: '个人设置' ,isTab: true }},
-    { path: '/teacher-editActivity', component: _import('modules/teacher/editActivity'), name: 'teacher-editActivity', meta: { title: '修改活动信息' ,isTab: true }},
-    { path: '/teacher-dealWork', component: _import('modules/teacher/dealWork'), name: 'teacher-dealWork', meta: { title: '批改作业' ,isTab: true }},
-    { path: '/teacher-inEvaluate', component: _import('modules/teacher/inEvaluate'), name: 'teacher-inEvaluate', meta: { title: '查看评价' ,isTab: true }},
     { path: '/dictionary-dictionarylist', component: _import('modules/dictionary/dictionarylist'), name: 'dictionarylist', meta: { title: '字典详情', isTab: true }}
   ],
   beforeEnter (to, from, next) {
