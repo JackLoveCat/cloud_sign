@@ -66,7 +66,16 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
-
+// 代理列表, 是否开启代理通过[./dev.env.js]配置
+    proxyTable: {
+      '/proxyApi': {
+        target: 'http://localhost:28080/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/proxyApi': '/proxyApi'
+        }
+      }
+    },
     /**
      * Source Maps
      */

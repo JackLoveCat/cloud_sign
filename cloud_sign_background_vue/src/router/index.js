@@ -40,7 +40,6 @@ const mainRoutes = {
     { path: '/student-classList', component: _import('modules/student/classList'), name: 'classList', meta: { title: '班课列表' ,isTab: true }},
     { path: '/student-class', component: _import('modules/student/class'), name: 'class', meta: { title: '我的课堂' ,isTab: true }},
     { path: '/student-updateActivity', component: _import('modules/student/updateActivity'), name: 'updateActivity', meta: { title: '活动详情' ,isTab: true }},
-    { path: '/student-inEvaluate', component: _import('modules/student/inEvaluate'), name: 'inEvaluate', meta: { title: '评价' ,isTab: true }},
     { path: '/teacher-class', component: _import('modules/teacher/class'), name: 'teacher-class', meta: { title: '我的课堂' ,isTab: true }},
     { path: '/teacher-Correction', component: _import('modules/teacher/Correction'), name: 'teacher-Correction', meta: { title: '查看作业' ,isTab: true }},
     { path: '/user-editInfo', component: _import('modules/user/editInfo'), name: 'user-editInfo', meta: { title: '个人设置' ,isTab: true }},
@@ -146,8 +145,6 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
           route['component'] = _import(`modules/${menuList[i].url}`) || null
         } catch (e) {}
       }
-      console.log('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
-      console.log(route)
       routes.push(route)
     }
   }

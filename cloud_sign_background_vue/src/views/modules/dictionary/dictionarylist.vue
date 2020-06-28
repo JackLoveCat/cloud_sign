@@ -455,10 +455,6 @@ export default {
       this.editFormVisible = true;
       this.update = Object.assign({}, row);
       _index = index;
-      console.log("indexindexindexindexindexindexindex");
-      console.log(index);
-      console.log("rowrowrowrowrowrowrowrowrowrowrowrow");
-      console.log(row);
       this.editForm = row;
       if (this.$refs["edit"]) {
         this.$refs["editForm"].clearValidate();
@@ -477,9 +473,6 @@ export default {
           this.editForm.dictLabel = data.data.dictLabel;
           this.editForm.dictValue = data.data.dictValue;
           this.editForm.dictDataSort = data.data.dictDataSort;
-          console.log("123123123123123123");
-          console.log(data.data);
-          console.log(this.editForm);
         }
       });
     },

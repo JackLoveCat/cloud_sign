@@ -6,7 +6,7 @@
       @keyup.enter.native="getDataList()"
     >
       <el-form-item>
-        <el-form-item label="院系列表">
+        <!--<el-form-item label="院系列表">
           <el-select v-model="nowSchool">
             <el-option
               :label="item.label"
@@ -15,7 +15,7 @@
               :key="item.value"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <el-input
           v-model="dataForm.roleName"
           placeholder="班课Id"
@@ -28,9 +28,9 @@
           placeholder="班课名称"
           clearable
         ></el-input> -->
-      </el-form-item>
+      <!--</el-form-item>
       <el-form-item>
-        <el-button @click="getDataList(nowSchool)">查询</el-button>
+        <el-button @click="getDataList(nowSchool)">查询</el-button>-->
         <!-- <el-button
           v-if="haveAuth('sys:user:save')"
           type="primary"

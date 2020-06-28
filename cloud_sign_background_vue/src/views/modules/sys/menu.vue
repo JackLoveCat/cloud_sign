@@ -64,12 +64,12 @@
       </el-table-column>
     </el-table>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="refreshDataList"></add-or-update>
   </div>
 </template>
 
 <script>
-  import { listMenu,treeMenu} from '@/api/sys/menu'
+  import { listMenu,treeMenu,deleteMenu} from '@/api/sys/menu'
   import AddOrUpdate from './menu-add-or-update'
   import "element-ui/lib/theme-chalk/index.css"
   import { handleTree } from '@/utils'
@@ -86,7 +86,6 @@
         // 菜单树选项
         menuOptions: [],
         // 弹出层标题
-        title: "",
         // 是否显示弹出层
         open: false,
         // 查询参数
@@ -101,7 +100,7 @@
       }
     },
     created () {
-      this.getDataList()
+      this.getList()
     },
     methods: {
       // 显示行
@@ -111,19 +110,22 @@
         return show ? '' : 'display:none;'
       },
       // 获取数据列表
-      getDataList () {
+      getList () {
+        this.menuList = []
         this.loading = true
         //treeMenu(this.queryParams).then(res => {
         listMenu(this.queryParams).then(res => {
-          console.log(res.data.rows)
           this.menuList = handleTree(res.data.rows, 'menuId')
           this.loading = false
         })
       },
-      load(tree, treeNode, resolve) {
+      load (tree, treeNode, resolve) {
         setTimeout(() => {
           resolve(tree.children)
         }, 1)
+      },
+      refreshDataList () {
+        this.getList()
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
@@ -139,18 +141,14 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl(`/sys/menu/delete/${id}`),
-            method: 'post',
-            data: this.$http.adornData()
-          }).then(({data}) => {
-            if (data && data.code === 0) {
+            deleteMenu (`${id}`).then(({data}) => {
+            if (data && data.code === 200) {
               this.$message({
                 message: '操作成功',
                 type: 'success',
                 duration: 1500,
                 onClose: () => {
-                  this.getDataList()
+                  this.getList()
                 }
               })
             } else {

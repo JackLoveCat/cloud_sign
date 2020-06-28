@@ -11,10 +11,10 @@
         <el-input v-model="dataForm.nickName" placeholder="用户昵称"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" placeholder="密码" :disabled="isDisabled"></el-input>
+        <el-input v-model="dataForm.password" placeholder="密码" :disabled="!dataForm.id"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.comfirmPassword" placeholder="确认密码"></el-input>
+        <el-input v-model="dataForm.comfirmPassword" placeholder="确认密码" :disabled="!dataForm.id"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
@@ -82,8 +82,8 @@
         dataForm: {
           id: -1,
           userName: '',
-          password: '',
-          comfirmPassword: '',
+          password: '123456',
+          comfirmPassword: '123456',
           nickName: '',
           email: '',
           mobile: '',
