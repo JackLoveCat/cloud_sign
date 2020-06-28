@@ -11,7 +11,7 @@ import cn.edu.fzu.cloudsign.common.utils.StringUtils;
 import cn.edu.fzu.cloudsign.framework.security.LoginUser;
 
 /**
- * TODO 增加自定义权限实现
+ * 控制接口调用权限
  */
 @Service("ss")
 public class PermissionService {
@@ -30,7 +30,6 @@ public class PermissionService {
 	 * @return 用户是否具备某权限
 	 */
 	public boolean hasPermi(String permission) {
-//		return true;
 		if (StringUtils.isEmpty(permission)) {
 			return false;
 		}
@@ -48,7 +47,6 @@ public class PermissionService {
 	 * @return 用户是否不具备某权限
 	 */
 	public boolean lacksPermi(String permission) {
-//		return true;
 		return hasPermi(permission) != true;
 	}
 
@@ -59,7 +57,6 @@ public class PermissionService {
 	 * @return 用户是否具有以下任意一个权限
 	 */
 	public boolean hasAnyPermi(String permissions) {
-//		return true;
 		if (StringUtils.isEmpty(permissions)) {
 			return false;
 		}
@@ -84,7 +81,6 @@ public class PermissionService {
 	 * @return 用户是否具备某权限
 	 */
 	private boolean hasPermissions(Set<String> permissions, String permission) {
-//		return true;
 		return permissions.contains(ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
 	}
 }

@@ -1,4 +1,4 @@
-package cn.edu.fzu.cloudsign.framework.redis;
+package cn.edu.fzu.cloudsign.framework.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;

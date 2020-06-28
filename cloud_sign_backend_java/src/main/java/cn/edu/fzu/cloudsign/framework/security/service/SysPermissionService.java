@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import cn.edu.fzu.cloudsign.project.system.domain.SysUser;
 import cn.edu.fzu.cloudsign.project.system.service.ISysMenuService;
-import cn.edu.fzu.cloudsign.project.system.service.ISysRoleService;
 
 /**
  * 用户权限处理
