@@ -7,14 +7,14 @@
     >
       <el-form-item>
         <el-input
-          v-model="dataForm.roleName"
+          v-model="dataForm.universityName"
           placeholder="学校名称"
           clearable
         ></el-input>
       </el-form-item>
       <el-form-item>
         <el-input
-          v-model="dataForm.roleName"
+          v-model="dataForm.academyName"
           placeholder="院系名称"
           clearable
         ></el-input>
@@ -26,12 +26,13 @@
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button
+        >批量删除
+        </el-button
         >
       </el-form-item>
     </el-form>
     <el-table
-      :data="dataList"
+      :data="dataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex - 1) * this.pageSize + this.pageSize)"
       border
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
@@ -62,7 +63,8 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="alertModal(scope.row)">{{
             scope.row.classNum || 0
-          }}</el-button>
+            }}
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -77,13 +79,15 @@
             type="text"
             size="small"
             @click="addOrUpdateHandle(scope.row)"
-            >修改</el-button
+          >修改
+          </el-button
           >
           <el-button
             type="text"
             size="small"
             @click="deleteHandle(scope.row.uniacadaId)"
-            >删除</el-button
+          >删除
+          </el-button
           >
         </template>
       </el-table-column>
@@ -94,7 +98,7 @@
       :current-page="pageIndex"
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
-      :total="totalPage"
+      :total="this.dataList.length"
       layout="total, sizes, prev, pager, next, jumper"
     >
     </el-pagination>
@@ -127,138 +131,144 @@
 </template>
 
 <script>
-import AddOrUpdate from './school-add-or-update'
-export default {
-  data () {
-    return {
-      dataForm: {
-        roleName: ''
+  import AddOrUpdate from './school-add-or-update'
+
+  export default {
+    data () {
+      return {
+        dataForm: {
+          universityName: '',
+          academyName: ''
+        },
+        classData: [],
+        dataList: [],
+        pageIndex: 1,
+        pageSize: 10,
+        totalPage: 0,
+        dataListLoading: false,
+        dataListSelections: [],
+        addOrUpdateVisible: false,
+        dialogTableVisible: false
+      }
+    },
+    components: {
+      AddOrUpdate
+    },
+    activated () {
+      this.getDataList()
+    },
+    mounted () {
+      this.getDataList()
+    },
+    methods: {
+      // 获取数据列表
+      getDataList () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('system/uniacada/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'universityName': this.dataForm.universityName,
+            'academyName': this.dataForm.academyName
+          })
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.dataList = data.rows
+            this.totalPage = data.total
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
       },
-      classData: [],
-      dataList: [],
-      pageIndex: 1,
-      pageSize: 10,
-      totalPage: 0,
-      dataListLoading: false,
-      dataListSelections: [],
-      addOrUpdateVisible: false,
-      dialogTableVisible: false
-    }
-  },
-  components: {
-    AddOrUpdate
-  },
-  activated () {
-    this.getDataList()
-  },
-  mounted () {
-    this.getDataList()
-  },
-  methods: {
-    // 获取数据列表
-    getDataList () {
-      this.dataListLoading = true
-      this.$http({
-        url: this.$http.adornUrl('system/uniacada/list'),
-        method: 'get',
-        params: this.$http.adornParams()
-      }).then(({ data }) => {
-        if (data && data.code === 200) {
-          this.dataList = data.rows
-          this.totalPage = data.total
-        } else {
-          this.dataList = []
-          this.totalPage = 0
-        }
-        this.dataListLoading = false
-      })
-    },
-    // 每页数
-    sizeChangeHandle (val) {
-      this.pageSize = val
-      this.pageIndex = 1
-      this.getDataList()
-    },
-    // 当前页
-    currentChangeHandle (val) {
-      this.pageIndex = val
-      this.getDataList()
-    },
-    // 多选
-    selectionChangeHandle (val) {
-      this.dataListSelections = val
-    },
-    // 新增 / 修改
-    addOrUpdateHandle (row) {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(row)
-      })
-    },
-    // 删除
-    deleteHandle (id) {
-      var ids = id
-        ? [id]
-        : this.dataListSelections.map(item => {
-          return item.roleId
+      // 每页数
+      sizeChangeHandle (val) {
+        this.pageSize = val
+        this.pageIndex = 1
+        this.getDataList()
+      },
+      // 当前页
+      currentChangeHandle (val) {
+        this.pageIndex = val
+        this.getDataList()
+      },
+      // 多选
+      selectionChangeHandle (val) {
+        this.dataListSelections = val
+      },
+      // 新增 / 修改
+      addOrUpdateHandle (row) {
+        this.addOrUpdateVisible = true
+        this.$nextTick(() => {
+          this.$refs.addOrUpdate.init(row)
         })
-      this.$confirm(
-        `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          this.$http({
-            url: this.$http.adornUrl('system/uniacada/' + id),
-            method: 'DELETE',
-            data: this.$http.adornData(ids, false)
-          }).then(({ data }) => {
-            if (data && data.code === 200) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.getDataList()
-                }
-              })
-            } else {
-              this.$message.error(data.msg)
-            }
+      },
+      // 删除
+      deleteHandle (id) {
+        var ids = id
+          ? [id]
+          : this.dataListSelections.map(item => {
+            return item.roleId
           })
+        this.$confirm(
+          `确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        )
+          .then(() => {
+            this.$http({
+              url: this.$http.adornUrl('system/uniacada/' + id),
+              method: 'DELETE',
+              data: this.$http.adornData(ids, false)
+            }).then(({data}) => {
+              if (data && data.code === 200) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.getDataList()
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          })
+          .catch(() => {
+          })
+      },
+      /* 弹出课程列表 */
+      alertModal (row) {
+        this.$router.push({path: 'student-classList', query: {id: row.uniacadaId}})
+        return false
+        this.$http({
+          url: this.$http.adornUrl(
+            'system/uniacada/listclacoursebyuni/' + row.uniacadaId
+          ),
+          method: 'get',
+          data: this.$http.adornData()
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 500,
+              onClose: () => {
+                this.dialogTableVisible = true
+                this.classData = data.data
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
         })
-        .catch(() => {})
-    },
-    /* 弹出课程列表 */
-    alertModal (row) {
-      this.$router.push({path: 'student-classList', query: {id: row.uniacadaId}})
-      return false
-      this.$http({
-        url: this.$http.adornUrl(
-          'system/uniacada/listclacoursebyuni/' + row.uniacadaId
-        ),
-        method: 'get',
-        data: this.$http.adornData()
-      }).then(({ data }) => {
-        if (data && data.code === 200) {
-          this.$message({
-            message: '操作成功',
-            type: 'success',
-            duration: 500,
-            onClose: () => {
-              this.dialogTableVisible = true
-              this.classData = data.data
-            }
-          })
-        } else {
-          this.$message.error(data.msg)
-        }
-      })
+      }
     }
   }
-}
 </script>

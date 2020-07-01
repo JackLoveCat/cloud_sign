@@ -6,7 +6,7 @@
       @keyup.enter.native="getDataList()"
     >
       <el-form-item>
-        <el-form-item label="院系列表">
+        <!--<el-form-item label="院系列表">
           <el-select v-model="nowSchool">
             <el-option
               :label="item.label"
@@ -15,7 +15,7 @@
               :key="item.value"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <el-input
           v-model="dataForm.roleName"
           placeholder="班课Id"
@@ -28,9 +28,9 @@
           placeholder="班课名称"
           clearable
         ></el-input> -->
-      </el-form-item>
+      <!--</el-form-item>
       <el-form-item>
-        <el-button @click="getDataList(nowSchool)">查询</el-button>
+        <el-button @click="getDataList(nowSchool)">查询</el-button>-->
         <!-- <el-button
           v-if="haveAuth('sys:user:save')"
           type="primary"
@@ -141,13 +141,12 @@
 </template>
 
 <script>
-import AddOrUpdate from "./class-add-or-update";
-import { isAuth } from "../../../utils";
+import { isAuth } from '../../../utils'
 export default {
-  data() {
+  data () {
     return {
       dataForm: {
-        roleName: ""
+        roleName: ''
       },
       dataList: [],
       pageIndex: 1,
@@ -160,145 +159,142 @@ export default {
       nowSchool: 0,
       dialogTableVisible: false,
       stuData: []
-    };
-  },
-  components: {
-    AddOrUpdate
+    }
   },
   // activated() {
   //   this.getDataList();
   // },
-  mounted() {
+  mounted () {
     this.getSchool().then(() => {
-      if (this.$route.query.id != undefined) {
-        this.nowSchool = this.$route.query.id;
+      if (this.$route.query.id !== undefined) {
+        this.nowSchool = this.$route.query.id
       } else {
-        this.nowSchool = this.schoolList[0].value || 0;
+        this.nowSchool = this.schoolList[0].value || 0
       }
 
-      this.getDataList(this.nowSchool);
-    });
+      this.getDataList(this.nowSchool)
+    })
   },
   methods: {
     // 获取数据列表
-    getSchool() {
+    getSchool () {
       return new Promise((resolve, reject) => {
         this.$http({
-          url: this.$http.adornUrl("system/uniacada/list"),
-          method: "get",
+          url: this.$http.adornUrl('system/uniacada/list'),
+          method: 'get',
           params: this.$http.adornParams()
         }).then(({ data }) => {
           if (data && data.code === 200) {
-            this.schoolList = [];
+            this.schoolList = []
             data.rows.forEach(item => {
               this.schoolList.push({
                 label: item.academyName,
                 value: item.uniacadaId
-              });
-            });
+              })
+            })
           } else {
-            this.schoolList = [];
+            this.schoolList = []
           }
-          resolve();
-        });
-      });
+          resolve()
+        })
+      })
     },
-    getDataList(id) {
-      this.dataListLoading = true;
+    getDataList (id) {
+      this.dataListLoading = true
       this.$http({
         url: this.$http.adornUrl(`system/uniacada/listclacoursebyuni/${id}`),
-        method: "get"
+        method: 'get'
       }).then(({ data }) => {
         if (data && data.code === 200) {
-          this.dataList = data.data;
-          this.totalPage = data.data.length;
+          this.dataList = data.data
+          this.totalPage = data.data.length
         } else {
-          this.dataList = [];
-          this.totalPage = 0;
+          this.dataList = []
+          this.totalPage = 0
         }
-        this.dataListLoading = false;
-      });
+        this.dataListLoading = false
+      })
     },
     // 每页数
-    sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getDataList();
+    sizeChangeHandle (val) {
+      this.pageSize = val
+      this.pageIndex = 1
+      this.getDataList()
     },
     // 当前页
-    currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getDataList();
+    currentChangeHandle (val) {
+      this.pageIndex = val
+      this.getDataList()
     },
     // 多选
-    selectionChangeHandle(val) {
-      this.dataListSelections = val;
+    selectionChangeHandle (val) {
+      this.dataListSelections = val
     },
     // 新增 / 修改
-    addOrUpdateHandle(row = {}) {
-      this.addOrUpdateVisible = true;
+    addOrUpdateHandle (row = {}) {
+      this.addOrUpdateVisible = true
       this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(row);
-      });
+        this.$refs.addOrUpdate.init(row)
+      })
     },
     // 删除
-    deleteHandle(courseId) {
-      this.$confirm(`确定对[id=${courseId}]进行删除操作?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    deleteHandle (courseId) {
+      this.$confirm(`确定对[id=${courseId}]进行删除操作?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           this.$http({
             url: this.$http.adornUrl(`cla/course/${courseId}`),
-            method: "delete"
+            method: 'delete'
           }).then(({ data }) => {
             if (data && data.code === 200) {
               this.$message({
-                message: "操作成功",
-                type: "success",
+                message: '操作成功',
+                type: 'success',
                 duration: 1500,
                 onClose: () => {
-                  this.getDataList(this.nowSchool);
+                  this.getDataList(this.nowSchool)
                 }
-              });
+              })
             } else {
-              this.$message.error(data.msg);
+              this.$message.error(data.msg)
             }
-          });
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
-    haveAuth(auth) {
-      console.log(auth + " " + isAuth(auth));
-      //return isAuth(auth)
-      return true;
+    haveAuth (auth) {
+      console.log(auth + ' ' + isAuth(auth))
+      // return isAuth(auth)
+      return true
     },
     /* 弹出学生列表 */
-    alertModal(row) {
+    alertModal (row) {
       this.$http({
         url: this.$http.adornUrl(
           `system/uniacada/listmemberbycla/${row.courseId}`
         ),
-        method: "get"
+        method: 'get'
       }).then(({ data }) => {
         if (data && data.code === 200) {
-          console.log(data);
+          console.log(data)
 
           this.$message({
-            message: "操作成功",
-            type: "success",
+            message: '操作成功',
+            type: 'success',
             duration: 500,
             onClose: () => {
-              this.dialogTableVisible = true;
-              this.stuData = data.data;
+              this.dialogTableVisible = true
+              this.stuData = data.data
             }
-          });
+          })
         } else {
-          this.$message.error(data.msg);
+          this.$message.error(data.msg)
         }
-      });
+      })
     }
   }
-};
+}
 </script>
