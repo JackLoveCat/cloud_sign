@@ -64,4 +64,8 @@ public interface IClaTeacherSignService
 	public int teacherSignIn(ClaTeacherSign claTeacherSign);
 
 	public int teacherSignInStop(ClaTeacherSign claTeacherSign);
+
+	public List<ClaTeacherSign> getSignInCourseList(Long teacherId);
+	
+//	public List<String> getSignInStudentList(ClaTeacherSign claTeacherSign);
 }

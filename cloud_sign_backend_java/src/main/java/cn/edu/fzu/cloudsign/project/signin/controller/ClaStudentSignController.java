@@ -136,6 +136,33 @@ public class ClaStudentSignController extends BaseController
     	return AjaxResult.success(claTeacherSignService.getSignInCourseInfo(courseId));
     }
     
+    
+    /**
+     * 教师查询班课签到列表
+     */
+    @ApiOperation("教师查询班课签到列表")
+    @PreAuthorize("@ss.hasAnyPermi('signin:teacher:signin,signin:student:signin')")
+    @GetMapping(value = "/getSignInCourseList/{teacherId}")
+    public TableDataInfo getSignInCourseList(@PathVariable("teacherId") Long teacherId)
+    {
+    	startPage();
+        List<ClaTeacherSign> list = claTeacherSignService.getSignInCourseList(teacherId);
+        return getDataTable(list);
+    }
+    
+//    /**
+//     * 教师查询班课签到结果
+//     */
+//    @ApiOperation("教师查询班课签到结果")
+//    @PreAuthorize("@ss.hasAnyPermi('signin:teacher:signin,signin:student:signin')")
+//    @PostMapping(value = "/getSignInStudentList")
+//    public TableDataInfo getSignInStudentList(@Validated @RequestBody ClaTeacherSign claTeacherSign)
+//    {
+//    	startPage();
+//        List<String> list = claTeacherSignService.getSignInStudentList(claTeacherSign);
+//        return getDataTable(list);
+//    }
+    
     /**
      * 学生记录签到
      */

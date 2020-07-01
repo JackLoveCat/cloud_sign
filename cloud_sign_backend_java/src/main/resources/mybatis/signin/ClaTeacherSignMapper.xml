@@ -38,6 +38,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where course_id = #{courseId}
         <![CDATA[and sysdate()>=start_time and sysdate()<=stop_time]]>
     </select>
+    
+    
+    <select id="getSignInCourseList" parameterType="Long" resultMap="ClaTeacherSignResult">
+        <include refid="selectClaTeacherSignVo"/>
+        <where>  
+            <if test="_parameter != null "> and teacher_id = #{_parameter}</if>
+        </where>
+    </select>
+    
         
     <insert id="insertClaTeacherSign" parameterType="ClaTeacherSign" useGeneratedKeys="true" keyProperty="teacherSignId">
         insert into cla_teacher_sign
@@ -57,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signType != null  and signType != ''">#{signType},</if>
             <if test="gesture != null  and gesture != ''">#{gesture},</if>
             sysdate(),
-            DATE_FORMAT(ADDDATE(sysdate(), INTERVAL (select each_sign_time from sys_settings) MINUTE),'%Y-%m-%d %H:%i:%s'),
+            DATE_FORMAT(ADDDATE(sysdate(), INTERVAL (select each_sign_time from sys_settings where status=0) MINUTE),'%Y-%m-%d %H:%i:%s'),
             <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
             <if test="remark != null  and remark != ''">#{remark},</if>
          </trim>

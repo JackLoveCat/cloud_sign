@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="ipaddr"    column="ipaddr"    />
         <result property="remark"    column="remark"    />
     </resultMap>
+    
 
     <sql id="selectClaStudentSignVo">
         select student_sign_id, student_id, course_id, sign_type, gesture, sign_time, ipaddr, remark from cla_student_sign
@@ -84,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != ''">#{remark},</if>
          </trim>
     </insert>
+    
 
     <update id="updateClaStudentSign" parameterType="ClaStudentSign">
         update cla_student_sign

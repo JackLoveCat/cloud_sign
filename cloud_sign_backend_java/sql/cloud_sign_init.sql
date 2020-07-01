@@ -429,7 +429,7 @@ create table cla_student_sign
 -- ----------------------------
 drop table if exists sys_settings;
 CREATE TABLE sys_settings (
-    sys_settings_id BIGINT(20) NOT NULL COMMENT '系统设置ID',
+    sys_settings_id BIGINT(20) NOT NULL auto_increment COMMENT '系统设置ID',
     each_sign_exp INT DEFAULT 2 COMMENT '每次签到经验',
     each_sign_time INT DEFAULT 2 COMMENT '每次签到时间',
     status     char(1) default '0' comment '状态（0正常 1停用）',
