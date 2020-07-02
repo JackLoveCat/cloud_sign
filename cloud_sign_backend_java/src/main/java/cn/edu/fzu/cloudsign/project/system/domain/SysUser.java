@@ -92,8 +92,7 @@ public class SysUser extends BaseEntity {
 	private List<SysRole> roles;
 
 	/** 角色组 */
-	@ApiModelProperty(hidden = true)
-	@JsonIgnore
+	@ApiModelProperty("角色ID数组，新增用户时传入角色ID")
 	private Long[] roleIds;
 
 	public SysUser() {
