@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-03 22:30:43
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-05-04 09:10:19
+ * @LastEditTime: 2020-05-16 09:53:16
  */
 
 import { MutationTree, ActionTree, GetterTree, Module } from "vuex";
@@ -71,13 +71,13 @@ export function initLogin(): User {
 const state: User = initLogin();
 
 const mutations: MutationTree<User> = {
-  login(state, userInfo) {
-    console.log("user_login");
-    console.log(state.isLogin);
+  login(state, userInfo) {  
+    state.isLogin = true;
+    state.userInfo = userInfo;
   },
   logout(state, userInfo) {
-    console.log("user_login");
-    console.log(state.isLogin);
+    state.userInfo = undefined;
+    state.isLogin = false;
   },
 };
 const getters: GetterTree<User, IndexState> = {
@@ -100,7 +100,6 @@ const actions: ActionTree<User, IndexState> = {
     localStorage.removeItem("user");
   },
   saveUserInfo({ commit, state }, userInfo) {
-    console.log(userInfo);
     state.userInfo = {
       userId: userInfo.userId,
       uniacadaId: userInfo.uniacadaId,

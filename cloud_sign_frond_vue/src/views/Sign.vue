@@ -26,6 +26,7 @@
             @click="goBack"
             >返回</a
           >
+          <div>您当前的位置：{{ location }}</div>
         </div>
       </div>
     </div>
@@ -34,11 +35,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import BaiDuMap from "@/plugin/BMap.js";
+import { location } from "@/plugin/location";
 import { Getter } from "vuex-class";
 import API, { KResponse } from "@/utils/api";
 import {
   ToastOptions,
-  SuccessToastOptions,
+  SuccessToastOptions
 } from "../components/base/toast/index";
 const COLUMN_NUM = 3; // 九宫格行数 列数
 // 手势签到状态
@@ -66,7 +69,7 @@ export default class Sign extends Vue {
   @Getter("User/getUserInfo") userInfo: any;
   private title = {
     text: "",
-    color: "",
+    color: ""
   };
   private canvas?: HTMLCanvasElement;
   private ctx?: CanvasRenderingContext2D;
@@ -77,11 +80,13 @@ export default class Sign extends Vue {
   private circleInfo: Array<Position> = [];
   private restPoint: Array<Position> = [];
   private signState = { step: START, password: "" };
+  private location: string | undefined | unknown = "未知位置";
 
   constructor() {
     super();
   }
   mounted() {
+    this.getLocation();
     if (!this.$route.query.myClassId) {
       this.$toptips.show(new ToastOptions("未知参数"));
       return;
@@ -90,6 +95,15 @@ export default class Sign extends Vue {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.r = this.ctx.canvas.width / (2 + 4 * 3); // 公式计算
     this.init();
+  }
+  locationSuccess(point: any) {
+    console.log(point.point);
+  }
+  async getLocation() {
+    const BMap = await BaiDuMap.init();
+    const cityName = await location.getCurrentCityPosition(BMap);
+    this.location = cityName;
+    console.log(cityName);
   }
   init() {
     this.initDom();
@@ -141,7 +155,8 @@ export default class Sign extends Vue {
       // TODO:根据课程查询签到活动 根据角色不同做不同处理
       API.teacherSignIn(
         this.$route.query.myClassId as string,
-        this.signState.password
+        this.signState.password,
+        this.location
       )
         .then((res: KResponse) => {
           this.$toptips.show(new SuccessToastOptions("签到发起成功~"));
@@ -153,7 +168,8 @@ export default class Sign extends Vue {
       // TODO:根据课程查询签到活动 根据角色不同做不同处理
       API.studentSignIn(
         this.$route.query.myClassId as string,
-        this.signState.password
+        this.signState.password,
+        this.location
       )
         .then((res: KResponse) => {
           this.$toptips.show(new SuccessToastOptions("签到成功"));
@@ -258,7 +274,7 @@ export default class Sign extends Vue {
         const obj = {
           x: j * 4 * r + 3 * r,
           y: i * 4 * r + 3 * r,
-          index: count,
+          index: count
         };
         this.circleInfo.push(obj);
         this.restPoint.push(obj);
@@ -448,7 +464,7 @@ export default class Sign extends Vue {
     }
   }
   conver2Pass(drawPath: Array<Position>): string {
-    return drawPath.map((e) => e.index).join("");
+    return drawPath.map(e => e.index).join("");
   }
   canvasTrouchend(e: TouchEvent) {
     if (this.touchDown) {

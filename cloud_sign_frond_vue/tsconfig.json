@@ -2,10 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "strict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -31,6 +32,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
+    "src/plugin/location.js", 
+    "src/plugin/BMap.js",
     "tests/**/*.tsx"
   ],
   "exclude": [
