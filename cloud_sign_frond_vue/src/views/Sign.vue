@@ -36,7 +36,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import BaiDuMap from "@/plugin/BMap.js";
-import { location } from "@/plugin/location";
 import { Getter } from "vuex-class";
 import API, { KResponse } from "@/utils/api";
 import {
@@ -86,7 +85,6 @@ export default class Sign extends Vue {
     super();
   }
   mounted() {
-    this.getLocation();
     if (!this.$route.query.myClassId) {
       this.$toptips.show(new ToastOptions("未知参数"));
       return;
@@ -95,15 +93,15 @@ export default class Sign extends Vue {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.r = this.ctx.canvas.width / (2 + 4 * 3); // 公式计算
     this.init();
+    this.getLocation();
   }
   locationSuccess(point: any) {
     console.log(point.point);
   }
-  async getLocation() {
-    const BMap = await BaiDuMap.init();
-    const cityName = await location.getCurrentCityPosition(BMap);
-    this.location = cityName;
-    console.log(cityName);
+  getLocation() {
+    BaiDuMap.init().then((name: string | undefined | unknown) => {
+      this.location = name;
+    });
   }
   init() {
     this.initDom();
