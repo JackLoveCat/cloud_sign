@@ -3,7 +3,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:23:12
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-04 17:36:27
+ * @LastEditTime: 2020-07-04 19:59:44
  */
 import axios from "axios";
 import Vue from "vue";
@@ -170,7 +170,6 @@ export default class Api {
   static teacherSignInStop(courseId: string) {
     return this.post(HOST_DOMAIN + "/signin/sign/teacherSignInStop", {
       courseId: courseId,
-      teacherId: getUserId(),
     });
   }
 

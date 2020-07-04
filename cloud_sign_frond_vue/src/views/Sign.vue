@@ -37,6 +37,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import BaiDuMap from "@/plugin/BMap.js";
 import { Getter } from "vuex-class";
+import cryptoJs from "crypto-js";
 import API, { KResponse } from "@/utils/api";
 import {
   ToastOptions,
@@ -333,7 +334,11 @@ export default class Sign extends Vue {
       this.signState.step === REDRAW ||
       this.signState.step === REDRAW_FAILED
     ) {
-      if (this.checkPass(this.signState.password, psw)) {
+      if (
+        this.userInfo.roleid === 2
+          ? this.checkPass(this.signState.password, psw)
+          : this.checkPass(psw, psw)
+      ) {
         this.drawStatusPoint("#2CFF26");
         this.drawPoint("#2CFF26");
         this.signState.password;
