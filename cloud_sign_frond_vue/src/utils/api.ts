@@ -3,7 +3,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:23:12
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-03 23:47:55
+ * @LastEditTime: 2020-07-04 17:36:27
  */
 import axios from "axios";
 import Vue from "vue";
@@ -97,7 +97,7 @@ export default class Api {
     return this.post(HOST_DOMAIN + "/cla/course/join", courseId);
   }
   static getCourseInfo(classId: string) {
-    return this.get(HOST_DOMAIN + "cla/course/" + classId);
+    return this.get(HOST_DOMAIN + "/cla/course/" + classId);
   }
 
   static listUni() {
@@ -114,6 +114,11 @@ export default class Api {
   static getSignInfo(courseId: string) {
     return this.get(
       HOST_DOMAIN + "/signin/sign/getSignInCourseInfo/" + courseId
+    );
+  }
+  static getSignInList(teacherId: string) {
+    return this.get(
+      HOST_DOMAIN + "/signin/sign/getSignInCourseList/" + teacherId
     );
   }
   static studentSignIn(
@@ -179,9 +184,7 @@ export default class Api {
     return new Promise(function(resolve, rejext) {
       axios
         .post(url, param)
-        .finally(() => {
-          Vue.prototype.$loading.hidden();
-        })
+
         .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
@@ -213,6 +216,9 @@ export default class Api {
             );
           }
           rejext({ ret: -1, msg: "网络通讯异常" } as Response);
+        })
+        .finally(() => {
+          Vue.prototype.$loading.hidden();
         });
     });
   }
@@ -239,10 +245,7 @@ export default class Api {
     Vue.prototype.$loading.show({ text: "加载中" });
     return new Promise(function(resolve, rejext) {
       axios
-        .get(url, param)
-        .finally(() => {
-          Vue.prototype.$loading.hidden();
-        })
+        .get(url, param ? {} : param)
         .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
@@ -262,7 +265,8 @@ export default class Api {
             );
         })
         .catch((err) => {
-          if (err.response.data) {
+          console.log(err);
+          if (err.response && err.response.data) {
             rejext(
               new Response(
                 err.response.data.status,
@@ -273,7 +277,13 @@ export default class Api {
               )
             );
           }
-          rejext({ ret: -1, msg: "网络通讯异常" } as Response);
+          rejext({
+            ret: -1,
+            msg: err.message ? err.message : "网络通讯异常",
+          } as Response);
+        })
+        .finally(() => {
+          Vue.prototype.$loading.hidden();
         });
     });
   }

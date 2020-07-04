@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-03 22:30:43
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-05-16 09:53:16
+ * @LastEditTime: 2020-07-04 16:41:43
  */
 
 import { MutationTree, ActionTree, GetterTree, Module } from "vuex";
@@ -86,7 +86,6 @@ const getters: GetterTree<User, IndexState> = {
 };
 const actions: ActionTree<User, IndexState> = {
   login({ commit, state }, token) {
-    // commit("login", userInfo);
     localStorage.setItem(
       "token",
       JSON.stringify({ token: token, expire: new Date().getTime() })
@@ -111,7 +110,6 @@ const actions: ActionTree<User, IndexState> = {
       roleid: userInfo.roles[0].roleId,
       roleName: userInfo.roles[0].roleName,
     };
-    // commit("login", userInfo);
     localStorage.setItem("user", JSON.stringify(state.userInfo));
   },
 };
