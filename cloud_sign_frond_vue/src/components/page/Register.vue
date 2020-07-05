@@ -177,7 +177,7 @@ export default class Register extends Vue {
       this.$toptips.show(new ToastOptions("手机号非法"));
       return;
     } else if (
-      !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
+      !/^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
         this.params.email
       )
     ) {
