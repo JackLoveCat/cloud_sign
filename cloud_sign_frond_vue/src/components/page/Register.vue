@@ -173,6 +173,17 @@ export default class Register extends Vue {
     //   });
   }
   register() {
+    if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(this.params.phonenumber)) {
+      this.$toptips.show(new ToastOptions("手机号非法"));
+      return;
+    } else if (
+      !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
+        this.params.email
+      )
+    ) {
+      this.$toptips.show(new ToastOptions("邮箱非法"));
+      return;
+    }
     API.register(this.params)
       .then(res => {
         API.login(this.params.phonenumber, this.params.password)
