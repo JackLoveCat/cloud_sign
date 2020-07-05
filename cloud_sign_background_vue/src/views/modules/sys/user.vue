@@ -1,214 +1,189 @@
 <template>
-  <div class="mod-user">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-input v-model="dataForm.nickName" placeholder="用户名" clearable></el-input>
+  <el-dialog
+    :title="!dataForm.id ? '新增' : '修改'"
+    :close-on-click-modal="false"
+    :visible.sync="visible">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+      <el-form-item label="用户账号" prop="userName">
+        <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="haveAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="haveAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+      <el-form-item label="用户昵称" prop="nickName">
+        <el-input v-model="dataForm.nickName" placeholder="用户昵称"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
+        <el-input v-model="dataForm.password" placeholder="密码" :disabled="!dataForm.id"></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
+        <el-input v-model="dataForm.comfirmPassword" placeholder="确认密码" :disabled="!dataForm.id"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
+      </el-form-item>
+      <el-form-item label="角色" size="mini" prop="roleId">
+        <el-radio-group v-model="dataForm.roleId">
+          <el-radio :label="0">学生</el-radio>
+          <el-radio :label="1">教师</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="状态" size="mini" prop="status">
+        <el-radio-group v-model="dataForm.status">
+          <el-radio label="1">禁用</el-radio>
+          <el-radio label="0">正常</el-radio>
+        </el-radio-group>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="dataList.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex - 1) * this.pageSize + this.pageSize)"
-      border
-      v-loading="dataListLoading"
-      @selection-change="selectionChangeHandle"
-      style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="userId"
-        header-align="center"
-        align="center"
-        width="80"
-        label="用户ID">
-      </el-table-column>
-      <el-table-column
-        prop="userName"
-        header-align="center"
-        align="center"
-        label="用户账号">
-      </el-table-column>
-      <el-table-column
-        prop="nickName"
-        header-align="center"
-        align="center"
-        label="用户昵称">
-      </el-table-column>
-      <el-table-column
-        prop="phonenumber"
-        header-align="center"
-        align="center"
-        label="手机号">
-      </el-table-column>
-      <el-table-column
-        prop="email"
-        header-align="center"
-        align="center"
-        label="用户邮箱">
-      </el-table-column>
-      <el-table-column
-        prop="loginIp"
-        header-align="center"
-        align="center"
-        label="最后登陆IP">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="帐号状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
-          <el-tag v-else size="small">正常</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        width="180"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button v-if="haveAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
-          <el-button v-if="haveAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      @size-change="sizeChangeHandle"
-      @current-change="currentChangeHandle"
-      :current-page="pageIndex"
-      :page-sizes="[5, 10, 20, 50]"
-      :page-size="pageSize"
-      :total="this.dataList.length"
-      layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
-    <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
-  </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
-  import AddOrUpdate from './user-add-or-update'
-  import {isAuth} from '../../../utils'
+  import { isEmail, isMobile } from '@/utils/validate'
   export default {
     data () {
+      var validatePassword = (rule, value, callback) => {
+        if (!this.dataForm.id && !/\S/.test(value)) {
+          callback(new Error('密码不能为空'))
+        } else {
+          callback()
+        }
+      }
+      var validateComfirmPassword = (rule, value, callback) => {
+        if (!this.dataForm.id && !/\S/.test(value)) {
+          callback(new Error('确认密码不能为空'))
+        } else if (this.dataForm.password !== value) {
+          callback(new Error('确认密码与密码输入不一致'))
+        } else {
+          callback()
+        }
+      }
+      var validateEmail = (rule, value, callback) => {
+        if (!isEmail(value)) {
+          callback(new Error('邮箱格式错误'))
+        } else {
+          callback()
+        }
+      }
+      var validateMobile = (rule, value, callback) => {
+        if (!isMobile(value)) {
+          callback(new Error('手机号格式错误'))
+        } else {
+          callback()
+        }
+      }
       return {
+        visible: false,
+        roleList: [],
         dataForm: {
-          nickName: ''
+          id: -1,
+          userName: '',
+          password: '123456',
+          comfirmPassword: '123456',
+          nickName: '',
+          email: '',
+          mobile: '',
+          roleId: 0,
+          status: ''
         },
-        dataList: [],
-        pageIndex: 1,
-        pageSize: 5,
-        totalPage: 0,
-        dataListLoading: false,
-        dataListSelections: [],
-        addOrUpdateVisible: false
+        dataRule: {
+          userName: [
+            { required: true, message: '用户名不能为空', trigger: 'blur' }
+          ],
+          nickName: [
+            { required: true, message: '昵称不能为空', trigger: 'blur' }
+          ],
+          password: [
+            { validator: validatePassword, trigger: 'blur' }
+          ],
+          comfirmPassword: [
+            { validator: validateComfirmPassword, trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '邮箱不能为空', trigger: 'blur' },
+            { validator: validateEmail, trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '手机号不能为空', trigger: 'blur' },
+            { validator: validateMobile, trigger: 'blur' }
+          ]
+        }
       }
     },
-    components: {
-      AddOrUpdate
-    },
-    activated () {
-      this.getDataList()
-    },
-    mounted () {
-      this.getDataList()
-    },
     methods: {
-      test () {
-        this.$router.push({name:'test'})
-      },
-      // 获取数据列表
-      getDataList () {
-        this.dataListLoading = true
+      init (id) {
+        this.dataForm.id = id || 0
         this.$http({
-          url: this.$http.adornUrl('system/user/list'),
+          url: this.$http.adornUrl('system/role/list'),
           method: 'get',
-          params: this.$http.adornParams({
-            'nickName': this.dataForm.nickName
-          })
+          params: this.$http.adornParams()
         }).then(({data}) => {
-          if (data && data.code === 200) {
-            this.dataList = data.rows
-            this.totalPage = data.total
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
-        })
-      },
-      // 每页数
-      sizeChangeHandle (val) {
-        this.pageSize = val
-        this.pageIndex = 1
-        this.getDataList()
-      },
-      // 当前页
-      currentChangeHandle (val) {
-        this.pageIndex = val
-        this.getDataList()
-      },
-      // 多选
-      selectionChangeHandle (val) {
-        this.dataListSelections = val
-      },
-      // 新增 / 修改
-      addOrUpdateHandle (id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
-        })
-      },
-      // 删除
-      deleteHandle (id) {
-        var userIds = id ? [id] : this.dataListSelections.map(item => {
-          return item.userId
-        })
-        this.$confirm(`确定对[id=${userIds.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+          this.roleList = data && data.code === 200 ? data.rows : []
         }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/sys/user/delete'),
-            method: 'post',
-            data: this.$http.adornData(userIds, false)
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.getDataList()
-                }
-              })
-            } else {
-              this.$message.error(data.msg)
-            }
+          this.visible = true
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
           })
-        }).catch(() => {})
+        }).then(() => {
+          if (this.dataForm.id) {
+            this.$http({
+              url: this.$http.adornUrl(`system/user/${this.dataForm.id}`),
+              method: 'get',
+              params: this.$http.adornParams()
+            }).then(({data}) => {
+              if (data && data.code === 200) {
+                this.dataForm.status = data.data.status
+                this.dataForm.userName = data.data.userName
+                this.dataForm.nickName = data.data.nickName
+                this.dataForm.password = data.data.password
+                this.dataForm.comfirmPassword = data.data.password
+                this.dataForm.email = data.data.email
+                this.dataForm.mobile = data.data.phonenumber
+                this.dataForm.roleId = data.data.role[0].roleId
+              }
+            })
+          }
+        })
       },
-      haveAuth (auth) {
-        console.log(auth + ' ' + isAuth(auth))
-        //return isAuth(auth)
-        return true
+      // 表单提交
+      dataFormSubmit () {
+        var methodtype = this.dataForm.id ? 'put' : 'post'
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            this.$http({
+              url: this.$http.adornUrl('system/user'),
+              method: methodtype,
+              data: this.$http.adornData({
+                'userId': this.dataForm.id || undefined,
+                'userName': this.dataForm.userName,
+                'nickName': this.dataForm.nickName,
+                'password': '123456',
+                'email': this.dataForm.email,
+                'phonenumber': this.dataForm.mobile,
+                'status': this.dataForm.status,
+                'roleId': this.dataForm.roleId
+              })
+            }).then(({data}) => {
+              if (data && data.code === 200) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false
+                    this.$emit('refreshDataList')
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          }
+        })
       }
     }
   }
