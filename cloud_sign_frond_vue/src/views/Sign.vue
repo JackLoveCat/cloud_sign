@@ -53,6 +53,7 @@ const CHECK_SUCCESS = 5; // 手势签到成功
 const CHECK_FAILED = 6; // 手势签到失败
 const READY_END_SIGN = 7; // 等待结束签到
 const SIGN_NOT_START = 8; // 签到未开始
+const SERVER_CHECK_FAILED = 9;
 
 class Position {
   x: number;
@@ -172,10 +173,16 @@ export default class Sign extends Vue {
       )
         .then((res: KResponse) => {
           this.$toptips.show(new SuccessToastOptions("签到成功"));
-          this.$router.go(-1);
+          setTimeout(() => {
+            this.$router.go(-1);
+          }, 2000);
         })
         .catch((res: KResponse) => {
+          this.signState.step = SERVER_CHECK_FAILED;
+          this.title.text = res.msg;
           this.$toptips.show(new ToastOptions(res.msg));
+          this.resetCanvas();
+          this.setShowTitle();
         });
     }
     // console.log("user operation end");
@@ -334,14 +341,10 @@ export default class Sign extends Vue {
       this.signState.step === REDRAW ||
       this.signState.step === REDRAW_FAILED
     ) {
-      if (
-        this.userInfo.roleid === 2
-          ? this.checkPass(this.signState.password, psw)
-          : this.checkPass(psw, psw)
-      ) {
+      if (this.checkPass(this.signState.password, psw)) {
         this.drawStatusPoint("#2CFF26");
         this.drawPoint("#2CFF26");
-        this.signState.password;
+        this.signState.password = psw;
         if (this.userInfo.roleid === 2) {
           this.signState.step = READY_END_SIGN;
         } else {
@@ -355,9 +358,14 @@ export default class Sign extends Vue {
     } else if (
       this.signState.step === CHECK ||
       this.signState.step === CHECK_FAILED ||
-      this.signState.step === CHECK_SUCCESS
+      this.signState.step === CHECK_SUCCESS ||
+      this.signState.step == SERVER_CHECK_FAILED
     ) {
-      if (this.checkPass(this.signState.password, psw)) {
+      if (
+        this.userInfo.roleid === 2
+          ? this.checkPass(this.signState.password, psw)
+          : this.checkPass(psw, psw)
+      ) {
         this.drawStatusPoint("#2CFF26"); //小点点外圈高亮
         this.drawPoint("#2CFF26");
         this.drawLine(
@@ -366,6 +374,7 @@ export default class Sign extends Vue {
           this.drawPath
         ); // 每帧画圆心
         this.signState.step = CHECK_SUCCESS;
+        this.signState.password = psw;
       } else {
         this.drawStatusPoint("red");
         this.drawPoint("red");
@@ -404,6 +413,8 @@ export default class Sign extends Vue {
     } else if (this.signState.step === CHECK_FAILED) {
       this.title.text = "手势错误,请重新输入";
       this.title.color = "red";
+    } else if (this.signState.step === SERVER_CHECK_FAILED) {
+      return (this.title.color = "red");
     } else if (this.signState.step === CHECK_SUCCESS) {
       this.title.color = "#2CFF26";
       this.title.text = "签到成功";

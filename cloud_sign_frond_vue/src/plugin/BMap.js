@@ -3,7 +3,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-07-03 22:45:54
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-04 01:01:47
+ * @LastEditTime: 2020-07-05 12:20:46
  */
 export default {
   init: function() {
@@ -53,7 +53,7 @@ export default {
         const geolocation = new BMap.Geolocation();
         const geocoder = new BMap.Geocoder();
         geolocation.getCurrentPosition(function(browserResult) {
-          if (browserResult.point) {
+          if (browserResult && browserResult.point) {
             geocoder.getLocation(browserResult.point, function(result) {
               const addComp = result.addressComponents;
               const address =
