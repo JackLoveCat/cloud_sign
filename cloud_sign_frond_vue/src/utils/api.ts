@@ -3,17 +3,14 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-03-22 20:23:12
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-05-07 00:22:21
+ * @LastEditTime: 2020-07-04 19:59:44
  */
 import axios from "axios";
 import Vue from "vue";
 import { UserInfo } from "@/types/model/User";
 import { CourseInfo } from "@/types/model/Class";
 import { getToken, getUserId } from "../store/model/User";
-const HOST_DOMAIN =
-  process.env.NODE_ENV === "production"
-    ? "http://123.206.49.117:8080"
-    : "/apis";
+const HOST_DOMAIN = "http://123.206.49.117:8080";
 export interface KResponse {
   ret: number;
   msg: string;
@@ -100,7 +97,7 @@ export default class Api {
     return this.post(HOST_DOMAIN + "/cla/course/join", courseId);
   }
   static getCourseInfo(classId: string) {
-    return this.get(HOST_DOMAIN + "cla/course/" + classId);
+    return this.get(HOST_DOMAIN + "/cla/course/" + classId);
   }
 
   static listUni() {
@@ -119,24 +116,39 @@ export default class Api {
       HOST_DOMAIN + "/signin/sign/getSignInCourseInfo/" + courseId
     );
   }
-  static studentSignIn(courseId: string, gesture: string, signType = 1) {
+  static getSignInList(teacherId: string) {
+    return this.get(
+      HOST_DOMAIN + "/signin/sign/getSignInCourseList/" + teacherId
+    );
+  }
+  static studentSignIn(
+    courseId: string,
+    gesture: string,
+    location: string | unknown | undefined,
+    signType = 1
+  ) {
     return this.post(HOST_DOMAIN + "/signin/sign/studentSignIn", {
       courseId: courseId,
       studentId: getUserId(),
       signType: signType,
       gesture: gesture,
-      remark: "",
+      remark: location ? location : "",
       ipaddr: "127.0.0.1",
     });
   }
-  static teacherSignIn(courseId: string, gesture: string, signType = 1) {
+  static teacherSignIn(
+    courseId: string,
+    gesture: string,
+    location: string | undefined | unknown,
+    signType = 1
+  ) {
     return this.post(HOST_DOMAIN + "/signin/sign/teacherSignIn", {
       courseId: courseId,
       teacherId: getUserId(),
       startTime: this.formatDate(new Date()),
       signType: signType,
       gesture: gesture,
-      remark: "",
+      remark: location ? location : "",
       ipaddr: "127.0.0.1",
       stopTime: this.formatDate(new Date(new Date().getTime() + 3600000)),
     });
@@ -158,7 +170,6 @@ export default class Api {
   static teacherSignInStop(courseId: string) {
     return this.post(HOST_DOMAIN + "/signin/sign/teacherSignInStop", {
       courseId: courseId,
-      teacherId: getUserId(),
     });
   }
 
@@ -172,9 +183,7 @@ export default class Api {
     return new Promise(function(resolve, rejext) {
       axios
         .post(url, param)
-        .finally(() => {
-          Vue.prototype.$loading.hidden();
-        })
+
         .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
@@ -206,6 +215,9 @@ export default class Api {
             );
           }
           rejext({ ret: -1, msg: "网络通讯异常" } as Response);
+        })
+        .finally(() => {
+          Vue.prototype.$loading.hidden();
         });
     });
   }
@@ -232,10 +244,7 @@ export default class Api {
     Vue.prototype.$loading.show({ text: "加载中" });
     return new Promise(function(resolve, rejext) {
       axios
-        .get(url, param)
-        .finally(() => {
-          Vue.prototype.$loading.hidden();
-        })
+        .get(url, param ? {} : param)
         .then((res) => {
           if (res.data && res.data.code && res.data.code === 200)
             resolve(
@@ -255,7 +264,8 @@ export default class Api {
             );
         })
         .catch((err) => {
-          if (err.response.data) {
+          console.log(err);
+          if (err.response && err.response.data) {
             rejext(
               new Response(
                 err.response.data.status,
@@ -266,7 +276,13 @@ export default class Api {
               )
             );
           }
-          rejext({ ret: -1, msg: "网络通讯异常" } as Response);
+          rejext({
+            ret: -1,
+            msg: err.message ? err.message : "网络通讯异常",
+          } as Response);
+        })
+        .finally(() => {
+          Vue.prototype.$loading.hidden();
         });
     });
   }

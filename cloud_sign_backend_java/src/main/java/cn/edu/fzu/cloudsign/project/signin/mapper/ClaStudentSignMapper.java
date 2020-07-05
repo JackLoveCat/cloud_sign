@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.fzu.cloudsign.project.signin.domain.ClaStudentSign;
+import cn.edu.fzu.cloudsign.project.signin.domain.ClaTeacherSign;
 
 /**
  * 学生签到记录Mapper接口
@@ -65,4 +66,6 @@ public interface ClaStudentSignMapper
 	public int studentSignIn(ClaStudentSign claStudentSign);
 
 	public List<ClaStudentSign> selectClaStudentSignBySignTime(Map<String, Date> queryMap);
+
+//	public List<String> getSignInStudentList(ClaTeacherSign claTeacherSign);
 }

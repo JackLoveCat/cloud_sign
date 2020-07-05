@@ -60,4 +60,6 @@ public interface ClaTeacherSignMapper
     public int deleteClaTeacherSignByIds(Long[] teacherSignIds);
 
 	public ClaTeacherSign getSignInCourseInfo(Long courseId);
+
+	public List<ClaTeacherSign> getSignInCourseList(Long teacherId);
 }

@@ -12,6 +12,7 @@ import cn.edu.fzu.cloudsign.project.signin.mapper.ClaTeacherSignMapper;
 import cn.edu.fzu.cloudsign.common.exception.CustomException;
 import cn.edu.fzu.cloudsign.common.utils.DateUtils;
 import cn.edu.fzu.cloudsign.common.utils.SecurityUtils;
+import cn.edu.fzu.cloudsign.common.utils.SigninEncryptionUtils;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseStudent;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseTeacher;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseStudentMapper;
@@ -122,7 +123,17 @@ public class ClaStudentSignServiceImpl implements IClaStudentSignService
 		//【判断签到类型】1-手势签到 0-点击签到
 		if("1".equals(claTeacherSign.getSignType()))
 		{
-			if(!claStudentSign.getGesture().equals(claTeacherSign.getGesture()))
+			String gesture=null;
+			try {
+				SigninEncryptionUtils des = new SigninEncryptionUtils("cloudsignbackend");// 自定义密钥
+				System.out.println("加密后的字符：" + claTeacherSign.getGesture());
+				System.out.println("解密后的字符：" + des.decrypt(claTeacherSign.getGesture()));
+				gesture=des.decrypt(claTeacherSign.getGesture());
+			} catch (Exception e) {
+				e.printStackTrace();
+	            throw new CustomException("签到手势解密异常！");
+			}
+			if(!claStudentSign.getGesture().equals(gesture))
 			{
 				throw new CustomException("签到手势不匹配！");
 			}

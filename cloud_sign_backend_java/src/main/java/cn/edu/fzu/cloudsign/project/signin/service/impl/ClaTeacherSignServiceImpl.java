@@ -3,10 +3,14 @@ package cn.edu.fzu.cloudsign.project.signin.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cn.edu.fzu.cloudsign.project.signin.mapper.ClaStudentSignMapper;
 import cn.edu.fzu.cloudsign.project.signin.mapper.ClaTeacherSignMapper;
 import cn.edu.fzu.cloudsign.common.exception.CustomException;
 import cn.edu.fzu.cloudsign.common.utils.DateUtils;
 import cn.edu.fzu.cloudsign.common.utils.SecurityUtils;
+import cn.edu.fzu.cloudsign.common.utils.SigninEncryptionUtils;
+import cn.edu.fzu.cloudsign.common.utils.StringUtils;
 import cn.edu.fzu.cloudsign.project.cla.domain.ClaCourseTeacher;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseStudentMapper;
 import cn.edu.fzu.cloudsign.project.cla.mapper.ClaCourseTeacherMapper;
@@ -25,6 +29,9 @@ public class ClaTeacherSignServiceImpl implements IClaTeacherSignService
 {
     @Autowired
     private ClaTeacherSignMapper claTeacherSignMapper;
+    
+    @Autowired
+	private ClaStudentSignMapper claStudentSignMapper;
     
 	@Autowired
 	private ClaCourseStudentMapper claCourseStudentMapper;
@@ -114,10 +121,38 @@ public class ClaTeacherSignServiceImpl implements IClaTeacherSignService
 		{
 			throw new CustomException("这门班课存在正在发起的有效签到！");
 		}
+		
+    	//encrypt start
+    	try {
+
+//            String test = "123456789";
+    		if(!StringUtils.isEmpty(claTeacherSign.getGesture()))
+    		{
+    			String gesture=claTeacherSign.getGesture();
+
+                SigninEncryptionUtils des = new SigninEncryptionUtils("cloudsignbackend");// 自定义密钥
+
+                System.out.println("加密前的字符：" + gesture);
+
+                System.out.println("加密后的字符：" + des.encrypt(gesture));
+
+                System.out.println("解密后的字符：" + des.decrypt(des.encrypt(gesture)));
+                
+                claTeacherSign.setGesture(des.encrypt(gesture));
+                
+    		}
+    		
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException("签到手势加密异常！");
+        }
+    	//encrypt end
     	
     	//插入教师发起签到表
     	rows=claTeacherSignMapper.insertClaTeacherSign(claTeacherSign);
-
+  	
+   
     	//更新教师班课表	
 		ClaCourseTeacher claCourseTeacher = new ClaCourseTeacher();
 		claCourseTeacher.setCourseId(claTeacherSign.getCourseId());
@@ -143,4 +178,14 @@ public class ClaTeacherSignServiceImpl implements IClaTeacherSignService
 	public ClaTeacherSign getSignInCourseInfo(Long courseId) {
 		return claTeacherSignMapper.getSignInCourseInfo(courseId);
 	}
+
+	@Override
+	public List<ClaTeacherSign> getSignInCourseList(Long teacherId) {
+		return claTeacherSignMapper.getSignInCourseList(teacherId);
+	}
+
+//	@Override
+//	public List<String> getSignInStudentList(ClaTeacherSign claTeacherSign) {
+//		return claStudentSignMapper.getSignInStudentList(claTeacherSign);
+//	}
 }
