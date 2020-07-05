@@ -26,7 +26,7 @@
             @click="goBack"
             >返回</a
           >
-          <div>您当前的位置：{{ location }}</div>
+          <div class="location-text">您当前的位置：{{ location }}</div>
         </div>
       </div>
     </div>
@@ -530,5 +530,8 @@ export default class Sign extends Vue {
   margin-top: 85px;
   font-size: 20px;
   font-weight: normal;
+}
+.location-text {
+  color: #497837;
 }
 </style>

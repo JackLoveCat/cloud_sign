@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-06 17:42:13
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-05-06 23:01:10
+ * @LastEditTime: 2020-07-05 17:28:15
  -->
 <template>
   <div class="welcome">
@@ -35,24 +35,25 @@ export default class Welcome extends Vue {
       "welcome",
       JSON.stringify({ t: new Date().getTime() + 3600 * 24 })
     );
-    this.timer = setInterval(() => {
-      if (this.type === 1) this.type = 2;
-      else {
-        clearInterval(this.timer);
-        this.$router.push({ name: "Home" });
-      }
-    }, 3000);
+    // this.timer = setInterval(() => {
+    //   if (this.type === 1) this.type = 2;
+    //   else {
+    //     clearInterval(this.timer);
+    //     this.$router.push({ name: "Home" });
+    //   }
+    // }, 3000);
   }
 }
 </script>
 <style scoped>
 .welcome {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  float: left;
+  left: 24%;
+  top: 37%;
 }
 .logo {
   width: 200px;
@@ -65,8 +66,13 @@ export default class Welcome extends Vue {
   margin-left: 8px;
 }
 .logo_full img {
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
 }
 .logo_full h1 {
   position: absolute;

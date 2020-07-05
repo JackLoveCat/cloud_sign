@@ -3,7 +3,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-07-03 22:45:54
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-05 12:20:46
+ * @LastEditTime: 2020-07-05 16:24:59
  */
 export default {
   init: function() {
@@ -16,35 +16,37 @@ export default {
     return new Promise((resolve, reject) => {
       // 如果已加载直接返回
       if (typeof BMap !== "undefined") {
-          // GPS 定位
-      const geolocation = new BMap.Geolocation();
-      const geocoder = new BMap.Geocoder();
-      geolocation.getCurrentPosition(function(browserResult) {
-        if (browserResult.point) {
-          geocoder.getLocation(browserResult.point, function(result) {
-            const addComp = result.addressComponents;
-            const address =
-              addComp.province +
-              ", " +
-              addComp.city +
-              ", " +
-              addComp.district +
-              ", " +
-              addComp.street +
-              ", " +
-              addComp.streetNumber;
-            resolve(address);
-          });
-        } else {
-          // IP 定位
-          const local = new BMap.LocalCity();
-          local.get((ipResult) => {
-            if (ipResult.name != "全国") {
-              resolve(ipResult.name);
-            }
-          });
-        }
-      });
+        // GPS 定位
+        const geolocation = new BMap.Geolocation();
+        const geocoder = new BMap.Geocoder();
+        // 开启辅助定位
+        geolocation.enableSDKLocation();
+        geolocation.getCurrentPosition(function(browserResult) {
+          if (browserResult.point) {
+            geocoder.getLocation(browserResult.point, function(result) {
+              const addComp = result.addressComponents;
+              const address =
+                addComp.province +
+                ", " +
+                addComp.city +
+                ", " +
+                addComp.district +
+                ", " +
+                addComp.street +
+                ", " +
+                addComp.streetNumber;
+              resolve(address);
+            });
+          } else {
+            // IP 定位
+            const local = new BMap.LocalCity();
+            local.get((ipResult) => {
+              if (ipResult.name != "全国") {
+                resolve(ipResult.name);
+              }
+            });
+          }
+        });
       }
       // 百度地图异步加载回调处理
       window.onBMapCallback = function() {
