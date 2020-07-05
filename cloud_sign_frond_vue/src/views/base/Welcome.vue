@@ -2,13 +2,15 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-06 17:42:13
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-05 17:28:15
+ * @LastEditTime: 2020-07-05 17:40:51
  -->
 <template>
   <div class="welcome">
     <div class="logo" v-show="type === 1">
-      <img src="../../assets/imgs/welcome.svg" style="display:block;" />
-      <h1>到云 1.0</h1>
+      <div class="logo_center">
+        <img src="../../assets/imgs/welcome.svg" style="display:block;" />
+        <h1>到云 1.0</h1>
+      </div>
     </div>
     <div v-show="type === 2" class="logo_full">
       <img src="../../assets/imgs/welcome_bg.svg" />
@@ -35,18 +37,22 @@ export default class Welcome extends Vue {
       "welcome",
       JSON.stringify({ t: new Date().getTime() + 3600 * 24 })
     );
-    // this.timer = setInterval(() => {
-    //   if (this.type === 1) this.type = 2;
-    //   else {
-    //     clearInterval(this.timer);
-    //     this.$router.push({ name: "Home" });
-    //   }
-    // }, 3000);
+    this.timer = setInterval(() => {
+      if (this.type === 1) this.type = 2;
+      else {
+        clearInterval(this.timer);
+        this.$router.push({ name: "Home" });
+      }
+    }, 3000);
   }
 }
 </script>
 <style scoped>
 .welcome {
+  width: 100vw;
+  height: 100vh;
+}
+.logo {
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -55,7 +61,7 @@ export default class Welcome extends Vue {
   left: 24%;
   top: 37%;
 }
-.logo {
+.logo .logo_center {
   width: 200px;
 }
 .logo img {
