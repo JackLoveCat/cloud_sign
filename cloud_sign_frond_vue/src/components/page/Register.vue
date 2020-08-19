@@ -127,15 +127,13 @@
             </div>
           </div>
         </div>
-        <div class="weui-form__opr-area">
-          <div class="weui-flex">
-            <div class="weui-flex__item">
-              <a @click="register" class="weui-btn weui-btn_primary">注册</a>
-            </div>
-            <div class="weui-flex__item">
-              <a @click="goLogin" class="weui-btn weui-btn_primary">前往登录</a>
-            </div>
-          </div>
+        <div class="button-sp-area">
+          <a @click="register" class="weui-btn weui-btn_mini weui-btn_primary"
+            >注册</a
+          >
+          <a @click="goLogin" class="weui-btn weui-btn_mini weui-btn_primary"
+            >前往登录</a
+          >
         </div>
       </div>
     </div>
@@ -152,6 +150,8 @@ import { ToastOptions } from "../base/toast/index";
 @Component
 export default class Register extends Vue {
   @Action("User/login") saveLogin!: Function;
+  @Action("User/logout") logout!: Function;
+  @Action("User/saveUserInfo") saveUserInfo!: Function;
   private params: UserInfo = {
     avatar: "男",
     nickName: "",
@@ -160,7 +160,7 @@ export default class Register extends Vue {
     repassword: "",
     email: "",
     phonenumber: "",
-    roleIds: [2],
+    roleIds: [2]
   };
   constructor() {
     super();
@@ -173,18 +173,39 @@ export default class Register extends Vue {
     //   });
   }
   register() {
+    if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(this.params.phonenumber)) {
+      this.$toptips.show(new ToastOptions("手机号非法"));
+      return;
+    } else if (
+      !/^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
+        this.params.email
+      )
+    ) {
+      this.$toptips.show(new ToastOptions("邮箱非法"));
+      return;
+    }
     API.register(this.params)
-      .then((res) => {
+      .then(res => {
         API.login(this.params.phonenumber, this.params.password)
           .then((res: KResponse) => {
-            this.saveLogin(res.data.token);
+            API.getLoginUserInfo()
+              .then((user: KResponse) => {
+                console.log(user);
+                this.saveLogin(res.data.token);
+                this.saveUserInfo(user.data.user);
+                this.$router.push({ name: "Home" });
+              })
+              .catch((res: KResponse) => {
+                this.logout();
+                this.$toptips.show(new ToastOptions(res.msg));
+              });
             this.$router.push({ name: "Home" });
           })
           .catch((res: KResponse) => {
             this.$toptips.show(new ToastOptions(res.msg));
           });
       })
-      .catch((res) => {
+      .catch(res => {
         this.$toptips.show(new ToastOptions(res.msg));
       });
   }
@@ -211,5 +232,14 @@ export default class Register extends Vue {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
+}
+
+.button-sp-area {
+  margin: 15px auto;
+  text-align: center;
+}
+.button-sp-area .weui-btn_mini {
+  margin-left: 10px;
+  width: 100px;
 }
 </style>
