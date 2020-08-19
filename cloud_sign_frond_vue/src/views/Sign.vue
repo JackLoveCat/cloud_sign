@@ -26,7 +26,6 @@
             @click="goBack"
             >返回</a
           >
-          <div class="location-text">您当前的位置：{{ location }}</div>
         </div>
       </div>
     </div>
@@ -35,13 +34,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import BaiDuMap from "@/plugin/BMap.js";
 import { Getter } from "vuex-class";
-import cryptoJs from "crypto-js";
 import API, { KResponse } from "@/utils/api";
 import {
   ToastOptions,
-  SuccessToastOptions
+  SuccessToastOptions,
 } from "../components/base/toast/index";
 const COLUMN_NUM = 3; // 九宫格行数 列数
 // 手势签到状态
@@ -53,7 +50,6 @@ const CHECK_SUCCESS = 5; // 手势签到成功
 const CHECK_FAILED = 6; // 手势签到失败
 const READY_END_SIGN = 7; // 等待结束签到
 const SIGN_NOT_START = 8; // 签到未开始
-const SERVER_CHECK_FAILED = 9;
 
 class Position {
   x: number;
@@ -70,7 +66,7 @@ export default class Sign extends Vue {
   @Getter("User/getUserInfo") userInfo: any;
   private title = {
     text: "",
-    color: ""
+    color: "",
   };
   private canvas?: HTMLCanvasElement;
   private ctx?: CanvasRenderingContext2D;
@@ -81,7 +77,6 @@ export default class Sign extends Vue {
   private circleInfo: Array<Position> = [];
   private restPoint: Array<Position> = [];
   private signState = { step: START, password: "" };
-  private location: string | undefined | unknown = "未知位置";
 
   constructor() {
     super();
@@ -95,15 +90,6 @@ export default class Sign extends Vue {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.r = this.ctx.canvas.width / (2 + 4 * 3); // 公式计算
     this.init();
-    this.getLocation();
-  }
-  locationSuccess(point: any) {
-    console.log(point.point);
-  }
-  getLocation() {
-    BaiDuMap.init().then((name: string | undefined | unknown) => {
-      this.location = name;
-    });
   }
   init() {
     this.initDom();
@@ -155,8 +141,7 @@ export default class Sign extends Vue {
       // TODO:根据课程查询签到活动 根据角色不同做不同处理
       API.teacherSignIn(
         this.$route.query.myClassId as string,
-        this.signState.password,
-        this.location
+        this.signState.password
       )
         .then((res: KResponse) => {
           this.$toptips.show(new SuccessToastOptions("签到发起成功~"));
@@ -168,21 +153,14 @@ export default class Sign extends Vue {
       // TODO:根据课程查询签到活动 根据角色不同做不同处理
       API.studentSignIn(
         this.$route.query.myClassId as string,
-        this.signState.password,
-        this.location
+        this.signState.password
       )
         .then((res: KResponse) => {
           this.$toptips.show(new SuccessToastOptions("签到成功"));
-          setTimeout(() => {
-            this.$router.go(-1);
-          }, 2000);
+          this.$router.go(-1);
         })
         .catch((res: KResponse) => {
-          this.signState.step = SERVER_CHECK_FAILED;
-          this.title.text = res.msg;
           this.$toptips.show(new ToastOptions(res.msg));
-          this.resetCanvas();
-          this.setShowTitle();
         });
     }
     // console.log("user operation end");
@@ -280,7 +258,7 @@ export default class Sign extends Vue {
         const obj = {
           x: j * 4 * r + 3 * r,
           y: i * 4 * r + 3 * r,
-          index: count
+          index: count,
         };
         this.circleInfo.push(obj);
         this.restPoint.push(obj);
@@ -344,7 +322,7 @@ export default class Sign extends Vue {
       if (this.checkPass(this.signState.password, psw)) {
         this.drawStatusPoint("#2CFF26");
         this.drawPoint("#2CFF26");
-        this.signState.password = psw;
+        this.signState.password;
         if (this.userInfo.roleid === 2) {
           this.signState.step = READY_END_SIGN;
         } else {
@@ -358,14 +336,9 @@ export default class Sign extends Vue {
     } else if (
       this.signState.step === CHECK ||
       this.signState.step === CHECK_FAILED ||
-      this.signState.step === CHECK_SUCCESS ||
-      this.signState.step == SERVER_CHECK_FAILED
+      this.signState.step === CHECK_SUCCESS
     ) {
-      if (
-        this.userInfo.roleid === 2
-          ? this.checkPass(this.signState.password, psw)
-          : this.checkPass(psw, psw)
-      ) {
+      if (this.checkPass(this.signState.password, psw)) {
         this.drawStatusPoint("#2CFF26"); //小点点外圈高亮
         this.drawPoint("#2CFF26");
         this.drawLine(
@@ -374,7 +347,6 @@ export default class Sign extends Vue {
           this.drawPath
         ); // 每帧画圆心
         this.signState.step = CHECK_SUCCESS;
-        this.signState.password = psw;
       } else {
         this.drawStatusPoint("red");
         this.drawPoint("red");
@@ -413,8 +385,6 @@ export default class Sign extends Vue {
     } else if (this.signState.step === CHECK_FAILED) {
       this.title.text = "手势错误,请重新输入";
       this.title.color = "red";
-    } else if (this.signState.step === SERVER_CHECK_FAILED) {
-      return (this.title.color = "red");
     } else if (this.signState.step === CHECK_SUCCESS) {
       this.title.color = "#2CFF26";
       this.title.text = "签到成功";
@@ -478,7 +448,7 @@ export default class Sign extends Vue {
     }
   }
   conver2Pass(drawPath: Array<Position>): string {
-    return drawPath.map(e => e.index).join("");
+    return drawPath.map((e) => e.index).join("");
   }
   canvasTrouchend(e: TouchEvent) {
     if (this.touchDown) {
@@ -530,8 +500,5 @@ export default class Sign extends Vue {
   margin-top: 85px;
   font-size: 20px;
   font-weight: normal;
-}
-.location-text {
-  color: #497837;
 }
 </style>

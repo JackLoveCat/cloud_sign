@@ -92,13 +92,13 @@ import Api, { KResponse } from "@/utils/api";
 import { Getter } from "vuex-class";
 import {
   ToastOptions,
-  SuccessToastOptions
+  SuccessToastOptions,
 } from "../../components/base/toast/index";
 
 @Component({
   components: {
-    Search
-  }
+    Search,
+  },
 })
 export default class Class extends Vue {
   @Getter("User/getUserInfo") userInfo: any;
@@ -120,16 +120,7 @@ export default class Class extends Vue {
     // console.log("copy failed");
   }
   loadData() {
-    if (this.userInfo.roleid === 3) {
-      Api.getMyJoin()
-        .then((res: KResponse) => {
-          this.classes = res.data.rows;
-        })
-        .catch((res: KResponse) => {
-          // console.log(res);
-          this.$toptips.show(new ToastOptions(res.msg));
-        });
-    } else {
+    if (this.userInfo.roleid === 2) {
       Api.getMyCreate()
         .then((res: KResponse) => {
           this.setClass(res.data.rows);
@@ -138,20 +129,28 @@ export default class Class extends Vue {
           // console.log(res);
           this.$toptips.show(new ToastOptions(res.msg));
         });
+    } else {
+      Api.getMyJoin()
+        .then((res: KResponse) => {
+          this.classes = res.data.rows;
+        })
+        .catch((res: KResponse) => {
+          // console.log(res);
+          this.$toptips.show(new ToastOptions(res.msg));
+        });
     }
   }
-
   goMyclass(classId: number) {
     this.$router.push({
       name: "MyClass",
-      query: { myClassId: "" + classId }
+      query: { myClassId: "" + classId },
     });
   }
   goSign(courseId: number) {
     //TODO 查询签到 如果当前有则开始
     this.$router.push({
       name: "Sign",
-      query: { myClassId: "" + courseId }
+      query: { myClassId: "" + courseId },
     });
   }
   createOrJoin() {
@@ -171,7 +170,7 @@ export default class Class extends Vue {
       this.classesBack = this.classes;
     }
     this.classes = this.classesBack.filter(
-      e =>
+      (e) =>
         (e.courseName && e.courseName.indexOf(text) > -1) ||
         (e.className && e.className.indexOf(text) > -1) ||
         (e.courseNum && e.courseNum.indexOf(text) > -1)

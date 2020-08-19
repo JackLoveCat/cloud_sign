@@ -6,23 +6,13 @@ import store from "./store";
 import "@/less/weui.less";
 import Toast from "./components/base/toast/index";
 import VueClipboard from "vue-clipboard2";
-import { ToastOptions } from "./components/base/toast/index";
-
 Vue.config.productionTip = false;
 
 Vue.use(Toast);
 Vue.use(VueClipboard);
-//系统错误捕获
-const errorHandler = (error: Error, vm: Vue, info?: string) => {
-  console.error("抛出全局异常");
-  console.error(error);
-  Vue.prototype.$toptips.show(new ToastOptions(error.message));
-};
 
-Vue.config.errorHandler = errorHandler;
-const vm = new Vue({
+new Vue({
   router,
   store,
   render: (h) => h(App),
 }).$mount("#app");
-Vue.prototype.$throw = (error: Error) => errorHandler(error, vm);

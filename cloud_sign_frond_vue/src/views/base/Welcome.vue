@@ -2,15 +2,13 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-06 17:42:13
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-05 17:40:51
+ * @LastEditTime: 2020-05-06 23:01:10
  -->
 <template>
   <div class="welcome">
     <div class="logo" v-show="type === 1">
-      <div class="logo_center">
-        <img src="../../assets/imgs/welcome.svg" style="display:block;" />
-        <h1>到云 1.0</h1>
-      </div>
+      <img src="../../assets/imgs/welcome.svg" style="display:block;" />
+      <h1>到云 1.0</h1>
     </div>
     <div v-show="type === 2" class="logo_full">
       <img src="../../assets/imgs/welcome_bg.svg" />
@@ -49,19 +47,14 @@ export default class Welcome extends Vue {
 </script>
 <style scoped>
 .welcome {
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 .logo {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-  float: left;
-  left: 24%;
-  top: 37%;
-}
-.logo .logo_center {
   width: 200px;
 }
 .logo img {
@@ -72,13 +65,8 @@ export default class Welcome extends Vue {
   margin-left: 8px;
 }
 .logo_full img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  min-width: 100%;
-  min-height: 100%;
-  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
 }
 .logo_full h1 {
   position: absolute;
