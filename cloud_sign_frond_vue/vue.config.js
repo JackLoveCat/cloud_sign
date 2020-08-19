@@ -9,10 +9,27 @@ module.exports = {
         ws: true, // proxy websockets
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
-          "^/apis": "" // rewrite path
-        }
-      }
+          "^/apis": "", // rewrite path
+        },
+      },
+    },
+  },
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === "production") {
+      config.plugins.push(
+        new TerserPlugin({
+          terserOptions: {
+            ecma: undefined,
+            warnings: false,
+            parse: {},
+            compress: {
+              drop_console: true,
+              drop_debugger: false,
+              pure_funcs: ["console.log"], // 移除console
+            },
+          },
+        })
+      );
     }
   },
-  publicPath: process.env.NODE_ENV === "production" ? "/mobile" : "/"
 };

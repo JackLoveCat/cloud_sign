@@ -2,7 +2,7 @@
  * @Author: Jack(yebin.xm@gmail.com)
  * @Date: 2020-04-03 22:30:43
  * @LastEditors: Jack(yebin.xm@gmail.com)
- * @LastEditTime: 2020-07-04 16:41:43
+ * @LastEditTime: 2020-05-04 09:10:19
  */
 
 import { MutationTree, ActionTree, GetterTree, Module } from "vuex";
@@ -71,13 +71,13 @@ export function initLogin(): User {
 const state: User = initLogin();
 
 const mutations: MutationTree<User> = {
-  login(state, userInfo) {  
-    state.isLogin = true;
-    state.userInfo = userInfo;
+  login(state, userInfo) {
+    console.log("user_login");
+    console.log(state.isLogin);
   },
   logout(state, userInfo) {
-    state.userInfo = undefined;
-    state.isLogin = false;
+    console.log("user_login");
+    console.log(state.isLogin);
   },
 };
 const getters: GetterTree<User, IndexState> = {
@@ -86,6 +86,7 @@ const getters: GetterTree<User, IndexState> = {
 };
 const actions: ActionTree<User, IndexState> = {
   login({ commit, state }, token) {
+    // commit("login", userInfo);
     localStorage.setItem(
       "token",
       JSON.stringify({ token: token, expire: new Date().getTime() })
@@ -99,6 +100,7 @@ const actions: ActionTree<User, IndexState> = {
     localStorage.removeItem("user");
   },
   saveUserInfo({ commit, state }, userInfo) {
+    console.log(userInfo);
     state.userInfo = {
       userId: userInfo.userId,
       uniacadaId: userInfo.uniacadaId,
@@ -110,6 +112,7 @@ const actions: ActionTree<User, IndexState> = {
       roleid: userInfo.roles[0].roleId,
       roleName: userInfo.roles[0].roleName,
     };
+    // commit("login", userInfo);
     localStorage.setItem("user", JSON.stringify(state.userInfo));
   },
 };

@@ -8,7 +8,6 @@ import MyClass from "../views/MyClass.vue";
 import CourseCreate from "../views/course/CourseCreate.vue";
 import CourseJoin from "../views/course/CourseJoin.vue";
 import Sign from "../views/Sign.vue";
-import SignList from "../views/SignList.vue";
 
 Vue.use(VueRouter);
 
@@ -79,16 +78,6 @@ const routes = [
     },
   },
   {
-    path: "/sign_list",
-    name: "SignList",
-    component: SignList,
-    meta: {
-      title: "签到列表",
-      showFoot: false,
-    },
-  },
-
-  {
     path: "/course_create",
     name: "CourseCreate",
     component: CourseCreate,
@@ -152,7 +141,7 @@ router.beforeEach((to: Route, from: Route, next: Function) => {
     return;
   } else {
     const result = JSON.parse(welcomeTag);
-    if (result.t && new Date().getTime() - result.t > 3600000) {
+    if (result.t && result.t < new Date().getTime()) {
       localStorage.removeItem("welcome");
       next("/welcome");
     }
