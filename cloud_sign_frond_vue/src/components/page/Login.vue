@@ -37,17 +37,13 @@
           </div>
         </div>
       </div>
-      <div class="weui-form__opr-area">
-        <div class="weui-flex">
-          <div class="weui-flex__item">
-            <a @click="login" class="weui-btn weui-btn_primary">登录</a>
-          </div>
-          <div class="weui-flex__item">
-            <a @click="goRegister" class="weui-btn weui-btn_primary"
-              >前往注册</a
-            >
-          </div>
-        </div>
+      <div class="button-sp-area">
+        <a @click="login" class="weui-btn weui-btn_mini weui-btn_primary"
+          >登录</a
+        >
+        <a @click="goRegister" class="weui-btn weui-btn_mini weui-btn_primary"
+          >前往注册</a
+        >
       </div>
     </div>
   </div>
@@ -67,13 +63,14 @@ export default class Login extends Vue {
   @Action("User/saveUserInfo") saveUserInfo!: Function;
   private params: LoginParams = {
     account: "",
-    password: "",
+    password: ""
   };
   login() {
     if (!this.params.account || !this.params.password) {
       this.$toptips.show(new ToastOptions("请输入账号密码~"));
       return;
     }
+    localStorage.removeItem("token");
     API.login(this.params.account, this.params.password)
       .then((res: KResponse) => {
         this.saveLogin(res.data.token);
@@ -85,7 +82,6 @@ export default class Login extends Vue {
           })
           .catch((res: KResponse) => {
             this.logout();
-            console.log(res);
             this.$toptips.show(new ToastOptions(res.msg));
           });
       })
@@ -109,5 +105,13 @@ export default class Login extends Vue {
   margin: 0 auto;
   position: relative;
   top: .reHeight(60px) [ @height]; /*偏移*/
+}
+.button-sp-area {
+  margin: 15px auto;
+  text-align: center;
+}
+.button-sp-area .weui-btn_mini {
+  margin-left: 10px;
+  width: 100px;
 }
 </style>
